@@ -60,12 +60,12 @@ textarea{min-height:80px;resize:vertical}
 <!-- ========== الـ CONFIG: حط بيانات مشروع Firebase الجديد هنا ========== -->
 <script>
 window.FIREBASE_CONFIG = {
-  apiKey: "PASTE_API_KEY",
-  authDomain: "PASTE_PROJECT.firebaseapp.com",
-  projectId: "PASTE_PROJECT_ID",
-  storageBucket: "PASTE_PROJECT.firebasestorage.app",
-  messagingSenderId: "PASTE_SENDER_ID",
-  appId: "PASTE_APP_ID"
+  apiKey: "AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",
+  authDomain: "menouf-app-bf7e6.firebaseapp.com",
+  projectId: "menouf-app-bf7e6",
+  storageBucket: "menouf-app-bf7e6.firebasestorage.app",
+  messagingSenderId: "16704487645",
+  appId: "1:16704487645:web:d10755595eac7aa7d45b34"
 };
 </script>
 
@@ -204,7 +204,8 @@ function friendly(err) {
   if (c.includes('weak-password')) return 'كلمة المرور لازم 6 خانات على الأقل';
   if (c.includes('invalid-credential') || c.includes('wrong-password') || c.includes('user-not-found')) return 'الرقم أو كلمة المرور غلط';
   if (c.includes('invalid-email')) return 'رقم الموبايل غلط';
-  return 'حصل خطأ، جرّب تاني';
+  console.error(err);
+  return 'خطأ: ' + (c || err.message || 'غير معروف');
 }
 
 /* ---------- الدخول والتسجيل ---------- */
