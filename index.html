@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>منوف في جيبك</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F5F1E8;--card:#fff;--ink:#1D2620;--muted:#6B7368;--line:#DDD6C5;--green:#1F5A44;--soft:#E6EEE8;--amber:#C7872B;--danger:#B3412E;--ok:#2E7D57}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'IBM Plex Sans Arabic',system-ui,sans-serif;background:var(--paper);color:var(--ink);min-height:100vh;font-size:15px}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+.wrap{max-width:560px;margin:0 auto;padding:16px 16px 90px}
+header{background:var(--green);color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:5}
+header h1{font-size:18px}
+.hidden{display:none!important}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px}
+.card h3{font-size:16px;margin-bottom:8px}
+.muted{color:var(--muted);font-size:13px;line-height:1.7}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
+input,select,textarea{width:100%;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;font-size:15px;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--green)}
+textarea{min-height:80px;resize:vertical}
+.btn{width:100%;background:var(--green);color:#fff;border-radius:14px;padding:13px;font-weight:700;font-size:15px;margin-top:6px}
+.btn.sec{background:#fff;color:var(--green);border:1.5px solid var(--green)}
+.btn.small{width:auto;padding:7px 12px;font-size:13px;border-radius:999px;margin:0}
+.btn.danger{background:var(--danger)}
+.btn:disabled{opacity:.5}
+.link{color:var(--green);font-weight:600;font-size:13.5px;text-decoration:underline;margin-top:12px;display:inline-block}
+.tabs{display:flex;gap:6px;background:var(--soft);border-radius:999px;padding:4px;margin-bottom:14px;overflow-x:auto}
+.tabs button{flex:1;min-width:max-content;padding:8px 12px;border-radius:999px;font-weight:600;font-size:13.5px;color:var(--muted)}
+.tabs button.on{background:#fff;color:var(--green);box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.chip{padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:13px}
+.chip.on{background:var(--green);color:#fff;border-color:var(--green)}
+.badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700}
+.badge.pending{background:#FDF1DC;color:#8a5a12}
+.badge.approved{background:#DDF0E5;color:var(--ok)}
+.badge.rejected{background:#F8E0DB;color:var(--danger)}
+.day{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.day input[type=time]{width:auto;padding:6px 8px;border-radius:10px}
+.tog{width:46px;height:26px;border-radius:20px;background:#CFC8B6;position:relative;flex:none}
+.tog::after{content:"";position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s}
+.tog.on{background:var(--green)}
+.tog.on::after{transform:translateX(-20px)}
+.toast{position:fixed;top:70px;left:50%;transform:translate(-50%,-10px);background:#1D2620;color:#fff;padding:10px 18px;border-radius:999px;font-size:13.5px;opacity:0;transition:.3s;pointer-events:none;z-index:50;max-width:90%;text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:8px 0 max(10px,env(safe-area-inset-bottom))}
+.nav button{font-size:12px;color:var(--muted);font-weight:600;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 10px}
+.nav button.on{color:var(--green)}
+.empty{text-align:center;color:var(--muted);padding:30px 10px}
+.hero-auth{text-align:center;padding:40px 16px 10px}
+.hero-auth h2{color:var(--green);font-size:24px;margin-bottom:6px}
+</style>
+</head>
+<body>
+
+<!-- ========== الـ CONFIG: حط بيانات مشروع Firebase الجديد هنا ========== -->
+<script>
+window.FIREBASE_CONFIG = {
+  apiKey: "PASTE_API_KEY",
+  authDomain: "PASTE_PROJECT.firebaseapp.com",
+  projectId: "PASTE_PROJECT_ID",
+  storageBucket: "PASTE_PROJECT.firebasestorage.app",
+  messagingSenderId: "PASTE_SENDER_ID",
+  appId: "PASTE_APP_ID"
+};
+</script>
+
+<div id="toast" class="toast"></div>
+
+<!-- شاشة الدخول والتسجيل -->
+<section id="authView" class="hidden">
+  <div class="hero-auth"><h2>منوف في جيبك 📍</h2><p class="muted">دليل المحلات والدكاترة والخدمات في منوف</p></div>
+  <div class="wrap" style="max-width:420px">
+    <form id="authForm" class="card">
+      <h3 id="authTitle">دخول</h3>
+      <div class="field hidden" id="nameField"><label>الاسم</label><input id="name" placeholder="اسمك بالكامل"></div>
+      <div class="field"><label>رقم الموبايل</label><input id="phone" type="tel" inputmode="tel" placeholder="010xxxxxxxx" maxlength="11"></div>
+      <div class="field"><label>كلمة المرور</label><input id="password" type="password" placeholder="6 خانات على الأقل"></div>
+      <button class="btn" id="authBtn" type="submit">دخول</button>
+      <div style="text-align:center"><button type="button" class="link" id="toggleAuth">ليس لديك حساب؟ سجّل الآن</button></div>
+    </form>
+  </div>
+</section>
+
+<!-- التطبيق الرئيسي -->
+<section id="appView" class="hidden">
+  <header>
+    <h1>منوف في جيبك 📍</h1>
+    <button class="btn sec small" id="logoutBtn" style="color:#fff;border-color:#fff;background:transparent">خروج</button>
+  </header>
+  <div class="wrap">
+    <div id="tab-browse">
+      <div class="chips" id="catChips"></div>
+      <div id="browseList"></div>
+    </div>
+    <div id="tab-add" class="hidden">
+      <form id="bizForm">
+        <div class="card">
+          <h3>نوع النشاط</h3>
+          <div class="chips" id="typeChips"></div>
+        </div>
+        <div id="typeFields" class="hidden">
+          <div class="card">
+            <h3>البيانات الأساسية</h3>
+            <div class="field"><label id="nameLbl">الاسم</label><input id="bName" required></div>
+            <div class="field" id="specField"><label>التخصص</label>
+              <select id="bSpec"></select></div>
+            <div class="field" id="catField"><label>التصنيف</label>
+              <select id="bCat"></select></div>
+            <div class="field" id="regField"><label>رقم القيد في النقابة</label>
+              <input id="bReg" inputmode="numeric" placeholder="مش هيظهر للعامة"></div>
+            <div class="field" id="priceField"><label>سعر الكشف (اختياري)</label>
+              <input id="bPrice" inputmode="numeric"></div>
+            <div class="field"><label>وصف قصير (اختياري)</label>
+              <textarea id="bDesc" maxlength="160"></textarea></div>
+          </div>
+
+          <div class="card">
+            <h3>الموقع</h3>
+            <button type="button" class="btn sec" id="geoBtn">📍 استخدم موقعي الحالي</button>
+            <div class="field" style="margin-top:12px"><label>العنوان</label>
+              <input id="bAddr" required placeholder="شارع الجيش، جنب مدرسة السلام"></div>
+            <p class="muted" id="geoStatus"></p>
+            <input type="hidden" id="bLat"><input type="hidden" id="bLng">
+          </div>
+
+          <div class="card">
+            <h3>مواعيد الشغل</h3>
+            <div id="hoursBox"></div>
+            <div id="bookingBox" class="hidden" style="margin-top:10px">
+              <label class="muted">طريقة الكشف</label>
+              <select id="bBooking"><option value="booking">بالحجز</option><option value="walkin">بدون حجز</option></select>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>المنتجات أو الخدمات (اختياري)</h3>
+            <div id="itemsBox"></div>
+            <div style="display:flex;gap:6px;margin-top:8px">
+              <input id="itemName" placeholder="الاسم" style="flex:2">
+              <input id="itemPrice" placeholder="السعر" inputmode="numeric" style="flex:1">
+              <button type="button" class="btn sec small" id="addItemBtn">+</button>
+            </div>
+          </div>
+
+          <button class="btn" type="submit" id="saveBizBtn">إرسال للمراجعة</button>
+          <p class="muted" style="text-align:center;margin-top:8px">النشاط هيظهر للناس بعد ما الإدارة توافق عليه.</p>
+        </div>
+      </form>
+    </div>
+    <div id="tab-mine" class="hidden"><div id="mineList"></div></div>
+    <div id="tab-admin" class="hidden"><div id="adminList"></div></div>
+  </div>
+  <nav class="nav">
+    <button data-tab="browse" class="on">🔎 تصفح</button>
+    <button data-tab="add">➕ أضف نشاط</button>
+    <button data-tab="mine">📋 أنشطتي</button>
+    <button data-tab="admin" id="adminTab" class="hidden">🛡️ الإدارة</button>
+  </nav>
+</section>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, collection, addDoc, query, where, onSnapshot, updateDoc, serverTimestamp, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const app = initializeApp(window.FIREBASE_CONFIG);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const PHONE_RE = /^01[0125]\d{8}$/;
+const emailOf = p => p + '@menouf.app';
+const DAYS = ['السبت','الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة'];
+const TYPES = {
+  doctor: { label: 'دكتور / مهني', nameLbl: 'الاسم بالكامل' },
+  shop: { label: 'محل / مطعم', nameLbl: 'اسم المحل' },
+  service: { label: 'خدمة', nameLbl: 'اسم الخدمة' }
+};
+const SPECS = ['باطنة','أطفال','نساء وتوليد','جلدية','أسنان','عظام','عيون','قلب','أنف وأذن','أخرى'];
+const CATS = {
+  shop: ['مطعم وكافيه','ملابس','إلكترونيات وساعات','أدوات منزلية','بقالة وسوبر ماركت','صيدلية','مواد بناء','أخرى'],
+  service: ['سباكة وكهرباء','نجارة ودهانات','تصوير وفيديو','نقل وعفش','تنظيف','صيانة أجهزة','أخرى']
+};
+const ALL_CATS = ['الكل', 'دكاترة', ...CATS.shop, ...CATS.service];
+
+let me = null, profile = null, unsubs = [];
+let approved = [], myBiz = [], pending = [];
+let mode = 'login', type = null, items = [], browseCat = 'الكل';
+
+function toast(msg) {
+  const t = $('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+function friendly(err) {
+  const c = err.code || '';
+  if (c.includes('email-already-in-use')) return 'الرقم ده متسجل قبل كده، سجّل دخول بدله';
+  if (c.includes('weak-password')) return 'كلمة المرور لازم 6 خانات على الأقل';
+  if (c.includes('invalid-credential') || c.includes('wrong-password') || c.includes('user-not-found')) return 'الرقم أو كلمة المرور غلط';
+  if (c.includes('invalid-email')) return 'رقم الموبايل غلط';
+  return 'حصل خطأ، جرّب تاني';
+}
+
+/* ---------- الدخول والتسجيل ---------- */
+function setMode(m) {
+  mode = m;
+  $('nameField').classList.toggle('hidden', m !== 'register');
+  $('authTitle').textContent = m === 'login' ? 'دخول' : 'حساب جديد';
+  $('authBtn').textContent = m === 'login' ? 'دخول' : 'إنشاء الحساب';
+  $('toggleAuth').textContent = m === 'login' ? 'ليس لديك حساب؟ سجّل الآن' : 'عندك حساب؟ ادخل من هنا';
+}
+$('toggleAuth').onclick = () => setMode(mode === 'login' ? 'register' : 'login');
+
+$('authForm').onsubmit = async e => {
+  e.preventDefault();
+  const phone = $('phone').value.replace(/\D/g, '');
+  const pass = $('password').value;
+  if (!PHONE_RE.test(phone)) return toast('اكتب رقم موبايل مصري صحيح');
+  if (pass.length < 6) return toast('كلمة المرور 6 خانات على الأقل');
+  $('authBtn').disabled = true;
+  try {
+    if (mode === 'register') {
+      const name = $('name').value.trim();
+      if (!name) { $('authBtn').disabled = false; return toast('اكتب اسمك'); }
+      const cred = await createUserWithEmailAndPassword(auth, emailOf(phone), pass);
+      await setDoc(doc(db, 'users', cred.user.uid), { name, phone, role: 'user', createdAt: serverTimestamp() });
+    } else {
+      await signInWithEmailAndPassword(auth, emailOf(phone), pass);
+    }
+  } catch (err) { toast(friendly(err)); }
+  $('authBtn').disabled = false;
+};
+
+$('logoutBtn').onclick = () => signOut(auth);
+
+onAuthStateChanged(auth, async user => {
+  unsubs.forEach(u => u()); unsubs = [];
+  if (!user) { $('appView').classList.add('hidden'); $('authView').classList.remove('hidden'); setMode('login'); return; }
+  me = user;
+  const snap = await getDoc(doc(db, 'users', user.uid));
+  profile = snap.exists() ? { uid: user.uid, ...snap.data() } : { uid: user.uid, name: 'مستخدم', role: 'user' };
+  $('authView').classList.add('hidden');
+  $('appView').classList.remove('hidden');
+  $('adminTab').classList.toggle('hidden', profile.role !== 'admin');
+  startListeners();
+  buildCats();
+  buildTypeChips();
+  buildHours();
+  switchTab('browse');
+});
+
+/* ---------- البيانات الحية ---------- */
+function startListeners() {
+  unsubs.push(onSnapshot(query(collection(db, 'businesses'), where('status', '==', 'approved')), snap => {
+    approved = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderBrowse();
+  }, () => toast('تعذر تحميل الأنشطة، راجع قواعد Firestore')));
+
+  unsubs.push(onSnapshot(query(collection(db, 'businesses'), where('ownerId', '==', me.uid)), snap => {
+    myBiz = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderMine();
+  }));
+
+  if (profile.role === 'admin') {
+    unsubs.push(onSnapshot(query(collection(db, 'businesses'), where('status', '==', 'pending')), snap => {
+      pending = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderAdmin();
+    }));
+  }
+}
+
+/* ---------- التصفح ---------- */
+function buildCats() {
+  $('catChips').innerHTML = ALL_CATS.map(c =>
+    `<button class="chip ${c === browseCat ? 'on' : ''}" data-cat="${esc(c)}">${esc(c)}</button>`).join('');
+}
+$('catChips').onclick = e => {
+  const b = e.target.closest('[data-cat]'); if (!b) return;
+  browseCat = b.dataset.cat; buildCats(); renderBrowse();
+};
+
+function matchesCat(b) {
+  if (browseCat === 'الكل') return true;
+  if (browseCat === 'دكاترة') return b.type === 'doctor';
+  return b.category === browseCat;
+}
+
+function renderBrowse() {
+  const list = approved.filter(matchesCat);
+  $('browseList').innerHTML = list.length ? list.map(b => `
+    <div class="card">
+      <h3>${esc(b.name)}</h3>
+      <p class="muted">${b.type === 'doctor' ? '🩺 ' + esc(b.specialty) : esc(b.category)}</p>
+      ${b.desc ? `<p class="muted">${esc(b.desc)}</p>` : ''}
+      <p class="muted">📍 ${esc(b.address)}${b.landmark ? ' · ' + esc(b.landmark) : ''}</p>
+      ${b.price ? `<p class="muted">💰 الكشف: ${esc(b.price)} جنيه</p>` : ''}
+      ${b.lat ? `<a class="link" target="_blank" href="https://www.google.com/maps?q=${b.lat},${b.lng}">فتح في الخريطة</a>` : ''}
+    </div>`).join('') : '<div class="empty">لا توجد أنشطة هنا لسه</div>';
+}
+
+/* ---------- إضافة نشاط ---------- */
+function buildTypeChips() {
+  $('typeChips').innerHTML = Object.entries(TYPES).map(([k, v]) =>
+    `<button type="button" class="chip ${type === k ? 'on' : ''}" data-type="${k}">${v.label}</button>`).join('');
+}
+$('typeChips').onclick = e => {
+  const b = e.target.closest('[data-type]'); if (!b) return;
+  type = b.dataset.type;
+  buildTypeChips();
+  applyType();
+};
+
+function applyType() {
+  $('typeFields').classList.remove('hidden');
+  $('nameLbl').textContent = TYPES[type].nameLbl;
+  const isDoc = type === 'doctor';
+  $('specField').classList.toggle('hidden', !isDoc);
+  $('regField').classList.toggle('hidden', !isDoc);
+  $('priceField').classList.toggle('hidden', !isDoc);
+  $('catField').classList.toggle('hidden', isDoc);
+  $('bookingBox').classList.toggle('hidden', !isDoc);
+  if (isDoc) $('bSpec').innerHTML = '<option value="">اختار التخصص</option>' + SPECS.map(s => `<option>${s}</option>`).join('');
+  else $('bCat').innerHTML = '<option value="">اختار التصنيف</option>' + CATS[type].map(s => `<option>${s}</option>`).join('');
+}
+
+function buildHours() {
+  $('hoursBox').innerHTML = DAYS.map((d, i) => `
+    <div class="day">
+      <span style="font-weight:600">${d}</span>
+      <div style="display:flex;gap:6px;align-items:center">
+        <button type="button" class="tog ${i !== 6 ? 'on' : ''}" data-day="${i}"></button>
+        <input type="time" id="from${i}" value="09:00">
+        <span>-</span>
+        <input type="time" id="to${i}" value="17:00">
+      </div>
+    </div>`).join('');
+}
+$('hoursBox').onclick = e => {
+  const t = e.target.closest('[data-day]'); if (t) t.classList.toggle('on');
+};
+
+function collectHours() {
+  return DAYS.map((d, i) => ({
+    day: d,
+    open: document.querySelector(`[data-day="${i}"]`).classList.contains('on'),
+    from: $('from' + i).value,
+    to: $('to' + i).value
+  }));
+}
+
+$('addItemBtn').onclick = () => {
+  const n = $('itemName').value.trim();
+  const p = $('itemPrice').value.trim();
+  if (!n) return toast('اكتب اسم العنصر');
+  if (items.length >= 10) return toast('الحد الأقصى 10 عناصر');
+  items.push({ name: n, price: p });
+  $('itemName').value = ''; $('itemPrice').value = '';
+  renderItems();
+};
+function renderItems() {
+  $('itemsBox').innerHTML = items.map((it, i) => `
+    <div class="card" style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;margin-bottom:6px">
+      <span>${esc(it.name)} ${it.price ? '· ' + esc(it.price) + ' ج' : ''}</span>
+      <button type="button" class="btn danger small" data-rm="${i}">حذف</button>
+    </div>`).join('');
+}
+$('itemsBox').onclick = e => {
+  const b = e.target.closest('[data-rm]'); if (!b) return;
+  items.splice(Number(b.dataset.rm), 1); renderItems();
+};
+
+$('geoBtn').onclick = () => {
+  if (!navigator.geolocation) return toast('الموقع مش متاح على الجهاز ده');
+  $('geoStatus').textContent = 'بنحدد موقعك...';
+  navigator.geolocation.getCurrentPosition(p => {
+    const lat = p.coords.latitude, lng = p.coords.longitude;
+    $('bLat').value = lat; $('bLng').value = lng;
+    const inside = lat >= 30.42 && lat <= 30.50 && lng >= 30.88 && lng <= 30.98;
+    $('geoStatus').textContent = inside ? '✓ الموقع جوه منوف' : '⚠️ الموقع بره حدود منوف، تأكد منه';
+  }, () => { $('geoStatus').textContent = 'ما قدرناش نحدد الموقع، اكتب العنوان بالتفصيل'; }, { enableHighAccuracy: true, timeout: 10000 });
+};
+
+$('bizForm').onsubmit = async e => {
+  e.preventDefault();
+  if (!type) return toast('اختار نوع النشاط الأول');
+  const isDoc = type === 'doctor';
+  const name = $('bName').value.trim();
+  if (!name) return toast('اكتب الاسم');
+  if (isDoc && !$('bSpec').value) return toast('اختار التخصص');
+  if (isDoc && $('bReg').value.trim().length < 3) return toast('اكتب رقم القيد في النقابة');
+  if (!isDoc && !$('bCat').value) return toast('اختار التصنيف');
+  const hours = collectHours();
+  if (!hours.some(h => h.open)) return toast('لازم يكون فيه يوم مفتوح');
+  if (hours.some(h => h.open && h.from >= h.to)) return toast('وقت الانتهاء لازم يكون بعد البداية');
+
+  $('saveBizBtn').disabled = true;
+  try {
+    await addDoc(collection(db, 'businesses'), {
+      ownerId: me.uid,
+      ownerName: profile.name,
+      ownerPhone: profile.phone,
+      type,
+      name,
+      specialty: isDoc ? $('bSpec').value : null,
+      category: isDoc ? 'دكاترة' : $('bCat').value,
+      regNo: isDoc ? $('bReg').value.trim() : null,
+      price: isDoc ? $('bPrice').value.trim() : null,
+      booking: isDoc ? $('bBooking').value : null,
+      desc: $('bDesc').value.trim(),
+      address: $('bAddr').value.trim(),
+      landmark: null,
+      lat: $('bLat').value ? Number($('bLat').value) : null,
+      lng: $('bLng').value ? Number($('bLng').value) : null,
+      hours,
+      items,
+      status: 'pending',
+      createdAt: serverTimestamp()
+    });
+    e.target.reset();
+    items = []; renderItems();
+    type = null; buildTypeChips();
+    $('typeFields').classList.add('hidden');
+    buildHours();
+    $('geoStatus').textContent = '';
+    toast('تم الإرسال، النشاط في انتظار موافقة الإدارة ✅');
+    switchTab('mine');
+  } catch (err) {
+    toast('حصل خطأ في الحفظ، جرّب تاني');
+  }
+  $('saveBizBtn').disabled = false;
+};
+
+/* ---------- أنشطتي والإدارة ---------- */
+const badge = s => `<span class="badge ${s}">${{pending:'قيد المراجعة',approved:'منشور',rejected:'مرفوض'}[s]}</span>`;
+
+function renderMine() {
+  $('mineList').innerHTML = myBiz.length ? myBiz.map(b => `
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+        <h3>${esc(b.name)}</h3>${badge(b.status)}
+      </div>
+      <p class="muted">${esc(b.category)}</p>
+    </div>`).join('') : '<div class="empty">لسه ماضفتش نشاط. اضغط "أضف نشاط".</div>';
+}
+
+function renderAdmin() {
+  $('adminList').innerHTML = pending.length ? pending.map(b => `
+    <div class="card">
+      <h3>${esc(b.name)}</h3>
+      <p class="muted">${b.type === 'doctor' ? 'دكتور · ' + esc(b.specialty) + ' · قيد ' + esc(b.regNo) : esc(b.category)}</p>
+      <p class="muted">👤 ${esc(b.ownerName)} · 📞 ${esc(b.ownerPhone)}</p>
+      <p class="muted">📍 ${esc(b.address)}</p>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="btn small" data-approve="${b.id}">موافقة ✅</button>
+        <button class="btn danger small" data-reject="${b.id}">رفض</button>
+      </div>
+    </div>`).join('') : '<div class="empty">مفيش أنشطة في انتظار المراجعة</div>';
+}
+$('adminList').onclick = async e => {
+  const a = e.target.closest('[data-approve]');
+  const r = e.target.closest('[data-reject]');
+  if (a) await updateDoc(doc(db, 'businesses', a.dataset.approve), { status: 'approved' });
+  if (r) await updateDoc(doc(db, 'businesses', r.dataset.reject), { status: 'rejected' });
+  if (a || r) toast(a ? 'تمت الموافقة ✅' : 'تم الرفض');
+};
+
+/* ---------- التنقل ---------- */
+function switchTab(name) {
+  ['browse','add','mine','admin'].forEach(t => $('tab-' + t).classList.toggle('hidden', t !== name));
+  document.querySelectorAll('.nav button').forEach(b => b.classList.toggle('on', b.dataset.tab === name));
+  window.scrollTo(0, 0);
+}
+document.querySelector('.nav').onclick = e => {
+  const b = e.target.closest('[data-tab]'); if (b) switchTab(b.dataset.tab);
+};
+</script>
+</body>
+</html>
