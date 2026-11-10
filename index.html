@@ -31,8 +31,9 @@ header img{height:42px;border-radius:12px}
 .hb.alert{border-color:rgba(239,68,68,.3);color:#f87171;background:rgba(239,68,68,.08)}
 .tools{display:flex;gap:7px;overflow-x:auto;padding:2px 2px 10px;scrollbar-width:none}
 .tools::-webkit-scrollbar{display:none}
-.tool{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid var(--b);font-size:12.5px;font-weight:700;white-space:nowrap}
-.tool.active{background:rgba(255,196,0,.14);border-color:var(--bg2);color:var(--p)}
+.tool{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:12px;background:rgba(255,196,0,.12);border:1px solid rgba(255,196,0,.35);color:var(--p);font-size:12.5px;font-weight:700;white-space:nowrap}
+.tool.active{background:linear-gradient(135deg,#ffd000,#e5a700);border-color:transparent;color:#0d0e12;box-shadow:0 4px 14px rgba(255,196,0,.3)}
+#bellCount{background:#ef4444;color:#fff;border-radius:999px;padding:0 6px;font-size:11px;font-weight:800}
 .card{background:var(--card);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--b);border-radius:20px;padding:17px;margin-bottom:14px;box-shadow:0 8px 30px rgba(0,0,0,.35);position:relative;transition:transform .2s}
 .card:active{transform:scale(.99)}
 .ct{font-size:17.5px;font-weight:800;color:#fff}
@@ -70,7 +71,10 @@ textarea{min-height:85px;resize:vertical}
 .tg.on{background:var(--p)}
 .tg.on::after{transform:translateX(-20px);background:#0d0e12}
 #pickMap{height:270px;border-radius:16px;margin:10px 0;border:1px solid var(--bg2)}
-#browseMapBox{height:520px;border-radius:16px;margin-bottom:20px;border:1px solid var(--bg2)}
+#browseMapBox{position:relative;z-index:1;isolation:isolate;height:520px;border-radius:16px;margin-bottom:20px;border:1px solid var(--bg2);background:#e5e7eb}
+.leaflet-container{background:#e5e7eb}
+.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#fff;color:#111}
+.leaflet-popup-content{color:#111}
 .lr{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border:1px solid var(--b);border-radius:12px;margin-bottom:6px;background:rgba(255,255,255,.03);font-size:14px}
 .fav{position:absolute;top:16px;left:16px;width:34px;height:34px;border-radius:50%;border:1px solid var(--b);background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:16px}
 .nav{position:fixed;bottom:14px;left:14px;right:14px;max-width:500px;margin:0 auto;z-index:35;display:flex;justify-content:space-around;padding:8px 10px;background:rgba(18,20,27,.92);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid rgba(255,255,255,.1);border-radius:24px;box-shadow:0 12px 35px rgba(0,0,0,.55)}
@@ -83,21 +87,15 @@ textarea{min-height:85px;resize:vertical}
 .sheet{background:#13151c;border:1px solid rgba(255,255,255,.12);width:100%;max-width:520px;border-radius:28px 28px 0 0;padding:22px 20px 30px;max-height:88vh;overflow-y:auto;animation:up .3s ease}
 .empty{text-align:center;color:var(--m);padding:45px 16px;font-weight:700}
 .edit{background:rgba(255,196,0,.12);border:1px solid var(--bg2);color:var(--p);padding:12px 14px;border-radius:14px;font-size:13.5px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
-#browseMapBox{position:relative;z-index:1;isolation:isolate;background:#e5e7eb}
-.leaflet-container{background:#e5e7eb}
-.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#fff;color:#111}
-.leaflet-popup-content{color:#111}
-.tool{
-  background:rgba(255,196,0,.12);
-  border:1px solid rgba(255,196,0,.35);
-  color:var(--p);
-}
-.tool.active{
-  background:linear-gradient(135deg,#ffd000,#e5a700);
-  border-color:transparent;
-  color:#0d0e12;
-  box-shadow:0 4px 14px rgba(255,196,0,.3);
-       }
+.rt{color:var(--p);font-size:12.5px;font-weight:700;margin-top:4px}
+.nitem{border:1px solid var(--b);border-radius:14px;padding:12px;margin-bottom:8px;background:rgba(255,255,255,.03)}
+.nitem.unread{border-color:var(--bg2)}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stat{border:1px solid var(--b);border-radius:14px;padding:12px;background:rgba(255,255,255,.03)}
+.stat b{display:block;font-size:19px;color:var(--p)}
+.stars{color:var(--p);font-size:17px;letter-spacing:2px}
+.star-pick button{font-size:28px;color:#3f3f46;margin-left:4px}
+.star-pick button.on{color:var(--p)}
 </style>
 <script>
 let dp=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;});
@@ -147,6 +145,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
     <div id="tab-browse">
       <div class="field"><input id="searchInput" placeholder="ابحث بالاسم أو التخصص أو العنوان..."></div>
       <div class="tools">
+        <button class="tool" id="bellBtn">🔔 الإشعارات <span id="bellCount" class="hidden"></span></button>
         <button class="tool" id="fOpen">🟢 مفتوح الآن</button>
         <button class="tool" id="fNear">📍 الأقرب لمكاني</button>
         <button class="tool" id="fMap">🗺️ الخريطة</button>
@@ -206,6 +205,13 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
 
     <div id="tab-admin" class="hidden">
       <div class="ct" style="margin-bottom:12px;color:var(--p)">لوحة الإدارة 🛡️</div>
+      <div id="adminStats"></div>
+      <div class="card">
+        <div class="ct" style="margin-bottom:10px">📢 إرسال إعلان للمستخدمين</div>
+        <div class="field"><input id="annTitle" placeholder="عنوان الإعلان"></div>
+        <div class="field"><textarea id="annBody" placeholder="نص الإعلان"></textarea></div>
+        <button class="btn" id="annSend" type="button">نشر الإعلان</button>
+      </div>
       <div class="chips" id="adminChips">
         <button type="button" class="chip on" data-f="pending">⏳ قيد المراجعة (<span id="cP">0</span>)</button>
         <button type="button" class="chip" data-f="approved">✅ المنشورة (<span id="cA">0</span>)</button>
@@ -241,7 +247,19 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
     <div id="mItemsBox" class="hidden" style="margin-bottom:14px"><div style="color:var(--p);font-weight:700;margin-bottom:6px">الخدمات والأسعار</div><div id="mItems"></div></div>
     <div style="color:var(--p);font-weight:700;margin-bottom:6px">مواعيد العمل</div>
     <div id="mHours" style="margin-bottom:6px"></div>
+    <div id="mRatings" style="margin-top:14px"></div>
     <div id="mActs" class="acts"></div>
+  </div>
+</div>
+
+<!-- الإشعارات -->
+<div id="notifModal" class="modal hidden">
+  <div class="sheet">
+    <div class="row" style="margin-bottom:12px">
+      <h3 class="ct">🔔 الإشعارات والإعلانات</h3>
+      <button id="closeNotif" style="font-size:26px;color:var(--m)">&times;</button>
+    </div>
+    <div id="notifList"></div>
   </div>
 </div>
 
@@ -267,7 +285,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, deleteDoc, collection, addDoc, query, where, onSnapshot, updateDoc, serverTimestamp, deleteField } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, deleteDoc, collection, addDoc, query, where, onSnapshot, updateDoc, serverTimestamp, deleteField, getAggregateFromServer, count } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const app = initializeApp(window.FIREBASE_CONFIG);
 const auth = getAuth(app);
@@ -276,7 +294,9 @@ const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const PHONE_RE = /^01[0125]\d{8}$/;
 const emailOf = p => p + '@menouf.app';
-const ADMIN_PHONE = '01002480665'; // ← حط رقم واتساب الإدارة هنا
+const ADMIN_PHONE = '01002480665';
+const tsMs = x => x?.toMillis?.() ?? 0;
+const fd = ms => ms ? new Date(ms).toLocaleString('ar-EG') : '';
 
 const DAYS = ['السبت','الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة'];
 const TYPES = {
@@ -293,11 +313,13 @@ const ALL_CATS = ['الكل','❤️ المفضلة','دكاترة', ...CATS.sho
 const CENTER = [30.46, 30.93];
 
 let me = null, profile = null, unsubs = [];
-let approved = [], myBiz = [], allBiz = [], reports = [];
-let type = null, items = [], browseCat = 'الكل', q = '', editId = null, adminFilter = 'pending';
+let approved = [], myBiz = [], allBiz = [], reports = [], reviews = [], notifs = [], announces = [];
+let userCount = null, type = null, items = [], browseCat = 'الكل', q = '', editId = null, adminFilter = 'pending';
 let map = null, marker = null, bMap = null, bMarkers = [], curBiz = null;
 let userPos = null, onlyOpen = false, nearMe = false, mapView = false;
 let favs = JSON.parse(localStorage.getItem('menouf_favs') || '[]');
+let lastAnnSeen = Number(localStorage.getItem('menouf_ann_seen') || 0);
+let mode = 'login';
 
 function toast(msg) {
   const t = $('toast'); t.textContent = msg; t.classList.add('show');
@@ -330,6 +352,10 @@ function badge(s) {
   const [t, c] = m[s] || [s, ''];
   return `<span class="badge ${c}">${t}</span>`;
 }
+const ratingOf = id => {
+  const list = reviews.filter(r => r.bizId === id);
+  return { n: list.length, avg: list.length ? list.reduce((s, r) => s + r.rating, 0) / list.length : 0 };
+};
 
 /* ---------- طوارئ ومشاركة ---------- */
 $('emergencyBtn').onclick = () => $('emergencyModal').classList.remove('hidden');
@@ -344,7 +370,6 @@ $('mShare').onclick = async () => {
 };
 
 /* ---------- الدخول ---------- */
-let mode = 'login';
 function setMode(m) {
   mode = m;
   $('nameField').classList.toggle('hidden', m !== 'register');
@@ -389,10 +414,60 @@ function listen() {
   unsubs.push(onSnapshot(query(collection(db, 'businesses'), where('ownerId', '==', me.uid)), s => {
     myBiz = s.docs.map(d => ({ id: d.id, ...d.data() })); renderMine();
   }));
+  unsubs.push(onSnapshot(query(collection(db, 'notifications'), where('userId', '==', me.uid)), s => {
+    notifs = s.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => tsMs(b.createdAt) - tsMs(a.createdAt));
+    updateBell();
+  }));
+  unsubs.push(onSnapshot(collection(db, 'announcements'), s => {
+    const newList = s.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => tsMs(b.createdAt) - tsMs(a.createdAt));
+    if (announces.length && newList.length && tsMs(newList[0].createdAt) > tsMs(announces[0].createdAt)) toast('📢 ' + newList[0].title);
+    announces = newList; updateBell();
+  }));
+  unsubs.push(onSnapshot(collection(db, 'reviews'), s => {
+    reviews = s.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderBrowse(); renderAdminStats();
+    if (curBiz && !$('bizModal').classList.contains('hidden')) renderRatings(curBiz);
+  }));
   if (profile.role === 'admin') {
     unsubs.push(onSnapshot(collection(db, 'businesses'), s => { allBiz = s.docs.map(d => ({ id: d.id, ...d.data() })); renderAdmin(); }));
     unsubs.push(onSnapshot(collection(db, 'reports'), s => { reports = s.docs.map(d => ({ id: d.id, ...d.data() })); renderAdmin(); }));
+    loadUserCount();
+    setInterval(loadUserCount, 120000);
   }
+}
+
+/* ---------- الإشعارات ---------- */
+function updateBell() {
+  const n = notifs.filter(x => !x.read).length + announces.filter(a => tsMs(a.createdAt) > lastAnnSeen).length;
+  $('bellCount').textContent = n;
+  $('bellCount').classList.toggle('hidden', !n);
+}
+function renderNotifs() {
+  const a = announces.map(x => `<div class="nitem unread"><span class="badge p">📢 إعلان من الإدارة</span>
+    <h4 class="ct" style="font-size:15px;margin:8px 0 2px">${esc(x.title)}</h4>
+    <p class="muted">${esc(x.body)}</p><span class="muted" style="font-size:11px">${fd(tsMs(x.createdAt))}</span></div>`).join('');
+  const n = notifs.map(x => `<div class="nitem ${x.read ? '' : 'unread'}">
+    <h4 class="ct" style="font-size:15px">${esc(x.title)}</h4>
+    <p class="muted">${esc(x.body)}</p><span class="muted" style="font-size:11px">${fd(tsMs(x.createdAt))}</span></div>`).join('');
+  $('notifList').innerHTML = (a + n) || '<div class="empty">لا توجد إشعارات حالياً</div>';
+}
+$('bellBtn').onclick = () => {
+  renderNotifs();
+  $('notifModal').classList.remove('hidden');
+  lastAnnSeen = Date.now();
+  localStorage.setItem('menouf_ann_seen', lastAnnSeen);
+  notifs.filter(x => !x.read).forEach(x => updateDoc(doc(db, 'notifications', x.id), { read: true }).catch(() => {}));
+  updateBell();
+};
+$('closeNotif').onclick = () => $('notifModal').classList.add('hidden');
+$('notifModal').onclick = e => { if (e.target.id === 'notifModal') $('notifModal').classList.add('hidden'); };
+
+async function notifyOwner(bizId, title, body) {
+  const b = allBiz.find(x => x.id === bizId);
+  if (!b || !b.ownerId) return;
+  try {
+    await addDoc(collection(db, 'notifications'), { userId: b.ownerId, title, body: `${b.name}: ${body}`, read: false, createdAt: serverTimestamp() });
+  } catch (e) {}
 }
 
 /* ---------- التصفح ---------- */
@@ -401,7 +476,6 @@ function buildCats() {
 }
 $('catChips').onclick = e => { const b = e.target.closest('[data-cat]'); if (b) { browseCat = b.dataset.cat; buildCats(); renderBrowse(); } };
 $('searchInput').oninput = e => { q = e.target.value.trim().toLowerCase(); renderBrowse(); };
-
 $('fOpen').onclick = () => { onlyOpen = !onlyOpen; $('fOpen').classList.toggle('active', onlyOpen); renderBrowse(); };
 $('fNear').onclick = () => {
   if (nearMe) { nearMe = false; $('fNear').classList.remove('active'); return renderBrowse(); }
@@ -435,6 +509,7 @@ function renderBrowse() {
   if (mapView) renderMap();
   $('browseList').innerHTML = list.length ? list.map(b => {
     const open = isOpen(b.hours), ph = b.phone || b.ownerPhone || '', fav = favs.includes(b.id);
+    const rt = ratingOf(b.id);
     return `<div class="card" data-open="${b.id}" style="cursor:pointer">
       <button class="fav" data-fav="${b.id}">${fav ? '❤️' : '🤍'}</button>
       <div class="row" style="padding-left:36px">
@@ -451,6 +526,7 @@ function renderBrowse() {
       ${b.desc ? `<p class="muted">${esc(b.desc)}</p>` : ''}
       <p class="muted">📍 ${esc(b.address)}${b.landmark ? ' (بجوار ' + esc(b.landmark) + ')' : ''}</p>
       ${b.km != null ? `<p style="color:var(--p);font-size:12px;font-weight:700">🚗 ${fmtDist(b.km)}</p>` : ''}
+      ${rt.n ? `<p class="rt">⭐ ${rt.avg.toFixed(1)} (${rt.n} تقييم)</p>` : ''}
       ${ph ? `<div class="acts">
         <a class="btn sm" href="tel:${ph}" onclick="event.stopPropagation()">📞 اتصال</a>
         <a class="btn sm g" target="_blank" href="https://wa.me/2${ph}" onclick="event.stopPropagation()">💬 واتساب</a>
@@ -489,7 +565,7 @@ $('browseList').onclick = e => {
   if (b) openModal(b);
 };
 
-/* ---------- تفاصيل النشاط ---------- */
+/* ---------- تفاصيل النشاط والتقييمات ---------- */
 function openModal(b) {
   curBiz = b;
   const open = isOpen(b.hours), ph = b.phone || b.ownerPhone || '';
@@ -511,10 +587,52 @@ function openModal(b) {
     ${ph ? `<a class="btn" href="tel:${ph}">📞 اتصال</a><a class="btn g" target="_blank" href="https://wa.me/2${ph}">💬 واتساب</a>` : ''}
     ${b.lat ? `<a class="btn s" style="grid-column:span 2" target="_blank" href="https://www.google.com/maps?q=${b.lat},${b.lng}">📍 فتح في الخريطة</a>` : ''}
     <button class="btn s" data-report style="grid-column:span 2">⚠️ إبلاغ عن خطأ في البيانات</button>`;
+  renderRatings(b);
   $('bizModal').classList.remove('hidden');
 }
 $('closeModal').onclick = () => $('bizModal').classList.add('hidden');
 $('bizModal').onclick = e => { if (e.target.id === 'bizModal') $('bizModal').classList.add('hidden'); };
+
+function renderRatings(b) {
+  const list = reviews.filter(r => r.bizId === b.id);
+  const rt = ratingOf(b.id);
+  const mine = list.find(r => r.reviewerId === me.uid);
+  $('mRatings').dataset.bizId = b.id;
+  $('mRatings').dataset.picked = mine ? mine.rating : 0;
+  $('mRatings').innerHTML = `<div style="border:1px solid var(--b);border-radius:14px;padding:12px">
+    <div class="row"><strong>⭐ التقييمات</strong>
+      <span class="muted">${rt.n ? rt.avg.toFixed(1) + ' من 5 (' + rt.n + ')' : 'لا توجد تقييمات بعد'}</span></div>
+    ${list.slice(0, 5).map(r => `<div style="margin-top:8px">
+      <span class="stars">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</span>
+      ${r.text ? `<div class="muted">${esc(r.text)}</div>` : ''}</div>`).join('')}
+    ${b.ownerId === me.uid ? '<p class="muted" style="margin-top:8px">لا يمكنك تقييم نشاطك</p>' : `
+      <div class="star-pick" id="starPick" style="margin-top:10px">
+        ${[1,2,3,4,5].map(n => `<button type="button" data-star="${n}" class="${n <= (mine?.rating || 0) ? 'on' : ''}">★</button>`).join('')}
+      </div>
+      <input id="revText" placeholder="اكتب رأيك (اختياري)" value="${esc(mine?.text || '')}" style="margin-top:8px">
+      <button class="btn sm" id="revSave" style="margin-top:8px">${mine ? 'تعديل تقييمي' : 'إضافة تقييم'}</button>`}
+  </div>`;
+}
+
+$('mRatings').onclick = async e => {
+  const st = e.target.closest('[data-star]');
+  if (st) {
+    $('mRatings').dataset.picked = st.dataset.star;
+    document.querySelectorAll('#starPick button').forEach(x => x.classList.toggle('on', +x.dataset.star <= +st.dataset.star));
+    return;
+  }
+  if (e.target.closest('#revSave')) {
+    const rating = +$('mRatings').dataset.picked, bizId = $('mRatings').dataset.bizId;
+    if (!rating) return toast('اختار عدد النجوم');
+    try {
+      await setDoc(doc(db, 'reviews', bizId + '_' + me.uid), {
+        bizId, reviewerId: me.uid, reviewerName: profile.name, rating,
+        text: $('revText').value.trim().slice(0, 200), createdAt: serverTimestamp()
+      });
+      toast('تم حفظ تقييمك ⭐');
+    } catch (err) { toast('تعذر حفظ التقييم'); }
+  }
+};
 
 $('mActs').onclick = async e => {
   if (!e.target.closest('[data-report]')) return;
@@ -642,7 +760,8 @@ async function startEdit(b) {
   $('bLat').value = b.lat || ''; $('bLng').value = b.lng || '';
   (b.hours || []).forEach((h, i) => {
     document.querySelector(`[data-day="${i}"]`)?.classList.toggle('on', !!h.open);
-    if (h.from) $('f' + i).value = h.from; if (h.to) $('t' + i).value = h.to;
+    if (h.from) $('f' + i).value = h.from;
+    if (h.to) $('t' + i).value = h.to;
   });
   items = [...(b.items || [])]; renderItems();
   $('editNotice').classList.remove('hidden');
@@ -671,6 +790,7 @@ function renderMine() {
   $('mineList').innerHTML = myBiz.map(b => `<div class="card">
     <div class="row"><h3 class="ct">${esc(b.name)}</h3>${badge(b.status)}</div>
     <p class="muted" style="margin:6px 0">📍 ${esc(b.address)}</p>
+    ${b.status === 'rejected' && b.rejectReason ? `<p style="color:#f87171;font-size:13px;margin-bottom:6px">سبب الرفض: ${esc(b.rejectReason)}</p>` : ''}
     <div class="acts wr">
       <button class="btn sm s" data-edit="${b.id}">تعديل ✏️</button>
       <button class="btn sm d" data-del="${b.id}">حذف 🗑️</button>
@@ -687,10 +807,43 @@ $('mineList').onclick = async e => {
 };
 
 /* ---------- لوحة الإدارة ---------- */
+function renderAdminStats() {
+  const c = s => allBiz.filter(b => b.status === s).length;
+  const all = reviews.length ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1) : '—';
+  $('adminStats').innerHTML = `<div class="card"><div class="ct" style="margin-bottom:10px">📊 الإحصائيات</div>
+    <div class="stat-grid">
+      <div class="stat"><span class="muted">المستخدمين</span><b>${userCount ?? '…'}</b></div>
+      <div class="stat"><span class="muted">إجمالي طلبات الإضافة</span><b>${allBiz.length}</b></div>
+      <div class="stat"><span class="muted">منشورة</span><b>${c('approved')}</b></div>
+      <div class="stat"><span class="muted">قيد المراجعة</span><b>${c('pending')}</b></div>
+      <div class="stat"><span class="muted">مخفية</span><b>${c('hidden')}</b></div>
+      <div class="stat"><span class="muted">مرفوضة</span><b>${c('rejected')}</b></div>
+      <div class="stat"><span class="muted">البلاغات</span><b>${reports.length}</b></div>
+      <div class="stat"><span class="muted">التقييمات · المتوسط</span><b>${reviews.length} · ⭐${all}</b></div>
+    </div></div>`;
+}
+async function loadUserCount() {
+  try {
+    const r = await getAggregateFromServer(collection(db, 'users'), { n: count() });
+    userCount = r.data().n;
+    renderAdminStats();
+  } catch (e) {}
+}
+$('annSend').onclick = async () => {
+  const title = $('annTitle').value.trim(), body = $('annBody').value.trim();
+  if (!title || !body) return toast('اكتب العنوان والنص');
+  try {
+    await addDoc(collection(db, 'announcements'), { title, body, createdAt: serverTimestamp() });
+    $('annTitle').value = ''; $('annBody').value = '';
+    toast('تم نشر الإعلان للمستخدمين ✅');
+  } catch (e) { toast('تعذر نشر الإعلان'); }
+};
+
 function renderAdmin() {
   $('cP').textContent = allBiz.filter(b => b.status === 'pending').length;
   $('cA').textContent = allBiz.filter(b => b.status === 'approved').length;
   $('cH').textContent = allBiz.filter(b => b.status === 'hidden' || b.status === 'rejected').length;
+  renderAdminStats();
   const repHtml = reports.length
     ? `<div style="color:var(--p);font-weight:800;margin-bottom:10px">🚩 البلاغات (${reports.length})</div>` +
       reports.map(r => `<div class="card">
@@ -714,7 +867,7 @@ function renderAdmin() {
       <a class="btn sm g" target="_blank" href="https://wa.me/2${esc(b.phone || b.ownerPhone)}">💬 واتساب</a>
       ${b.type === 'doctor' ? `<button class="btn sm s" data-showreg="${b.id}">رقم القيد</button>` : ''}
       ${b.status === 'approved' ? `<button class="btn sm s" data-verify="${b.id}">${b.verified ? 'إلغاء التوثيق' : 'توثيق ✓'}</button>` : ''}
-      ${b.status !== 'approved' ? `<button class="btn sm" data-approve="${b.id}">اعتماد ✅</button>` : `<button class="btn sm s" data-hide="${b.id}">إخفاء ⏸️</button>`}
+      ${b.status !== 'approved' ? `<button class="btn sm" data-approve="${b.id}">اعتماد ✅</button><button class="btn sm d" data-reject="${b.id}">رفض ❌</button>` : `<button class="btn sm s" data-hide="${b.id}">إخفاء ⏸️</button>`}
       <button class="btn sm d" data-del="${b.id}">حذف 🗑️</button>
     </div></div>`).join('');
   $('adminList').innerHTML = repHtml + (cards || '<div class="empty">لا توجد أنشطة هنا</div>');
@@ -739,7 +892,18 @@ $('adminList').onclick = async e => {
       await updateDoc(doc(db, 'businesses', d.verify), { verified: !b.verified });
       toast(b.verified ? 'تم إلغاء التوثيق' : 'تم توثيق النشاط ✓');
     }
-    else if (d.approve) { await updateDoc(doc(db, 'businesses', d.approve), { status: 'approved' }); toast('تم النشر ✅'); }
+    else if (d.approve) {
+      await updateDoc(doc(db, 'businesses', d.approve), { status: 'approved' });
+      await notifyOwner(d.approve, '✅ تم اعتماد نشاطك', 'أصبح ظاهراً للناس في التطبيق');
+      toast('تم النشر وإرسال إشعار لصاحبه ✅');
+    }
+    else if (d.reject) {
+      const reason = prompt('سبب الرفض (هيوصل لصاحب النشاط):');
+      if (reason === null) return;
+      await updateDoc(doc(db, 'businesses', d.reject), { status: 'rejected', rejectReason: reason.trim() });
+      await notifyOwner(d.reject, '❌ تم رفض نشاطك', reason.trim() || 'راجع البيانات وأعد الإرسال');
+      toast('تم الرفض وإرسال إشعار لصاحبه');
+    }
     else if (d.hide) { await updateDoc(doc(db, 'businesses', d.hide), { status: 'hidden' }); toast('تم الإخفاء ⏸️'); }
     else if (d.del && confirm('حذف نهائي لهذا النشاط؟')) { await deleteDoc(doc(db, 'businesses', d.del)); toast('تم الحذف 🗑️'); }
   } catch (err) { toast('تعذر تنفيذ العملية'); }
