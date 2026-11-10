@@ -87,6 +87,17 @@ textarea{min-height:85px;resize:vertical}
 .leaflet-container{background:#e5e7eb}
 .leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#fff;color:#111}
 .leaflet-popup-content{color:#111}
+.tool{
+  background:rgba(255,196,0,.12);
+  border:1px solid rgba(255,196,0,.35);
+  color:var(--p);
+}
+.tool.active{
+  background:linear-gradient(135deg,#ffd000,#e5a700);
+  border-color:transparent;
+  color:#0d0e12;
+  box-shadow:0 4px 14px rgba(255,196,0,.3);
+       }
 </style>
 <script>
 let dp=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;});
