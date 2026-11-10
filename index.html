@@ -83,6 +83,10 @@ textarea{min-height:85px;resize:vertical}
 .sheet{background:#13151c;border:1px solid rgba(255,255,255,.12);width:100%;max-width:520px;border-radius:28px 28px 0 0;padding:22px 20px 30px;max-height:88vh;overflow-y:auto;animation:up .3s ease}
 .empty{text-align:center;color:var(--m);padding:45px 16px;font-weight:700}
 .edit{background:rgba(255,196,0,.12);border:1px solid var(--bg2);color:var(--p);padding:12px 14px;border-radius:14px;font-size:13.5px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
+#browseMapBox{position:relative;z-index:1;isolation:isolate;background:#e5e7eb}
+.leaflet-container{background:#e5e7eb}
+.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#fff;color:#111}
+.leaflet-popup-content{color:#111}
 </style>
 <script>
 let dp=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;});
