@@ -20,6 +20,8 @@
   --border: #E2E8F0;
   --danger: #EF4444;
   --danger-light: #FEE2E2;
+  --warning: #F59E0B;
+  --warning-light: #FEF3C7;
   --success: #10B981;
   --success-light: #D1FAE5;
   --radius-sm: 10px;
@@ -133,6 +135,7 @@ textarea { min-height: 80px; resize: vertical; }
 .btn.small { width: auto; padding: 7px 14px; font-size: 13px; border-radius: 999px; box-shadow: none; }
 .btn.danger { background: var(--danger); box-shadow: 0 2px 8px rgba(239,68,68,0.2); }
 .btn.danger:hover { background: #dc2626; }
+.btn.warning { background: var(--warning); color: #fff; box-shadow: 0 2px 8px rgba(245,158,11,0.25); }
 .btn.whatsapp { background: #25D366; color: #fff; box-shadow: 0 2px 8px rgba(37,211,102,0.25); }
 .btn.call { background: var(--primary); }
 .btn:disabled { opacity: 0.55; cursor: not-allowed; }
@@ -191,8 +194,9 @@ textarea { min-height: 80px; resize: vertical; }
   font-size: 12px;
   font-weight: 700;
 }
-.badge.pending { background: #FEF3C7; color: #B45309; }
+.badge.pending { background: var(--warning-light); color: #B45309; }
 .badge.approved { background: var(--success-light); color: var(--success); }
+.badge.hidden-status { background: #F1F5F9; color: #475569; }
 .badge.rejected { background: var(--danger-light); color: var(--danger); }
 .badge.open { background: var(--success-light); color: #047857; }
 .badge.closed { background: #F1F5F9; color: var(--text-muted); }
@@ -241,7 +245,7 @@ textarea { min-height: 80px; resize: vertical; }
 .toggle.on { background: var(--primary); }
 .toggle.on::after { transform: translateX(-20px); }
 
-/* القائمة السفلية (Navigation Bar) */
+/* القائمة السفلية */
 .nav-bar {
   position: fixed;
   bottom: 0;
@@ -301,7 +305,6 @@ textarea { min-height: 80px; resize: vertical; }
   align-items: flex-end;
   justify-content: center;
   z-index: 50;
-  transition: opacity 0.2s;
 }
 .modal-content {
   background: #fff;
@@ -315,18 +318,26 @@ textarea { min-height: 80px; resize: vertical; }
 }
 @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
-.empty-state {
-  text-align: center;
-  padding: 45px 20px;
-  color: var(--text-muted);
-}
+.empty-state { text-align: center; padding: 45px 20px; color: var(--text-muted); }
 .empty-state svg { width: 56px; height: 56px; margin-bottom: 12px; stroke: #CBD5E1; }
 .empty-state p { font-size: 15px; font-weight: 600; }
+
+.edit-alert {
+  background: var(--warning-light);
+  border: 1px solid var(--accent);
+  color: #92400E;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  margin-bottom: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 </style>
 </head>
 <body>
 
-<!-- إعدادات فايربيس -->
 <script>
 window.FIREBASE_CONFIG = {
   apiKey: "AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",
@@ -340,7 +351,7 @@ window.FIREBASE_CONFIG = {
 
 <div id="toast" class="toast"></div>
 
-<!-- نافذة تفاصيل النشاط (Modal) -->
+<!-- نافذة التفاصيل (Modal) -->
 <div id="bizModal" class="modal-backdrop hidden">
   <div class="modal-content">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
@@ -400,7 +411,7 @@ window.FIREBASE_CONFIG = {
   </div>
 </section>
 
-<!-- التطبيق الأساسي -->
+<!-- التطبيق الرئيسي -->
 <section id="appView" class="hidden">
   <header>
     <h1><span>📍</span> منوف في جيبك</h1>
@@ -418,11 +429,16 @@ window.FIREBASE_CONFIG = {
       <div id="browseList"></div>
     </div>
 
-    <!-- تبويب إضافة نشاط -->
+    <!-- تبويب إضافة / تعديل نشاط -->
     <div id="tab-add" class="hidden">
+      <div id="editNotice" class="edit-alert hidden">
+        <span>⚠️ أنت الآن في وضع تعديل النشاط. عند الحفظ سيعود للمراجعة.</span>
+        <button type="button" id="cancelEditBtn" style="font-weight:800;color:var(--danger)">إلغاء ✖</button>
+      </div>
+
       <form id="bizForm">
         <div class="card">
-          <div class="card-title" style="margin-bottom:10px">اختار نوع النشاط</div>
+          <div class="card-title" style="margin-bottom:10px" id="formHeaderTitle">اختار نوع النشاط</div>
           <div class="chips" id="typeChips" style="margin-bottom:0"></div>
         </div>
 
@@ -463,7 +479,7 @@ window.FIREBASE_CONFIG = {
           </div>
 
           <button class="btn" type="submit" id="saveBizBtn" style="padding:15px">إرسال النشاط للمراجعة</button>
-          <p style="text-align:center;font-size:12.5px;color:var(--text-muted);margin-top:10px">يتم نشر النشاط مباشرة بعد مراجعته من الإدارة للحفاظ على المصداقية.</p>
+          <p id="saveHint" style="text-align:center;font-size:12.5px;color:var(--text-muted);margin-top:10px">يتم نشر النشاط مباشرة بعد مراجعته من الإدارة للحفاظ على المصداقية.</p>
         </div>
       </form>
     </div>
@@ -475,20 +491,30 @@ window.FIREBASE_CONFIG = {
 
     <!-- تبويب الإدارة -->
     <div id="tab-admin" class="hidden">
-      <h3 style="font-size:17px;font-weight:800;margin-bottom:12px">طلبات تنتظر الموافقة 🛡️</h3>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <h3 style="font-size:18px;font-weight:800">لوحة تحكم الإدارة 🛡️</h3>
+      </div>
+
+      <!-- فلاتر الأدمن -->
+      <div class="chips" id="adminStatusChips">
+        <button type="button" class="chip on" data-admin-filter="pending">⏳ قيد المراجعة (<span id="countPending">0</span>)</button>
+        <button type="button" class="chip" data-admin-filter="approved">✅ المنشورة (<span id="countApproved">0</span>)</button>
+        <button type="button" class="chip" data-admin-filter="hidden">⏸️ المخفية / الموقوفة (<span id="countHidden">0</span>)</button>
+      </div>
+
       <div id="adminList"></div>
     </div>
   </div>
 
-  <!-- الشريط السفلي للتنقل -->
+  <!-- الشريط السفلي -->
   <nav class="nav-bar">
     <button class="nav-btn on" data-tab="browse">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
       <span>تصفح</span>
     </button>
-    <button class="nav-btn" data-tab="add">
+    <button class="nav-btn" data-tab="add" id="navAddBtn">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
-      <span>أضف نشاط</span>
+      <span id="navAddLbl">أضف نشاط</span>
     </button>
     <button class="nav-btn" data-tab="mine">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
@@ -501,7 +527,6 @@ window.FIREBASE_CONFIG = {
   </nav>
 </section>
 
-<!-- المنطق البرمجي (Firebase) -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -530,8 +555,10 @@ const CATS = {
 const ALL_CATS = ['الكل', 'دكاترة', ...CATS.shop, ...CATS.service];
 
 let me = null, profile = null, unsubs = [];
-let approved = [], myBiz = [], pending = [];
+let approved = [], myBiz = [], allAdminBiz = [];
 let mode = 'login', type = null, items = [], browseCat = 'الكل', searchQuery = '';
+let editingBizId = null; // متغير لحفظ ID النشاط الجاري تعديله
+let adminFilter = 'pending'; // فلتر الإدارة
 
 function toast(msg) {
   const t = $('toast'); t.textContent = msg; t.classList.add('show');
@@ -546,11 +573,9 @@ function friendly(err) {
   return 'حدث خطأ: ' + (err.message || 'حاول مجدداً');
 }
 
-/* ---------- هل النشاط مفتوح الآن؟ ---------- */
 function isOpenNow(hours) {
   if (!hours || !Array.isArray(hours)) return false;
   const now = new Date();
-  // تحويل ترتيب أيام جافاسكريبت (الأحد 0) إلى ترتيب القائمة (السبت 0)
   const dayIndex = (now.getDay() + 1) % 7;
   const todaySchedule = hours[dayIndex];
   if (!todaySchedule || !todaySchedule.open) return false;
@@ -558,12 +583,10 @@ function isOpenNow(hours) {
   const currentMinutes = now.getHours() * 60 + now.getMinutes();
   const [fh, fm] = todaySchedule.from.split(':').map(Number);
   const [th, tm] = todaySchedule.to.split(':').map(Number);
-  const fromMin = fh * 60 + fm;
-  const toMin = th * 60 + tm;
-  return currentMinutes >= fromMin && currentMinutes <= toMin;
+  return currentMinutes >= (fh * 60 + fm) && currentMinutes <= (th * 60 + tm);
 }
 
-/* ---------- تسجيل الدخول ---------- */
+/* ---------- تسجيل الدخول والتسجيل ---------- */
 function setMode(m) {
   mode = m;
   $('nameField').classList.toggle('hidden', m !== 'register');
@@ -619,21 +642,24 @@ onAuthStateChanged(auth, async user => {
   switchTab('browse');
 });
 
-/* ---------- الاستماع للبيانات الحية ---------- */
+/* ---------- الاستماع لقاعدة البيانات ---------- */
 function startListeners() {
+  // للجمهور: المشاهدة فقط للأنشطة المعتمدة approved
   unsubs.push(onSnapshot(query(collection(db, 'businesses'), where('status', '==', 'approved')), snap => {
     approved = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     renderBrowse();
   }));
 
+  // لصاحب النشاط: أنشطته بكل حالاتها
   unsubs.push(onSnapshot(query(collection(db, 'businesses'), where('ownerId', '==', me.uid)), snap => {
     myBiz = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     renderMine();
   }));
 
+  // للأدمن: كافة الأنشطة
   if (profile.role === 'admin') {
-    unsubs.push(onSnapshot(query(collection(db, 'businesses'), where('status', '==', 'pending')), snap => {
-      pending = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    unsubs.push(onSnapshot(collection(db, 'businesses'), snap => {
+      allAdminBiz = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       renderAdmin();
     }));
   }
@@ -715,7 +741,7 @@ function renderBrowse() {
   }).join('');
 }
 
-/* ---------- عرض التفاصيل في المودال ---------- */
+/* ---------- نافذة التفاصيل ---------- */
 $('browseList').onclick = e => {
   const card = e.target.closest('[data-biz-id]');
   if (!card) return;
@@ -771,7 +797,7 @@ function openBizModal(b) {
 $('closeModalBtn').onclick = () => $('bizModal').classList.add('hidden');
 $('bizModal').onclick = e => { if (e.target === $('bizModal')) $('bizModal').classList.add('hidden'); };
 
-/* ---------- إضافة نشاط ---------- */
+/* ---------- إضافة وتعديل نشاط ---------- */
 function buildTypeChips() {
   $('typeChips').innerHTML = Object.entries(TYPES).map(([k, v]) =>
     `<button type="button" class="chip ${type === k ? 'on' : ''}" data-type="${k}">${v.label}</button>`).join('');
@@ -854,6 +880,7 @@ $('geoBtn').onclick = () => {
   }, { enableHighAccuracy: true, timeout: 10000 });
 };
 
+// حفظ البيانات (إضافة جديدة أو تعديل نشاط قائم)
 $('bizForm').onsubmit = async e => {
   e.preventDefault();
   if (!type) return toast('يرجى اختيار نوع النشاط أولاً');
@@ -869,47 +896,117 @@ $('bizForm').onsubmit = async e => {
   if (!hours.some(h => h.open)) return toast('يجب تفعيل يوم عمل واحد على الأقل');
 
   $('saveBizBtn').disabled = true;
-  $('saveBizBtn').textContent = 'جاري الحفظ والإرسال...';
-  try {
-    await addDoc(collection(db, 'businesses'), {
-      ownerId: me.uid,
-      ownerName: profile.name,
-      ownerPhone: profile.phone,
-      phone,
-      type,
-      name,
-      specialty: isDoc ? $('bSpec').value : null,
-      category: isDoc ? 'دكاترة' : $('bCat').value,
-      regNo: isDoc ? $('bReg').value.trim() : null,
-      price: isDoc ? $('bPrice').value.trim() : null,
-      desc: $('bDesc').value.trim(),
-      address: $('bAddr').value.trim(),
-      landmark: $('bLandmark').value.trim(),
-      lat: $('bLat').value ? Number($('bLat').value) : null,
-      lng: $('bLng').value ? Number($('bLng').value) : null,
-      hours,
-      items,
-      status: 'pending',
-      createdAt: serverTimestamp()
-    });
+  $('saveBizBtn').textContent = 'جاري الحفظ...';
 
-    e.target.reset();
-    items = []; renderItems();
-    type = null; buildTypeChips();
-    $('typeFields').classList.add('hidden');
-    buildHours();
-    $('geoStatus').textContent = '';
-    toast('تم إرسال نشاطك بنجاح وسيكون متاحاً بعد المراجعة');
+  const bizData = {
+    phone,
+    type,
+    name,
+    specialty: isDoc ? $('bSpec').value : null,
+    category: isDoc ? 'دكاترة' : $('bCat').value,
+    regNo: isDoc ? $('bReg').value.trim() : null,
+    price: isDoc ? $('bPrice').value.trim() : null,
+    desc: $('bDesc').value.trim(),
+    address: $('bAddr').value.trim(),
+    landmark: $('bLandmark').value.trim(),
+    lat: $('bLat').value ? Number($('bLat').value) : null,
+    lng: $('bLng').value ? Number($('bLng').value) : null,
+    hours,
+    items,
+    status: 'pending', // دائماً يعود لقيد المراجعة!
+    updatedAt: serverTimestamp()
+  };
+
+  try {
+    if (editingBizId) {
+      // تعديل نشاط موجود
+      await updateDoc(doc(db, 'businesses', editingBizId), bizData);
+      toast('تم حفظ التعديلات وإعادة النشاط للمراجعة بنجاح ✅');
+    } else {
+      // إضافة نشاط جديد لأول مرة
+      bizData.ownerId = me.uid;
+      bizData.ownerName = profile.name;
+      bizData.ownerPhone = profile.phone;
+      bizData.createdAt = serverTimestamp();
+      await addDoc(collection(db, 'businesses'), bizData);
+      toast('تم إرسال نشاطك بنجاح وسيكون متاحاً بعد المراجعة ✅');
+    }
+
+    cancelEditMode();
     switchTab('mine');
   } catch (err) {
-    toast('حدث خطأ أثناء الحفظ، يرجى مراجعة إعدادات فايربيس');
+    toast('حدث خطأ أثناء الحفظ، تحقق من الاتصال وقواعد Firestore');
   }
   $('saveBizBtn').disabled = false;
-  $('saveBizBtn').textContent = 'إرسال للمراجعة';
 };
 
+/* ---------- وضع التعديل (Edit Mode) ---------- */
+function startEditBiz(biz) {
+  editingBizId = biz.id;
+  type = biz.type;
+  buildTypeChips();
+  applyType();
+
+  $('bName').value = biz.name || '';
+  $('bPhone').value = biz.phone || biz.ownerPhone || '';
+  if (biz.type === 'doctor') {
+    $('bSpec').value = biz.specialty || '';
+    $('bReg').value = biz.regNo || '';
+    $('bPrice').value = biz.price || '';
+  } else {
+    $('bCat').value = biz.category || '';
+  }
+  $('bDesc').value = biz.desc || '';
+  $('bAddr').value = biz.address || '';
+  $('bLandmark').value = biz.landmark || '';
+  $('bLat').value = biz.lat || '';
+  $('bLng').value = biz.lng || '';
+
+  // الساعات
+  if (biz.hours && Array.isArray(biz.hours)) {
+    biz.hours.forEach((h, i) => {
+      const tog = document.querySelector(`[data-day="${i}"]`);
+      if (tog) tog.classList.toggle('on', !!h.open);
+      const f = $('from' + i), t = $('to' + i);
+      if (f && h.from) f.value = h.from;
+      if (t && h.to) t.value = h.to;
+    });
+  }
+
+  // الخدمات
+  items = Array.isArray(biz.items) ? [...biz.items] : [];
+  renderItems();
+
+  // تغيير مظهر الفورم
+  $('editNotice').classList.remove('hidden');
+  $('formHeaderTitle').textContent = 'تعديل نشاطك';
+  $('saveBizBtn').textContent = 'حفظ التعديلات (إرسال للمراجعة)';
+  $('saveHint').textContent = 'تنبيه: التعديل سيجعل النشاط قيد المراجعة حتى تعتمده الإدارة مجدداً.';
+  $('navAddLbl').textContent = 'تعديل نشاط';
+
+  switchTab('add');
+}
+
+function cancelEditMode() {
+  editingBizId = null;
+  $('bizForm').reset();
+  items = []; renderItems();
+  type = null; buildTypeChips();
+  $('typeFields').classList.add('hidden');
+  buildHours();
+  $('geoStatus').textContent = '';
+  $('editNotice').classList.add('hidden');
+  $('formHeaderTitle').textContent = 'اختار نوع النشاط';
+  $('saveBizBtn').textContent = 'إرسال النشاط للمراجعة';
+  $('saveHint').textContent = 'يتم نشر النشاط مباشرة بعد مراجعته من الإدارة للحفاظ على المصداقية.';
+  $('navAddLbl').textContent = 'أضف نشاط';
+}
+$('cancelEditBtn').onclick = () => { cancelEditMode(); switchTab('mine'); };
+
 /* ---------- أنشطتي وحذف النشاط ---------- */
-const badgeHtml = s => `<span class="badge ${s}">${{pending:'⏳ قيد المراجعة',approved:'✅ معتمد ومنشور',rejected:'❌ مرفوض'}[s]}</span>`;
+const badgeHtml = s => `<span class="badge ${s === 'hidden' ? 'hidden-status' : s}">
+  ${{pending:'⏳ قيد المراجعة',approved:'✅ معتمد ومنشور',hidden:'⏸️ مخفي وموقوف',rejected:'❌ مرفوض'}[s] || s}
+</span>`;
 
 function renderMine() {
   if (!myBiz.length) {
@@ -917,7 +1014,7 @@ function renderMine() {
       <div class="empty-state">
         <svg fill="none" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
         <p>لم تقم بإضافة أي نشاط بعد</p>
-        <button class="btn small" style="margin-top:14px" onclick="switchTab('add')">أضف نشاطك الأول</button>
+        <button class="btn small" style="margin-top:14px" onclick="cancelEditMode(); switchTab('add')">أضف نشاطك الأول</button>
       </div>`;
     return;
   }
@@ -929,56 +1026,114 @@ function renderMine() {
         ${badgeHtml(b.status)}
       </div>
       <p style="font-size:13.5px;color:var(--text-muted);margin-bottom:8px">📍 ${esc(b.address)}</p>
-      <div style="display:flex;justify-content:flex-end;margin-top:10px">
-        <button class="btn danger small" data-del-biz="${b.id}">حذف هذا النشاط 🗑️</button>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px;border-top:1px dashed var(--border);padding-top:10px">
+        <button class="btn sec small" data-edit-biz="${b.id}">تعديل ✏️</button>
+        <button class="btn danger small" data-del-biz="${b.id}">حذف 🗑️</button>
       </div>
     </div>`).join('');
 }
 
 $('mineList').onclick = async e => {
-  const btn = e.target.closest('[data-del-biz]');
-  if (!btn) return;
-  if (!confirm('هل أنت متأكد من رغبتك في حذف هذا النشاط نهائياً؟')) return;
-  try {
-    await deleteDoc(doc(db, 'businesses', btn.dataset.delBiz));
-    toast('تم حذف النشاط');
-  } catch (err) { toast('تعذر الحذف'); }
-};
-
-/* ---------- تبويب الإدارة ---------- */
-function renderAdmin() {
-  if (!pending.length) {
-    $('adminList').innerHTML = `<div class="empty-state"><p>لا توجد طلبات معلقة بانتظار المراجعة 👍</p></div>`;
+  const editBtn = e.target.closest('[data-edit-biz]');
+  if (editBtn) {
+    const b = myBiz.find(x => x.id === editBtn.dataset.editBiz);
+    if (b) startEditBiz(b);
     return;
   }
-  $('adminList').innerHTML = pending.map(b => `
+
+  const delBtn = e.target.closest('[data-del-biz]');
+  if (delBtn) {
+    if (!confirm('هل أنت متأكد من رغبتك في حذف هذا النشاط نهائياً؟')) return;
+    try {
+      await deleteDoc(doc(db, 'businesses', delBtn.dataset.delBiz));
+      toast('تم حذف النشاط بنجاح');
+    } catch (err) { toast('تعذر الحذف'); }
+  }
+};
+
+/* ---------- لوحة تحكم الإدارة (Admin Panel) ---------- */
+function renderAdmin() {
+  // حساب العدادات
+  const pCount = allAdminBiz.filter(b => b.status === 'pending').length;
+  const aCount = allAdminBiz.filter(b => b.status === 'approved').length;
+  const hCount = allAdminBiz.filter(b => b.status === 'hidden' || b.status === 'rejected').length;
+
+  $('countPending').textContent = pCount;
+  $('countApproved').textContent = aCount;
+  $('countHidden').textContent = hCount;
+
+  // تصفية حسب التبويب
+  const filtered = allAdminBiz.filter(b => {
+    if (adminFilter === 'pending') return b.status === 'pending';
+    if (adminFilter === 'approved') return b.status === 'approved';
+    if (adminFilter === 'hidden') return b.status === 'hidden' || b.status === 'rejected';
+    return true;
+  });
+
+  if (!filtered.length) {
+    $('adminList').innerHTML = `<div class="empty-state"><p>لا توجد أنشطة في هذا القسم حالياً 👍</p></div>`;
+    return;
+  }
+
+  $('adminList').innerHTML = filtered.map(b => `
     <div class="card">
       <div class="card-header">
-        <h3 class="card-title">${esc(b.name)}</h3>
-        <span class="badge pending">معلق</span>
+        <div>
+          <h3 class="card-title">${esc(b.name)}</h3>
+          <span style="font-size:12.5px;color:var(--text-muted)">👤 ${esc(b.ownerName || 'بدون اسم')} · 📞 ${esc(b.phone || b.ownerPhone || 'لا يوجد')}</span>
+        </div>
+        ${badgeHtml(b.status)}
       </div>
-      <p style="font-size:13.5px;color:var(--primary);font-weight:700">
+      <p style="font-size:13px;color:var(--primary);font-weight:700">
         ${b.type === 'doctor' ? `طبيب (${esc(b.specialty)}) · نقابة: ${esc(b.regNo)}` : esc(b.category)}
       </p>
-      <p style="font-size:13px;color:var(--text-muted);margin:4px 0">👤 المالك: ${esc(b.ownerName)} · هاتف: ${esc(b.phone || b.ownerPhone)}</p>
-      <p style="font-size:13px;color:var(--text-muted)">📍 ${esc(b.address)}</p>
-      <div style="display:flex;gap:8px;margin-top:14px">
-        <button class="btn small" data-approve="${b.id}" style="flex:1">قبول ونشر ✅</button>
-        <button class="btn danger small" data-reject="${b.id}" style="flex:1">رفض الطلب ❌</button>
+      <p style="font-size:13px;color:var(--text-muted);margin:4px 0">📍 ${esc(b.address)}</p>
+
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;border-top:1px dashed var(--border);padding-top:10px">
+        ${b.status !== 'approved' ? `
+          <button class="btn small" style="flex:1" data-adm-approve="${b.id}">اعتماد ونشر ✅</button>
+        ` : ''}
+        ${b.status === 'approved' ? `
+          <button class="btn warning small" style="flex:1" data-adm-hide="${b.id}">إخفاء / إيقاف مؤقت ⏸️</button>
+        ` : ''}
+        <button class="btn danger small" data-adm-del="${b.id}">حذف نهائي 🗑️</button>
       </div>
     </div>`).join('');
 }
 
-$('adminList').onclick = async e => {
-  const a = e.target.closest('[data-approve]');
-  const r = e.target.closest('[data-reject]');
-  if (a) await updateDoc(doc(db, 'businesses', a.dataset.approve), { status: 'approved' });
-  if (r) await updateDoc(doc(db, 'businesses', r.dataset.reject), { status: 'rejected' });
-  if (a || r) toast(a ? 'تم اعتماد النشاط ونشره للجمهور' : 'تم رفض النشاط');
+$('adminStatusChips').onclick = e => {
+  const b = e.target.closest('[data-admin-filter]');
+  if (!b) return;
+  adminFilter = b.dataset.adminFilter;
+  document.querySelectorAll('#adminStatusChips button').forEach(el => el.classList.remove('on'));
+  b.classList.add('on');
+  renderAdmin();
 };
 
-/* ---------- التبديل بين التبويبات ---------- */
+$('adminList').onclick = async e => {
+  const ap = e.target.closest('[data-adm-approve]');
+  const hd = e.target.closest('[data-adm-hide]');
+  const dl = e.target.closest('[data-adm-del]');
+
+  if (ap) {
+    await updateDoc(doc(db, 'businesses', ap.dataset.admApprove), { status: 'approved' });
+    toast('تم اعتماد النشاط ونشره للعامة بنجاح ✅');
+  } else if (hd) {
+    await updateDoc(doc(db, 'businesses', hd.dataset.admHide), { status: 'hidden' });
+    toast('تم إخفاء النشاط مؤقتاً ولن يظهر للجمهور ⏸️');
+  } else if (dl) {
+    if (confirm('هل أنت متأكد من الحذف النهائي لهذا النشاط؟ لا يمكن التراجع!')) {
+      await deleteDoc(doc(db, 'businesses', dl.dataset.admDel));
+      toast('تم حذف النشاط نهائياً من قاعدة البيانات 🗑️');
+    }
+  }
+};
+
+/* ---------- التنقل بين التبويبات ---------- */
 window.switchTab = function(name) {
+  if (name !== 'add' && editingBizId) {
+    cancelEditMode();
+  }
   ['browse','add','mine','admin'].forEach(t => $('tab-' + t).classList.toggle('hidden', t !== name));
   document.querySelectorAll('.nav-bar button').forEach(b => b.classList.toggle('on', b.dataset.tab === name));
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -988,4 +1143,4 @@ document.querySelector('.nav-bar').onclick = e => {
 };
 </script>
 </body>
-</html>
+  </html>
