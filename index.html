@@ -4,9 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>منوف في جيبك 📍</title>
+<link rel="icon" href="logo.jpg">
+<link rel="apple-touch-icon" href="logo.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 :root {
   --primary: #0F766E;
@@ -52,7 +56,7 @@ a { text-decoration: none; color: inherit; }
 header {
   background: linear-gradient(135deg, var(--primary), #115E59);
   color: #fff;
-  padding: 16px 20px;
+  padding: 12px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -61,7 +65,7 @@ header {
   z-index: 20;
   box-shadow: 0 4px 16px rgba(15,118,110,0.2);
 }
-header h1 { font-size: 19px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+header h1 { display: flex; align-items: center; }
 .btn-logout {
   background: rgba(255,255,255,0.15);
   color: #fff;
@@ -87,8 +91,9 @@ header h1 { font-size: 19px; font-weight: 800; display: flex; align-items: cente
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
-.card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+.card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; gap: 8px; }
 .card-title { font-size: 17px; font-weight: 800; color: var(--text-main); }
+.muted { color: var(--text-muted); font-size: 13px; }
 
 .field { margin-bottom: 14px; }
 .field label { display: block; font-size: 13.5px; font-weight: 700; margin-bottom: 6px; color: var(--text-main); }
@@ -140,16 +145,18 @@ textarea { min-height: 80px; resize: vertical; }
 .btn.call { background: var(--primary); }
 .btn:disabled { opacity: 0.55; cursor: not-allowed; }
 
-/* شريط البحث والتصنيفات */
-.search-box {
-  position: relative;
-  margin-bottom: 14px;
+/* الخريطة */
+#pickMap {
+  height: 260px;
+  border-radius: 12px;
+  margin: 10px 0;
+  border: 1.5px solid var(--border);
+  z-index: 1;
 }
-.search-box input {
-  padding-right: 42px;
-  border-radius: 999px;
-  background: #fff;
-}
+
+/* البحث والتصنيفات */
+.search-box { position: relative; margin-bottom: 14px; }
+.search-box input { padding-right: 42px; border-radius: 999px; background: #fff; }
 .search-box svg {
   position: absolute;
   right: 14px;
@@ -184,7 +191,7 @@ textarea { min-height: 80px; resize: vertical; }
   box-shadow: 0 2px 8px rgba(15,118,110,0.2);
 }
 
-/* الشارات (Badges) */
+/* الشارات */
 .badge {
   display: inline-flex;
   align-items: center;
@@ -193,6 +200,7 @@ textarea { min-height: 80px; resize: vertical; }
   border-radius: 999px;
   font-size: 12px;
   font-weight: 700;
+  white-space: nowrap;
 }
 .badge.pending { background: var(--warning-light); color: #B45309; }
 .badge.approved { background: var(--success-light); color: var(--success); }
@@ -202,7 +210,6 @@ textarea { min-height: 80px; resize: vertical; }
 .badge.closed { background: #F1F5F9; color: var(--text-muted); }
 .badge.type { background: var(--primary-subtle); color: var(--primary); font-size: 11.5px; }
 
-/* أزرار الاتصال في الكرت */
 .action-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -213,13 +220,15 @@ textarea { min-height: 80px; resize: vertical; }
 }
 .action-grid.single { grid-template-columns: 1fr; }
 
-/* جدول الأيام والتوجل */
+/* مواعيد العمل */
 .day-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px 0;
   border-bottom: 1px solid #F1F5F9;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 .day-row input[type=time] { width: 100px; padding: 6px; font-size: 13px; }
 .toggle {
@@ -230,6 +239,7 @@ textarea { min-height: 80px; resize: vertical; }
   position: relative;
   transition: 0.2s;
   cursor: pointer;
+  flex: none;
 }
 .toggle::after {
   content: "";
@@ -275,7 +285,7 @@ textarea { min-height: 80px; resize: vertical; }
 .nav-btn.on { color: var(--primary); }
 .nav-btn.on svg { transform: translateY(-2px); }
 
-/* المودال والتوست */
+/* التوست والمودال */
 .toast {
   position: fixed;
   bottom: 80px;
@@ -293,6 +303,9 @@ textarea { min-height: 80px; resize: vertical; }
   transition: 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
   z-index: 100;
   white-space: nowrap;
+  max-width: 92%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
@@ -333,6 +346,7 @@ textarea { min-height: 80px; resize: vertical; }
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 8px;
 }
 </style>
 </head>
@@ -351,7 +365,7 @@ window.FIREBASE_CONFIG = {
 
 <div id="toast" class="toast"></div>
 
-<!-- نافذة التفاصيل (Modal) -->
+<!-- نافذة التفاصيل -->
 <div id="bizModal" class="modal-backdrop hidden">
   <div class="modal-content">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
@@ -384,9 +398,8 @@ window.FIREBASE_CONFIG = {
 <!-- شاشة تسجيل الدخول -->
 <section id="authView" class="hidden">
   <div class="wrap" style="max-width:400px;margin-top:40px">
-    <div style="text-align:center;margin-bottom:28px">
-      <span style="font-size:44px">📍</span>
-      <h2 style="font-size:26px;font-weight:800;color:var(--primary);margin-top:6px">منوف في جيبك</h2>
+    <div style="text-align:center;margin-bottom:24px">
+      <img src="logo.jpg" alt="منوف في جيبك" style="display:block;width:200px;max-width:70%;height:auto;margin:0 auto 6px">
       <p style="color:var(--text-muted);font-size:14px">دليلك الكامل للدكاترة، المحلات، والخدمات</p>
     </div>
     <form id="authForm" class="card" style="padding:22px">
@@ -414,12 +427,12 @@ window.FIREBASE_CONFIG = {
 <!-- التطبيق الرئيسي -->
 <section id="appView" class="hidden">
   <header>
-    <h1><span>📍</span> منوف في جيبك</h1>
+    <h1><img src="logo.jpg" alt="منوف في جيبك" style="height:44px;width:auto;background:#fff;border-radius:10px;padding:3px"></h1>
     <button class="btn-logout" id="logoutBtn">خروج</button>
   </header>
 
   <div class="wrap">
-    <!-- تبويب التصفح -->
+    <!-- التصفح -->
     <div id="tab-browse">
       <div class="search-box">
         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
@@ -429,7 +442,7 @@ window.FIREBASE_CONFIG = {
       <div id="browseList"></div>
     </div>
 
-    <!-- تبويب إضافة / تعديل نشاط -->
+    <!-- إضافة / تعديل نشاط -->
     <div id="tab-add" class="hidden">
       <div id="editNotice" class="edit-alert hidden">
         <span>⚠️ أنت الآن في وضع تعديل النشاط. عند الحفظ سيعود للمراجعة.</span>
@@ -456,8 +469,10 @@ window.FIREBASE_CONFIG = {
 
           <div class="card">
             <div class="card-title" style="margin-bottom:12px">الموقع بالتفصيل</div>
-            <button type="button" class="btn sec" id="geoBtn">📍 تحديد مكاني الجغرافي تلقائياً</button>
-            <p class="muted" id="geoStatus" style="font-size:12.5px;color:var(--text-muted);margin:8px 0"></p>
+            <button type="button" class="btn sec" id="geoBtn">📍 تحديد مكاني الجغرافي</button>
+            <p class="muted" style="margin:10px 0 0">حرّك الدبوس لمكان المحل بالظبط، أو اضغط على الخريطة مباشرة.</p>
+            <div id="pickMap" class="hidden"></div>
+            <p class="muted" id="geoStatus" style="margin:6px 0 10px"></p>
             <div class="field"><label>العنوان بالتفصيل</label><input id="bAddr" required placeholder="مثال: شارع الجيش، أمام المحطة"></div>
             <div class="field"><label>علامة مميزة (اختياري)</label><input id="bLandmark" placeholder="مثال: بجوار بنك مصر"></div>
             <input type="hidden" id="bLat"><input type="hidden" id="bLng">
@@ -484,29 +499,25 @@ window.FIREBASE_CONFIG = {
       </form>
     </div>
 
-    <!-- تبويب أنشطتي -->
+    <!-- أنشطتي -->
     <div id="tab-mine" class="hidden">
       <div id="mineList"></div>
     </div>
 
-    <!-- تبويب الإدارة -->
+    <!-- الإدارة -->
     <div id="tab-admin" class="hidden">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div style="margin-bottom:12px">
         <h3 style="font-size:18px;font-weight:800">لوحة تحكم الإدارة 🛡️</h3>
       </div>
-
-      <!-- فلاتر الأدمن -->
       <div class="chips" id="adminStatusChips">
         <button type="button" class="chip on" data-admin-filter="pending">⏳ قيد المراجعة (<span id="countPending">0</span>)</button>
         <button type="button" class="chip" data-admin-filter="approved">✅ المنشورة (<span id="countApproved">0</span>)</button>
-        <button type="button" class="chip" data-admin-filter="hidden">⏸️ المخفية / الموقوفة (<span id="countHidden">0</span>)</button>
+        <button type="button" class="chip" data-admin-filter="hidden">⏸️ المخفية (<span id="countHidden">0</span>)</button>
       </div>
-
       <div id="adminList"></div>
     </div>
   </div>
 
-  <!-- الشريط السفلي -->
   <nav class="nav-bar">
     <button class="nav-btn on" data-tab="browse">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
@@ -553,12 +564,14 @@ const CATS = {
   service: ['سباكة وأعمال صحية','كهربائي وتأسيس','نجارة ودهانات','صيانة أجهزة منزلية','نقل ورفع أثاث','تصوير ومناسبات','أخرى']
 };
 const ALL_CATS = ['الكل', 'دكاترة', ...CATS.shop, ...CATS.service];
+const MENOUF_CENTER = [30.4600, 30.9300];
 
 let me = null, profile = null, unsubs = [];
 let approved = [], myBiz = [], allAdminBiz = [];
 let mode = 'login', type = null, items = [], browseCat = 'الكل', searchQuery = '';
-let editingBizId = null; // متغير لحفظ ID النشاط الجاري تعديله
-let adminFilter = 'pending'; // فلتر الإدارة
+let editingBizId = null;
+let adminFilter = 'pending';
+let pickerMap = null, pickerMarker = null;
 
 function toast(msg) {
   const t = $('toast'); t.textContent = msg; t.classList.add('show');
@@ -577,16 +590,15 @@ function isOpenNow(hours) {
   if (!hours || !Array.isArray(hours)) return false;
   const now = new Date();
   const dayIndex = (now.getDay() + 1) % 7;
-  const todaySchedule = hours[dayIndex];
-  if (!todaySchedule || !todaySchedule.open) return false;
-
-  const currentMinutes = now.getHours() * 60 + now.getMinutes();
-  const [fh, fm] = todaySchedule.from.split(':').map(Number);
-  const [th, tm] = todaySchedule.to.split(':').map(Number);
-  return currentMinutes >= (fh * 60 + fm) && currentMinutes <= (th * 60 + tm);
+  const today = hours[dayIndex];
+  if (!today || !today.open) return false;
+  const cur = now.getHours() * 60 + now.getMinutes();
+  const [fh, fm] = today.from.split(':').map(Number);
+  const [th, tm] = today.to.split(':').map(Number);
+  return cur >= fh * 60 + fm && cur <= th * 60 + tm;
 }
 
-/* ---------- تسجيل الدخول والتسجيل ---------- */
+/* ---------- الدخول والتسجيل ---------- */
 function setMode(m) {
   mode = m;
   $('nameField').classList.toggle('hidden', m !== 'register');
@@ -630,11 +642,11 @@ onAuthStateChanged(auth, async user => {
   me = user;
   const snap = await getDoc(doc(db, 'users', user.uid));
   profile = snap.exists() ? { uid: user.uid, ...snap.data() } : { uid: user.uid, name: 'مستخدم', role: 'user', phone: '' };
-  
+
   $('authView').classList.add('hidden');
   $('appView').classList.remove('hidden');
   $('adminTab').classList.toggle('hidden', profile.role !== 'admin');
-  
+
   startListeners();
   buildCats();
   buildTypeChips();
@@ -642,21 +654,18 @@ onAuthStateChanged(auth, async user => {
   switchTab('browse');
 });
 
-/* ---------- الاستماع لقاعدة البيانات ---------- */
+/* ---------- الاستماع للبيانات ---------- */
 function startListeners() {
-  // للجمهور: المشاهدة فقط للأنشطة المعتمدة approved
   unsubs.push(onSnapshot(query(collection(db, 'businesses'), where('status', '==', 'approved')), snap => {
     approved = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     renderBrowse();
   }));
 
-  // لصاحب النشاط: أنشطته بكل حالاتها
   unsubs.push(onSnapshot(query(collection(db, 'businesses'), where('ownerId', '==', me.uid)), snap => {
     myBiz = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     renderMine();
   }));
 
-  // للأدمن: كافة الأنشطة
   if (profile.role === 'admin') {
     unsubs.push(onSnapshot(collection(db, 'businesses'), snap => {
       allAdminBiz = snap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -665,7 +674,7 @@ function startListeners() {
   }
 }
 
-/* ---------- التصفح والبحث ---------- */
+/* ---------- التصفح ---------- */
 function buildCats() {
   $('catChips').innerHTML = ALL_CATS.map(c =>
     `<button type="button" class="chip ${c === browseCat ? 'on' : ''}" data-cat="${esc(c)}">${esc(c)}</button>`).join('');
@@ -684,16 +693,14 @@ $('searchInput').oninput = e => {
 
 function renderBrowse() {
   const list = approved.filter(b => {
-    const matchesCategory = (browseCat === 'الكل') ||
-      (browseCat === 'دكاترة' && b.type === 'doctor') ||
-      (b.category === browseCat);
-
-    const matchesSearch = !searchQuery || 
-      b.name.toLowerCase().includes(searchQuery) ||
-      (b.specialty && b.specialty.toLowerCase().includes(searchQuery)) ||
-      (b.category && b.category.toLowerCase().includes(searchQuery)) ||
-      (b.address && b.address.toLowerCase().includes(searchQuery));
-
+    const matchesCategory = browseCat === 'الكل'
+      || (browseCat === 'دكاترة' && b.type === 'doctor')
+      || b.category === browseCat;
+    const matchesSearch = !searchQuery
+      || b.name.toLowerCase().includes(searchQuery)
+      || (b.specialty && b.specialty.toLowerCase().includes(searchQuery))
+      || (b.category && b.category.toLowerCase().includes(searchQuery))
+      || (b.address && b.address.toLowerCase().includes(searchQuery));
     return matchesCategory && matchesSearch;
   });
 
@@ -717,9 +724,7 @@ function renderBrowse() {
             <span class="badge type" style="margin-bottom:6px">${esc(typeLabel)}</span>
             <h3 class="card-title">${esc(b.name)}</h3>
           </div>
-          <span class="badge ${open ? 'open' : 'closed'}">
-            ${open ? '🟢 مفتوح الآن' : '⚪ مغلق الآن'}
-          </span>
+          <span class="badge ${open ? 'open' : 'closed'}">${open ? '🟢 مفتوح الآن' : '⚪ مغلق الآن'}</span>
         </div>
         <p style="font-size:13.5px;color:var(--text-muted);margin-bottom:6px">
           ${b.type === 'doctor' ? '🩺 ' + esc(b.specialty) : esc(b.category)}
@@ -728,28 +733,22 @@ function renderBrowse() {
         <p style="font-size:13px;color:var(--text-muted)">
           📍 ${esc(b.address)}${b.landmark ? ' (بجوار ' + esc(b.landmark) + ')' : ''}
         </p>
-
-        <div class="action-grid ${phone ? '' : 'single'}">
-          ${phone ? `
-            <a href="tel:${phone}" class="btn small call" onclick="event.stopPropagation()">📞 اتصال</a>
-            <a href="https://wa.me/2${phone}" target="_blank" class="btn small whatsapp" onclick="event.stopPropagation()">💬 واتساب</a>
-          ` : `
-            <button class="btn small sec" style="width:100%">عرض التفاصيل الكاملة</button>
-          `}
-        </div>
+        ${phone ? `
+        <div class="action-grid">
+          <a href="tel:${phone}" class="btn small call" onclick="event.stopPropagation()">📞 اتصال</a>
+          <a href="https://wa.me/2${phone}" target="_blank" class="btn small whatsapp" onclick="event.stopPropagation()">💬 واتساب</a>
+        </div>` : ''}
       </div>`;
   }).join('');
 }
 
-/* ---------- نافذة التفاصيل ---------- */
 $('browseList').onclick = e => {
-  const card = e.target.closest('[data-biz-id]');
-  if (!card) return;
+  const card = e.target.closest('[data-biz-id]'); if (!card) return;
   const b = approved.find(x => x.id === card.dataset.bizId);
-  if (!b) return;
-  openBizModal(b);
+  if (b) openBizModal(b);
 };
 
+/* ---------- نافذة التفاصيل ---------- */
 function openBizModal(b) {
   const open = isOpenNow(b.hours);
   const phone = b.phone || b.ownerPhone;
@@ -758,8 +757,8 @@ function openBizModal(b) {
   $('mTitle').textContent = b.name;
   $('mSub').textContent = b.type === 'doctor' ? `طبيب متخصص في ${b.specialty}` : b.category;
   $('mDesc').textContent = b.desc || 'لا يوجد وصف إضافي.';
-  $('mAddr').textContent = b.address + (b.landmark ? ` (علامة مميزة: ${b.landmark})` : '');
-  
+  $('mAddr').textContent = b.address + (b.landmark ? ` (بجوار ${b.landmark})` : '');
+
   if (b.price) {
     $('mPriceBox').classList.remove('hidden');
     $('mPrice').textContent = b.price;
@@ -773,8 +772,7 @@ function openBizModal(b) {
       <div style="display:flex;justify-content:space-between;background:var(--bg);padding:8px 12px;border-radius:8px;font-size:13.5px">
         <span>${esc(it.name)}</span>
         <strong style="color:var(--primary)">${esc(it.price)} جنيه</strong>
-      </div>
-    `).join('');
+      </div>`).join('');
   } else {
     $('mItemsBox').classList.add('hidden');
   }
@@ -782,20 +780,67 @@ function openBizModal(b) {
   $('mHoursList').innerHTML = (b.hours || []).map(h => `
     <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f1f5f9">
       <span>${h.day}</span>
-      <span>${h.open ? `${h.from} إلى ${h.to}` : 'عطلة مغلق'}</span>
-    </div>
-  `).join('');
+      <span>${h.open ? `${h.from} إلى ${h.to}` : 'مغلق'}</span>
+    </div>`).join('');
 
   $('mActionBtns').innerHTML = `
     ${phone ? `<a href="tel:${phone}" class="btn call">📞 اتصال الآن</a>` : ''}
     ${phone ? `<a href="https://wa.me/2${phone}" target="_blank" class="btn whatsapp">💬 مراسلة واتساب</a>` : ''}
-    ${b.lat ? `<a href="https://www.google.com/maps?q=${b.lat},${b.lng}" target="_blank" class="btn sec" style="grid-column: span 2">📍 فتح في خرائط جوجل</a>` : ''}
-  `;
+    ${b.lat ? `<a href="https://www.google.com/maps?q=${b.lat},${b.lng}" target="_blank" class="btn sec" style="grid-column:span 2">📍 فتح في خرائط جوجل</a>` : ''}`;
 
   $('bizModal').classList.remove('hidden');
 }
 $('closeModalBtn').onclick = () => $('bizModal').classList.add('hidden');
 $('bizModal').onclick = e => { if (e.target === $('bizModal')) $('bizModal').classList.add('hidden'); };
+
+/* ---------- الخريطة وتحديد الموقع ---------- */
+function setCoords(lat, lng) {
+  $('bLat').value = lat;
+  $('bLng').value = lng;
+  const inside = lat >= 30.42 && lat <= 30.50 && lng >= 30.88 && lng <= 30.98;
+  $('geoStatus').textContent = inside
+    ? '✅ الموقع داخل منوف، تأكد إن الدبوس على المحل'
+    : '⚠️ الدبوس بره حدود منوف، تأكد منه';
+}
+
+function showPicker(lat, lng, zoom = 17) {
+  const pos = [lat, lng];
+  $('pickMap').classList.remove('hidden');
+  if (!pickerMap) {
+    pickerMap = L.map('pickMap').setView(pos, zoom);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(pickerMap);
+    pickerMarker = L.marker(pos, { draggable: true }).addTo(pickerMap);
+    pickerMarker.on('dragend', () => {
+      const p = pickerMarker.getLatLng();
+      setCoords(p.lat, p.lng);
+    });
+    pickerMap.on('click', e => {
+      pickerMarker.setLatLng(e.latlng);
+      setCoords(e.latlng.lat, e.latlng.lng);
+    });
+  } else {
+    pickerMap.setView(pos, zoom);
+    pickerMarker.setLatLng(pos);
+  }
+  setCoords(lat, lng);
+  setTimeout(() => pickerMap.invalidateSize(), 150);
+}
+
+$('geoBtn').onclick = () => {
+  if (!navigator.geolocation) {
+    showPicker(...MENOUF_CENTER, 14);
+    return toast('الموقع مش متاح، حرّك الدبوس يدوياً');
+  }
+  $('geoStatus').textContent = 'جاري تحديد موقعك...';
+  navigator.geolocation.getCurrentPosition(
+    p => showPicker(p.coords.latitude, p.coords.longitude),
+    () => {
+      showPicker(...MENOUF_CENTER, 14);
+      $('geoStatus').textContent = 'تعذر تحديد موقعك، حرّك الدبوس على مكان المحل';
+    },
+    { enableHighAccuracy: true, timeout: 10000 }
+  );
+};
 
 /* ---------- إضافة وتعديل نشاط ---------- */
 function buildTypeChips() {
@@ -865,22 +910,10 @@ function renderItems() {
 }
 $('itemsBox').onclick = e => {
   const b = e.target.closest('[data-rm]'); if (!b) return;
-  items.splice(Number(b.dataset.rm), 1); renderItems();
+  items.splice(Number(b.dataset.rm), 1);
+  renderItems();
 };
 
-$('geoBtn').onclick = () => {
-  if (!navigator.geolocation) return toast('خاصية تحديد الموقع غير مدعومة');
-  $('geoStatus').textContent = 'جاري تحديد موقعك الجغرافي بدقة...';
-  navigator.geolocation.getCurrentPosition(p => {
-    const lat = p.coords.latitude, lng = p.coords.longitude;
-    $('bLat').value = lat; $('bLng').value = lng;
-    $('geoStatus').textContent = '✅ تم تحديد الموقع بدقة وسيرفق بالنشاط';
-  }, () => {
-    $('geoStatus').textContent = 'تعذر الوصول للموقع، يرجى كتابة العنوان بالتفصيل';
-  }, { enableHighAccuracy: true, timeout: 10000 });
-};
-
-// حفظ البيانات (إضافة جديدة أو تعديل نشاط قائم)
 $('bizForm').onsubmit = async e => {
   e.preventDefault();
   if (!type) return toast('يرجى اختيار نوع النشاط أولاً');
@@ -891,6 +924,7 @@ $('bizForm').onsubmit = async e => {
   if (isDoc && !$('bSpec').value) return toast('اختار التخصص');
   if (isDoc && $('bReg').value.trim().length < 3) return toast('اكتب رقم القيد بالنقابة');
   if (!isDoc && !$('bCat').value) return toast('اختار التصنيف المناسب');
+  if (!$('bLat').value) return toast('حدد مكان النشاط على الخريطة');
 
   const hours = collectHours();
   if (!hours.some(h => h.open)) return toast('يجب تفعيل يوم عمل واحد على الأقل');
@@ -909,38 +943,36 @@ $('bizForm').onsubmit = async e => {
     desc: $('bDesc').value.trim(),
     address: $('bAddr').value.trim(),
     landmark: $('bLandmark').value.trim(),
-    lat: $('bLat').value ? Number($('bLat').value) : null,
-    lng: $('bLng').value ? Number($('bLng').value) : null,
+    lat: Number($('bLat').value),
+    lng: Number($('bLng').value),
     hours,
     items,
-    status: 'pending', // دائماً يعود لقيد المراجعة!
+    status: 'pending',
     updatedAt: serverTimestamp()
   };
 
   try {
     if (editingBizId) {
-      // تعديل نشاط موجود
       await updateDoc(doc(db, 'businesses', editingBizId), bizData);
-      toast('تم حفظ التعديلات وإعادة النشاط للمراجعة بنجاح ✅');
+      toast('تم حفظ التعديلات وإعادة النشاط للمراجعة ✅');
     } else {
-      // إضافة نشاط جديد لأول مرة
       bizData.ownerId = me.uid;
       bizData.ownerName = profile.name;
       bizData.ownerPhone = profile.phone;
       bizData.createdAt = serverTimestamp();
       await addDoc(collection(db, 'businesses'), bizData);
-      toast('تم إرسال نشاطك بنجاح وسيكون متاحاً بعد المراجعة ✅');
+      toast('تم إرسال نشاطك وسيكون متاحاً بعد المراجعة ✅');
     }
-
     cancelEditMode();
     switchTab('mine');
   } catch (err) {
-    toast('حدث خطأ أثناء الحفظ، تحقق من الاتصال وقواعد Firestore');
+    toast('حدث خطأ أثناء الحفظ، تحقق من الاتصال والقواعد');
   }
   $('saveBizBtn').disabled = false;
+  $('saveBizBtn').textContent = editingBizId ? 'حفظ التعديلات (إرسال للمراجعة)' : 'إرسال النشاط للمراجعة';
 };
 
-/* ---------- وضع التعديل (Edit Mode) ---------- */
+/* ---------- وضع التعديل ---------- */
 function startEditBiz(biz) {
   editingBizId = biz.id;
   type = biz.type;
@@ -962,22 +994,18 @@ function startEditBiz(biz) {
   $('bLat').value = biz.lat || '';
   $('bLng').value = biz.lng || '';
 
-  // الساعات
   if (biz.hours && Array.isArray(biz.hours)) {
     biz.hours.forEach((h, i) => {
       const tog = document.querySelector(`[data-day="${i}"]`);
       if (tog) tog.classList.toggle('on', !!h.open);
-      const f = $('from' + i), t = $('to' + i);
-      if (f && h.from) f.value = h.from;
-      if (t && h.to) t.value = h.to;
+      if ($('from' + i) && h.from) $('from' + i).value = h.from;
+      if ($('to' + i) && h.to) $('to' + i).value = h.to;
     });
   }
 
-  // الخدمات
   items = Array.isArray(biz.items) ? [...biz.items] : [];
   renderItems();
 
-  // تغيير مظهر الفورم
   $('editNotice').classList.remove('hidden');
   $('formHeaderTitle').textContent = 'تعديل نشاطك';
   $('saveBizBtn').textContent = 'حفظ التعديلات (إرسال للمراجعة)';
@@ -985,6 +1013,7 @@ function startEditBiz(biz) {
   $('navAddLbl').textContent = 'تعديل نشاط';
 
   switchTab('add');
+  if (biz.lat && biz.lng) showPicker(biz.lat, biz.lng);
 }
 
 function cancelEditMode() {
@@ -995,6 +1024,7 @@ function cancelEditMode() {
   $('typeFields').classList.add('hidden');
   buildHours();
   $('geoStatus').textContent = '';
+  $('pickMap').classList.add('hidden');
   $('editNotice').classList.add('hidden');
   $('formHeaderTitle').textContent = 'اختار نوع النشاط';
   $('saveBizBtn').textContent = 'إرسال النشاط للمراجعة';
@@ -1003,9 +1033,9 @@ function cancelEditMode() {
 }
 $('cancelEditBtn').onclick = () => { cancelEditMode(); switchTab('mine'); };
 
-/* ---------- أنشطتي وحذف النشاط ---------- */
+/* ---------- أنشطتي ---------- */
 const badgeHtml = s => `<span class="badge ${s === 'hidden' ? 'hidden-status' : s}">
-  ${{pending:'⏳ قيد المراجعة',approved:'✅ معتمد ومنشور',hidden:'⏸️ مخفي وموقوف',rejected:'❌ مرفوض'}[s] || s}
+  ${{pending:'⏳ قيد المراجعة', approved:'✅ منشور', hidden:'⏸️ مخفي', rejected:'❌ مرفوض'}[s] || s}
 </span>`;
 
 function renderMine() {
@@ -1014,7 +1044,7 @@ function renderMine() {
       <div class="empty-state">
         <svg fill="none" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
         <p>لم تقم بإضافة أي نشاط بعد</p>
-        <button class="btn small" style="margin-top:14px" onclick="cancelEditMode(); switchTab('add')">أضف نشاطك الأول</button>
+        <button class="btn small" style="margin-top:14px" data-add-first="1">أضف نشاطك الأول</button>
       </div>`;
     return;
   }
@@ -1025,7 +1055,7 @@ function renderMine() {
         <h3 class="card-title">${esc(b.name)}</h3>
         ${badgeHtml(b.status)}
       </div>
-      <p style="font-size:13.5px;color:var(--text-muted);margin-bottom:8px">📍 ${esc(b.address)}</p>
+      <p class="muted" style="margin-bottom:8px">📍 ${esc(b.address)}</p>
       <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px;border-top:1px dashed var(--border);padding-top:10px">
         <button class="btn sec small" data-edit-biz="${b.id}">تعديل ✏️</button>
         <button class="btn danger small" data-del-biz="${b.id}">حذف 🗑️</button>
@@ -1034,6 +1064,12 @@ function renderMine() {
 }
 
 $('mineList').onclick = async e => {
+  if (e.target.closest('[data-add-first]')) {
+    cancelEditMode();
+    switchTab('add');
+    return;
+  }
+
   const editBtn = e.target.closest('[data-edit-biz]');
   if (editBtn) {
     const b = myBiz.find(x => x.id === editBtn.dataset.editBiz);
@@ -1043,26 +1079,20 @@ $('mineList').onclick = async e => {
 
   const delBtn = e.target.closest('[data-del-biz]');
   if (delBtn) {
-    if (!confirm('هل أنت متأكد من رغبتك في حذف هذا النشاط نهائياً؟')) return;
+    if (!confirm('هل أنت متأكد من حذف هذا النشاط نهائياً؟')) return;
     try {
       await deleteDoc(doc(db, 'businesses', delBtn.dataset.delBiz));
-      toast('تم حذف النشاط بنجاح');
+      toast('تم حذف النشاط');
     } catch (err) { toast('تعذر الحذف'); }
   }
 };
 
-/* ---------- لوحة تحكم الإدارة (Admin Panel) ---------- */
+/* ---------- لوحة الإدارة ---------- */
 function renderAdmin() {
-  // حساب العدادات
-  const pCount = allAdminBiz.filter(b => b.status === 'pending').length;
-  const aCount = allAdminBiz.filter(b => b.status === 'approved').length;
-  const hCount = allAdminBiz.filter(b => b.status === 'hidden' || b.status === 'rejected').length;
+  $('countPending').textContent = allAdminBiz.filter(b => b.status === 'pending').length;
+  $('countApproved').textContent = allAdminBiz.filter(b => b.status === 'approved').length;
+  $('countHidden').textContent = allAdminBiz.filter(b => b.status === 'hidden' || b.status === 'rejected').length;
 
-  $('countPending').textContent = pCount;
-  $('countApproved').textContent = aCount;
-  $('countHidden').textContent = hCount;
-
-  // تصفية حسب التبويب
   const filtered = allAdminBiz.filter(b => {
     if (adminFilter === 'pending') return b.status === 'pending';
     if (adminFilter === 'approved') return b.status === 'approved';
@@ -1071,7 +1101,7 @@ function renderAdmin() {
   });
 
   if (!filtered.length) {
-    $('adminList').innerHTML = `<div class="empty-state"><p>لا توجد أنشطة في هذا القسم حالياً 👍</p></div>`;
+    $('adminList').innerHTML = `<div class="empty-state"><p>لا توجد أنشطة في هذا القسم 👍</p></div>`;
     return;
   }
 
@@ -1080,30 +1110,24 @@ function renderAdmin() {
       <div class="card-header">
         <div>
           <h3 class="card-title">${esc(b.name)}</h3>
-          <span style="font-size:12.5px;color:var(--text-muted)">👤 ${esc(b.ownerName || 'بدون اسم')} · 📞 ${esc(b.phone || b.ownerPhone || 'لا يوجد')}</span>
+          <span class="muted">👤 ${esc(b.ownerName || 'بدون اسم')} · 📞 ${esc(b.phone || b.ownerPhone || '')}</span>
         </div>
         ${badgeHtml(b.status)}
       </div>
       <p style="font-size:13px;color:var(--primary);font-weight:700">
         ${b.type === 'doctor' ? `طبيب (${esc(b.specialty)}) · نقابة: ${esc(b.regNo)}` : esc(b.category)}
       </p>
-      <p style="font-size:13px;color:var(--text-muted);margin:4px 0">📍 ${esc(b.address)}</p>
-
+      <p class="muted" style="margin:4px 0">📍 ${esc(b.address)}</p>
       <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;border-top:1px dashed var(--border);padding-top:10px">
-        ${b.status !== 'approved' ? `
-          <button class="btn small" style="flex:1" data-adm-approve="${b.id}">اعتماد ونشر ✅</button>
-        ` : ''}
-        ${b.status === 'approved' ? `
-          <button class="btn warning small" style="flex:1" data-adm-hide="${b.id}">إخفاء / إيقاف مؤقت ⏸️</button>
-        ` : ''}
-        <button class="btn danger small" data-adm-del="${b.id}">حذف نهائي 🗑️</button>
+        ${b.status !== 'approved' ? `<button class="btn small" style="flex:1" data-adm-approve="${b.id}">اعتماد ونشر ✅</button>` : ''}
+        ${b.status === 'approved' ? `<button class="btn warning small" style="flex:1" data-adm-hide="${b.id}">إخفاء ⏸️</button>` : ''}
+        <button class="btn danger small" data-adm-del="${b.id}">حذف 🗑️</button>
       </div>
     </div>`).join('');
 }
 
 $('adminStatusChips').onclick = e => {
-  const b = e.target.closest('[data-admin-filter]');
-  if (!b) return;
+  const b = e.target.closest('[data-admin-filter]'); if (!b) return;
   adminFilter = b.dataset.adminFilter;
   document.querySelectorAll('#adminStatusChips button').forEach(el => el.classList.remove('on'));
   b.classList.add('on');
@@ -1114,26 +1138,23 @@ $('adminList').onclick = async e => {
   const ap = e.target.closest('[data-adm-approve]');
   const hd = e.target.closest('[data-adm-hide]');
   const dl = e.target.closest('[data-adm-del]');
-
   if (ap) {
     await updateDoc(doc(db, 'businesses', ap.dataset.admApprove), { status: 'approved' });
-    toast('تم اعتماد النشاط ونشره للعامة بنجاح ✅');
+    toast('تم اعتماد النشاط ونشره ✅');
   } else if (hd) {
     await updateDoc(doc(db, 'businesses', hd.dataset.admHide), { status: 'hidden' });
-    toast('تم إخفاء النشاط مؤقتاً ولن يظهر للجمهور ⏸️');
+    toast('تم إخفاء النشاط ⏸️');
   } else if (dl) {
-    if (confirm('هل أنت متأكد من الحذف النهائي لهذا النشاط؟ لا يمكن التراجع!')) {
+    if (confirm('حذف نهائي لهذا النشاط؟ لا يمكن التراجع!')) {
       await deleteDoc(doc(db, 'businesses', dl.dataset.admDel));
-      toast('تم حذف النشاط نهائياً من قاعدة البيانات 🗑️');
+      toast('تم الحذف نهائياً 🗑️');
     }
   }
 };
 
-/* ---------- التنقل بين التبويبات ---------- */
+/* ---------- التنقل ---------- */
 window.switchTab = function(name) {
-  if (name !== 'add' && editingBizId) {
-    cancelEditMode();
-  }
+  if (name !== 'add' && editingBizId) cancelEditMode();
   ['browse','add','mine','admin'].forEach(t => $('tab-' + t).classList.toggle('hidden', t !== name));
   document.querySelectorAll('.nav-bar button').forEach(b => b.classList.toggle('on', b.dataset.tab === name));
   window.scrollTo({ top: 0, behavior: 'smooth' });
