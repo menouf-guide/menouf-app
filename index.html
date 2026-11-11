@@ -118,14 +118,14 @@ textarea{min-height:85px;resize:vertical}
 .empty small{display:block;color:var(--m);font-size:13px;font-weight:600;line-height:1.7;margin-bottom:14px}
 .edit{background:rgba(255,196,0,.12);border:1px solid var(--bg2);color:var(--p);padding:12px 14px;border-radius:14px;font-size:13.5px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
 
-/* شريط التنقل السفلي */
-.nav{position:fixed;bottom:12px;left:12px;right:12px;max-width:496px;margin:0 auto;z-index:35;display:flex;justify-content:space-around;align-items:flex-end;padding:8px 6px;background:rgba(14,16,22,.96);border:1px solid rgba(255,255,255,.1);border-radius:26px;box-shadow:0 12px 35px rgba(0,0,0,.6)}
-.nav button{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11.5px;font-weight:700;color:var(--m);padding:6px 10px;min-width:62px}
+/* شريط التنقل السفلي: 5 أعمدة ثابتة، الزرار + في النص دايماً */
+.nav{position:fixed;bottom:12px;left:12px;right:12px;max-width:496px;margin:0 auto;z-index:35;display:grid;grid-template-columns:1fr 1fr 84px 1fr 1fr;align-items:end;padding:8px 6px;background:rgba(14,16,22,.96);border:1px solid rgba(255,255,255,.1);border-radius:26px;box-shadow:0 12px 35px rgba(0,0,0,.6)}
+.nav button{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11.5px;font-weight:700;color:var(--m);padding:6px 4px}
 .nav button .ni{font-size:19px}
 .nav button.on{color:var(--p)}
-.navadd{position:relative;top:-16px}
-.fab{width:58px;height:58px;border-radius:50%;background:var(--pg);color:#0d0e12;font-size:30px;font-weight:900;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 22px var(--pglow);border:4px solid #0e1016}
-.navadd span{color:var(--p);font-size:11.5px;font-weight:700;margin-top:2px}
+.navadd{display:flex;flex-direction:column;align-items:center;position:relative;top:-20px}
+.fab{width:60px;height:60px;border-radius:50%;background:var(--pg);color:#0d0e12;font-size:30px;font-weight:900;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 22px var(--pglow);border:4px solid #0e1016;padding:0}
+.navadd span{color:var(--p);font-size:11.5px;font-weight:700;margin-top:4px;text-align:center;white-space:nowrap}
 
 /* عام */
 .toast{position:fixed;bottom:100px;left:50%;transform:translate(-50%,20px);background:rgba(24,27,36,.96);border:1px solid var(--bg2);padding:12px 22px;border-radius:999px;font-weight:700;opacity:0;transition:.3s;pointer-events:none;z-index:100;max-width:90%;text-align:center}
@@ -186,7 +186,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
       <button class="ib alert" id="emergencyBtn" title="طوارئ">🚨</button>
       <button class="ib" onclick="installApp()" title="تثبيت">📲</button>
       <button class="ib" id="contactBtn" title="الإدارة">💬</button>
-      <button class="ib" id="logoutBtn" title="خروج">⏻</button>
+      <button class="ib" id="logoutBtn" title="خروج">🚪</button>
     </div>
   </header>
 
@@ -281,12 +281,13 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
 
   <nav class="nav">
     <button class="on" data-tab="browse"><span class="ni">🔍</span>تصفح</button>
-    <div class="navadd" id="navAdd">
-      <button class="fab" data-tab="add" style="width:58px;height:58px;padding:0">+</button>
-      <span id="navAddLbl" style="display:block;text-align:center">أضف نشاط</span>
-    </div>
     <button data-tab="mine" id="navMine"><span class="ni">📋</span>أنشطتي</button>
+    <div class="navadd" id="navAdd">
+      <button class="fab" data-tab="add">+</button>
+      <span id="navAddLbl">أضف نشاط</span>
+    </div>
     <button data-tab="admin" id="adminTab" class="hidden"><span class="ni">🛡️</span>الإدارة</button>
+    <span></span>
   </nav>
 </section>
 
@@ -309,7 +310,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
     <div style="color:var(--p);font-weight:700;margin-bottom:6px">مواعيد العمل</div>
     <div id="mHours" style="margin-bottom:6px"></div>
     <div id="mRatings"></div>
-    <div id="mActs" class="acts-w" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"></div>
+    <div id="mActs" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;padding-top:12px;border-top:1px dashed rgba(255,255,255,.08)"></div>
   </div>
 </div>
 
@@ -491,7 +492,7 @@ onAuthStateChanged(auth, async user => {
   $('navAdd').classList.remove('hidden');
   $('navMine').classList.remove('hidden');
   $('bellBtn').classList.remove('hidden');
-  $('logoutBtn').textContent = '⏻';
+  $('logoutBtn').textContent = '🚪';
   $('logoutBtn').title = 'خروج';
   $('logoutBtn').onclick = () => signOut(auth);
   const s = await getDoc(doc(db, 'users', user.uid));
