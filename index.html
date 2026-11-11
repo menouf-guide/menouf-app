@@ -14,9 +14,9 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-:root{--bg:#090a0f;--card:rgba(20,22,29,.85);--p:#ffc400;--pg:linear-gradient(135deg,#ffd000,#e5a700);--pglow:rgba(255,196,0,.28);--t:#f8fafc;--m:#94a3b8;--b:rgba(255,255,255,.08);--bg2:rgba(245,196,0,.25);--d:#ef4444;--v:#38bdf8}
+:root{--bg:#08090c;--card:rgba(22,24,31,.9);--p:#ffc400;--pg:linear-gradient(135deg,#ffd000,#e5a700);--pglow:rgba(255,196,0,.28);--t:#f8fafc;--m:#94a3b8;--b:rgba(255,255,255,.08);--bg2:rgba(245,196,0,.25);--d:#ef4444;--v:#38bdf8}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:Cairo,system-ui,sans-serif;background:var(--bg) radial-gradient(circle at 15% 10%,rgba(245,196,0,.08),transparent 45%);background-attachment:fixed;color:var(--t);min-height:100vh;font-size:15px;line-height:1.6;overflow-x:hidden}
+body{font-family:Cairo,system-ui,sans-serif;background:radial-gradient(circle at 50% 0%,rgba(245,196,0,.10),transparent 50%),var(--bg);color:var(--t);min-height:100vh;font-size:15px;line-height:1.6;overflow-x:hidden}
 button,input,select,textarea{font:inherit;outline:none}
 button{cursor:pointer;border:0;background:none}
 a{text-decoration:none;color:inherit}
@@ -24,34 +24,72 @@ a{text-decoration:none;color:inherit}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @keyframes up{from{transform:translateY(100%)}to{transform:none}}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(16,185,129,.7)}70%{box-shadow:0 0 0 7px rgba(16,185,129,0)}100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}}
-.wrap{max-width:520px;margin:0 auto;padding:16px 16px 115px;animation:fadeIn .4s ease-out}
-header{position:sticky;top:0;z-index:25;display:flex;justify-content:space-between;align-items:center;gap:6px;padding:12px 16px;background:rgba(9,10,15,.85);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--b)}
-header img{height:42px;border-radius:12px}
-.hb{padding:7px 12px;border-radius:999px;border:1px solid var(--bg2);color:var(--p);font-size:12.5px;font-weight:700;background:rgba(255,196,0,.06);white-space:nowrap}
-.hb.alert{border-color:rgba(239,68,68,.3);color:#f87171;background:rgba(239,68,68,.08)}
-.tools{display:flex;gap:7px;overflow-x:auto;padding:2px 2px 10px;scrollbar-width:none}
-.tools::-webkit-scrollbar{display:none}
-.tool{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:12px;background:rgba(255,196,0,.12);border:1px solid rgba(255,196,0,.35);color:var(--p);font-size:12.5px;font-weight:700;white-space:nowrap}
-.tool.active{background:linear-gradient(135deg,#ffd000,#e5a700);border-color:transparent;color:#0d0e12;box-shadow:0 4px 14px rgba(255,196,0,.3)}
-#bellCount{background:#ef4444;color:#fff;border-radius:999px;padding:0 6px;font-size:11px;font-weight:800}
-.card{background:var(--card);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--b);border-radius:20px;padding:17px;margin-bottom:14px;box-shadow:0 8px 30px rgba(0,0,0,.35);position:relative;transition:transform .2s}
+.wrap{max-width:520px;margin:0 auto;padding:12px 16px 120px;animation:fadeIn .4s ease-out}
+
+/* الهيدر */
+header{position:sticky;top:0;z-index:25;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:linear-gradient(180deg,rgba(40,34,10,.95),rgba(8,9,12,.92));border-bottom:1px solid var(--bg2)}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid var(--p);box-shadow:0 0 14px var(--pglow)}
+.brand h1{font-size:18px;font-weight:900;color:var(--p);line-height:1.2}
+.brand small{color:var(--m);font-size:11.5px}
+.hact{display:flex;gap:6px}
+.ib{width:38px;height:38px;border-radius:50%;border:1px solid var(--bg2);background:rgba(255,196,0,.08);font-size:16px;display:flex;align-items:center;justify-content:center}
+.ib.alert{border-color:rgba(239,68,68,.4);background:rgba(239,68,68,.12)}
+.ib:active{transform:scale(.92)}
+
+/* البحث والفلاتر */
+.search{display:flex;align-items:center;gap:8px;background:rgba(18,20,26,.95);border:1px solid var(--bg2);border-radius:16px;padding:0 14px;margin:14px 0 12px}
+.search input{border:0;background:transparent;padding:13px 0;color:#fff;font-size:14.5px;flex:1;width:100%}
+.search input::placeholder{color:#64748b}
+.tools{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.tool{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:11px 14px;border-radius:14px;background:rgba(18,20,26,.95);border:1px solid var(--b);font-size:13px;font-weight:700;color:#e2e8f0;position:relative}
+.tool.active{border-color:var(--bg2);background:rgba(255,196,0,.12);color:var(--p)}
+#bellCount{background:var(--d);color:#fff;border-radius:999px;padding:0 6px;font-size:11px;font-weight:800;margin-right:4px}
+.sec{font-size:17px;font-weight:900;color:#fff;margin:14px 0 10px}
+
+/* التصنيفات */
+.cats{display:flex;gap:12px;overflow-x:auto;padding:4px 2px 8px;scrollbar-width:none}
+.cats::-webkit-scrollbar{display:none}
+.cat{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:64px;font-size:12px;font-weight:700;color:var(--m)}
+.ci{width:54px;height:54px;border-radius:50%;background:rgba(22,24,31,.95);border:1px solid var(--b);display:flex;align-items:center;justify-content:center;font-size:22px}
+.cat.on{color:var(--p)}
+.cat.on .ci{background:var(--pg);box-shadow:0 6px 18px var(--pglow);border-color:transparent}
+
+/* الكروت */
+.card{background:var(--card);border:1px solid var(--b);border-radius:20px;padding:16px;margin-bottom:14px;box-shadow:0 8px 28px rgba(0,0,0,.35);position:relative;transition:transform .2s}
 .card:active{transform:scale(.99)}
-.ct{font-size:17.5px;font-weight:800;color:#fff}
+.card.fe{border-color:var(--bg2)}
+.ct{font-size:17px;font-weight:800;color:#fff}
 .muted{color:var(--m);font-size:13px}
 .row{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
-.field{margin-bottom:14px}
-.field label{display:block;font-size:13.5px;font-weight:700;margin-bottom:6px;color:#e2e8f0}
-input,select,textarea{width:100%;background:rgba(15,17,23,.85);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:13px 16px;color:#fff;font-size:14.5px}
-input:focus,select:focus,textarea:focus{border-color:var(--p);box-shadow:0 0 0 3.5px var(--pglow)}
-select option{background:#13151b}
-textarea{min-height:85px;resize:vertical}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:14px 18px;border-radius:14px;font-weight:800;font-size:15px;text-align:center;background:var(--pg);color:#0d0e12;box-shadow:0 6px 18px var(--pglow)}
+.type{font-size:12.5px;color:var(--m)}
+.name{font-size:17.5px;font-weight:900;color:#fff;margin:2px 0}
+.spec{color:var(--p);font-weight:700;font-size:13.5px}
+.tags{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.info{margin-top:10px;font-size:13.5px;color:#cbd5e1;line-height:1.9}
+.dist{color:var(--p);font-size:13px;font-weight:700}
+.foot{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:12px;padding-top:12px;border-top:1px dashed rgba(255,255,255,.1)}
+.acts{display:flex;gap:8px;flex:1}
+.acts .btn{flex:1}
+.rt{font-size:12.5px;color:var(--p);font-weight:700;white-space:nowrap}
+.fav{position:absolute;top:14px;left:14px;width:32px;height:32px;border-radius:50%;border:1px solid var(--b);background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:15px}
+
+/* الأزرار */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:12px 14px;border-radius:14px;font-weight:800;font-size:14.5px;text-align:center;background:var(--pg);color:#0d0e12;box-shadow:0 6px 16px var(--pglow)}
 .btn:active{transform:scale(.96)}
 .btn.s{background:rgba(255,196,0,.08);color:var(--p);border:1px solid var(--bg2);box-shadow:none}
 .btn.sm{width:auto;padding:8px 14px;font-size:13px;border-radius:999px;box-shadow:none}
 .btn.d{background:linear-gradient(135deg,#dc2626,#ef4444);color:#fff;box-shadow:none}
 .btn.g{background:linear-gradient(135deg,#059669,#10b981);color:#fff;box-shadow:none}
 .btn:disabled{opacity:.5}
+
+/* الفورم */
+.field{margin-bottom:14px}
+.field label{display:block;font-size:13.5px;font-weight:700;margin-bottom:6px;color:#e2e8f0}
+input,select,textarea{width:100%;background:rgba(15,17,23,.85);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:13px 16px;color:#fff;font-size:14.5px}
+input:focus,select:focus,textarea:focus{border-color:var(--p);box-shadow:0 0 0 3.5px var(--pglow)}
+select option{background:#13151b}
+textarea{min-height:85px;resize:vertical}
 .chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;margin-bottom:12px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
 .chip{white-space:nowrap;padding:8px 15px;border-radius:999px;border:1px solid var(--b);background:rgba(20,23,31,.75);font-size:13.5px;font-weight:700;color:var(--m)}
@@ -62,8 +100,7 @@ textarea{min-height:85px;resize:vertical}
 .badge.p{color:var(--p);background:rgba(255,196,0,.12);border-color:var(--bg2)}
 .badge.r{color:#f87171;background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.3)}
 .badge.v{color:var(--v);border-color:rgba(56,189,248,.35);background:rgba(56,189,248,.1)}
-.acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;padding-top:12px;border-top:1px dashed rgba(255,255,255,.08)}
-.acts.wr{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
+.acts-w{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;margin-top:12px;padding-top:12px;border-top:1px dashed rgba(255,255,255,.08)}
 .day{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);flex-wrap:wrap}
 .day input{width:105px;padding:7px 8px;font-size:13px;border-radius:10px}
 .tg{width:46px;height:26px;background:#2d313d;border-radius:999px;position:relative;cursor:pointer;flex:none;transition:.25s}
@@ -71,31 +108,39 @@ textarea{min-height:85px;resize:vertical}
 .tg.on{background:var(--p)}
 .tg.on::after{transform:translateX(-20px);background:#0d0e12}
 #pickMap{height:270px;border-radius:16px;margin:10px 0;border:1px solid var(--bg2)}
-#browseMapBox{position:relative;z-index:1;isolation:isolate;height:520px;border-radius:16px;margin-bottom:20px;border:1px solid var(--bg2);background:#e5e7eb}
+#browseMapBox{position:relative;z-index:1;isolation:isolate;height:480px;border-radius:18px;margin-bottom:16px;border:1px solid var(--bg2);background:#e5e7eb}
 .leaflet-container{background:#e5e7eb}
 .leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#fff;color:#111}
 .leaflet-popup-content{color:#111}
 .lr{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border:1px solid var(--b);border-radius:12px;margin-bottom:6px;background:rgba(255,255,255,.03);font-size:14px}
-.fav{position:absolute;top:16px;left:16px;width:34px;height:34px;border-radius:50%;border:1px solid var(--b);background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:16px}
-.nav{position:fixed;bottom:14px;left:14px;right:14px;max-width:500px;margin:0 auto;z-index:35;display:flex;justify-content:space-around;padding:8px 10px;background:rgba(18,20,27,.92);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid rgba(255,255,255,.1);border-radius:24px;box-shadow:0 12px 35px rgba(0,0,0,.55)}
-.nav button{display:flex;flex-direction:column;align-items:center;font-size:11.5px;font-weight:700;color:var(--m);padding:5px 12px;border-radius:14px}
-.nav svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;margin-bottom:2px}
-.nav button.on{color:var(--p);background:rgba(255,196,0,.08)}
-.toast{position:fixed;bottom:92px;left:50%;transform:translate(-50%,20px);background:rgba(24,27,36,.96);border:1px solid var(--bg2);padding:12px 22px;border-radius:999px;font-weight:700;opacity:0;transition:.3s;pointer-events:none;z-index:100;max-width:90%;text-align:center}
+.empty{text-align:center;color:var(--m);padding:40px 16px;font-weight:700}
+.empty p{font-size:15px;color:#e2e8f0;margin-bottom:6px}
+.empty small{display:block;color:var(--m);font-size:13px;font-weight:600;line-height:1.7;margin-bottom:14px}
+.edit{background:rgba(255,196,0,.12);border:1px solid var(--bg2);color:var(--p);padding:12px 14px;border-radius:14px;font-size:13.5px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
+
+/* شريط التنقل السفلي */
+.nav{position:fixed;bottom:12px;left:12px;right:12px;max-width:496px;margin:0 auto;z-index:35;display:flex;justify-content:space-around;align-items:flex-end;padding:8px 6px;background:rgba(14,16,22,.96);border:1px solid rgba(255,255,255,.1);border-radius:26px;box-shadow:0 12px 35px rgba(0,0,0,.6)}
+.nav button{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11.5px;font-weight:700;color:var(--m);padding:6px 10px;min-width:62px}
+.nav button .ni{font-size:19px}
+.nav button.on{color:var(--p)}
+.navadd{position:relative;top:-16px}
+.fab{width:58px;height:58px;border-radius:50%;background:var(--pg);color:#0d0e12;font-size:30px;font-weight:900;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 22px var(--pglow);border:4px solid #0e1016}
+.navadd span{color:var(--p);font-size:11.5px;font-weight:700;margin-top:2px}
+
+/* عام */
+.toast{position:fixed;bottom:100px;left:50%;transform:translate(-50%,20px);background:rgba(24,27,36,.96);border:1px solid var(--bg2);padding:12px 22px;border-radius:999px;font-weight:700;opacity:0;transition:.3s;pointer-events:none;z-index:100;max-width:90%;text-align:center}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .modal{position:fixed;inset:0;background:rgba(4,5,8,.75);backdrop-filter:blur(8px);display:flex;align-items:flex-end;justify-content:center;z-index:60}
 .sheet{background:#13151c;border:1px solid rgba(255,255,255,.12);width:100%;max-width:520px;border-radius:28px 28px 0 0;padding:22px 20px 30px;max-height:88vh;overflow-y:auto;animation:up .3s ease}
-.empty{text-align:center;color:var(--m);padding:45px 16px;font-weight:700}
-.edit{background:rgba(255,196,0,.12);border:1px solid var(--bg2);color:var(--p);padding:12px 14px;border-radius:14px;font-size:13.5px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
-.rt{color:var(--p);font-size:12.5px;font-weight:700;margin-top:4px}
+.rt-bar{border:1px solid var(--b);border-radius:14px;padding:12px;margin-top:14px}
+.stars{color:var(--p);font-size:17px;letter-spacing:2px}
+.star-pick button{font-size:28px;color:#3f3f46;margin-left:4px}
+.star-pick button.on{color:var(--p)}
 .nitem{border:1px solid var(--b);border-radius:14px;padding:12px;margin-bottom:8px;background:rgba(255,255,255,.03)}
 .nitem.unread{border-color:var(--bg2)}
 .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .stat{border:1px solid var(--b);border-radius:14px;padding:12px;background:rgba(255,255,255,.03)}
 .stat b{display:block;font-size:19px;color:var(--p)}
-.stars{color:var(--p);font-size:17px;letter-spacing:2px}
-.star-pick button{font-size:28px;color:#3f3f46;margin-left:4px}
-.star-pick button.on{color:var(--p)}
 </style>
 <script>
 let dp=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;});
@@ -133,26 +178,38 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
 <!-- التطبيق -->
 <section id="appView" class="hidden">
   <header>
-    <img src="logo.jpg" alt="منوف في جيبك">
-    <div style="display:flex;gap:6px">
-      <button class="hb alert" id="emergencyBtn">🚨 طوارئ</button>
-      <button class="hb" onclick="installApp()">📲 تثبيت</button>
-      <button class="hb" id="contactBtn">💬 الإدارة</button>
-      <button class="hb" id="logoutBtn">خروج</button>
+    <div class="brand">
+      <img class="logo" src="logo.jpg" alt="منوف في جيبك">
+      <div><h1>منوف في جيبك 📍</h1><small>دليلك في منوف</small></div>
+    </div>
+    <div class="hact">
+      <button class="ib alert" id="emergencyBtn" title="طوارئ">🚨</button>
+      <button class="ib" onclick="installApp()" title="تثبيت">📲</button>
+      <button class="ib" id="contactBtn" title="الإدارة">💬</button>
+      <button class="ib" id="logoutBtn" title="خروج">⏻</button>
     </div>
   </header>
 
   <div class="wrap">
     <div id="tab-browse">
-      <div class="field"><input id="searchInput" placeholder="ابحث بالاسم أو التخصص أو العنوان..."></div>
+      <div class="search">
+        <span>🔍</span>
+        <input id="searchInput" placeholder="ابحث بالاسم أو التخصص أو العنوان...">
+      </div>
+
       <div class="tools">
         <button class="tool" id="bellBtn">🔔 الإشعارات <span id="bellCount" class="hidden"></span></button>
         <button class="tool" id="fOpen">🟢 مفتوح الآن</button>
-        <button class="tool" id="fNear">📍 الأقرب لمكاني</button>
         <button class="tool" id="fMap">🗺️ الخريطة</button>
+        <button class="tool" id="fNear">📍 الأقرب لمكاني</button>
       </div>
-      <div class="chips" id="catChips"></div>
+
+      <div class="sec">التصنيفات</div>
+      <div class="cats" id="catChips"></div>
+
       <div id="browseMapBox" class="hidden"></div>
+
+      <div class="sec">قائمة الأنشطة</div>
       <div id="browseList"></div>
     </div>
 
@@ -223,10 +280,13 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
   </div>
 
   <nav class="nav">
-    <button class="on" data-tab="browse"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>تصفح</button>
-    <button data-tab="add" id="navAdd"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg><span id="navAddLbl">أضف نشاط</span></button>
-    <button data-tab="mine" id="navMine"><svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>أنشطتي</button>
-    <button data-tab="admin" id="adminTab" class="hidden"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>الإدارة</button>
+    <button class="on" data-tab="browse"><span class="ni">🔍</span>تصفح</button>
+    <div class="navadd" id="navAdd">
+      <button class="fab" data-tab="add" style="width:58px;height:58px;padding:0">+</button>
+      <span id="navAddLbl" style="display:block;text-align:center">أضف نشاط</span>
+    </div>
+    <button data-tab="mine" id="navMine"><span class="ni">📋</span>أنشطتي</button>
+    <button data-tab="admin" id="adminTab" class="hidden"><span class="ni">🛡️</span>الإدارة</button>
   </nav>
 </section>
 
@@ -235,7 +295,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
   <div class="sheet">
     <div class="row" style="margin-bottom:12px">
       <div style="display:flex;gap:6px;flex-wrap:wrap"><span id="mBadge" class="badge"></span><span id="mVerified" class="badge v hidden">✓ موثق</span></div>
-      <div style="display:flex;gap:6px"><button id="mShare" class="hb">📤 مشاركة</button><button id="closeModal" style="font-size:26px;color:var(--m);line-height:1">&times;</button></div>
+      <div style="display:flex;gap:6px"><button id="mShare" class="ib" title="مشاركة">📤</button><button id="closeModal" style="font-size:26px;color:var(--m);line-height:1">&times;</button></div>
     </div>
     <h2 id="mTitle" class="ct" style="font-size:21px;margin-bottom:4px"></h2>
     <p id="mSub" style="color:var(--p);font-weight:700;margin-bottom:10px"></p>
@@ -248,8 +308,8 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
     <div id="mItemsBox" class="hidden" style="margin-bottom:14px"><div style="color:var(--p);font-weight:700;margin-bottom:6px">الخدمات والأسعار</div><div id="mItems"></div></div>
     <div style="color:var(--p);font-weight:700;margin-bottom:6px">مواعيد العمل</div>
     <div id="mHours" style="margin-bottom:6px"></div>
-    <div id="mRatings" style="margin-top:14px"></div>
-    <div id="mActs" class="acts"></div>
+    <div id="mRatings"></div>
+    <div id="mActs" class="acts-w" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"></div>
   </div>
 </div>
 
@@ -301,16 +361,22 @@ const fd = ms => ms ? new Date(ms).toLocaleString('ar-EG') : '';
 
 const DAYS = ['السبت','الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة'];
 const TYPES = {
-  doctor: { label: '🩺 دكتور / عيادة', nameLbl: 'اسم الطبيب واللقب العلمي' },
-  shop: { label: '🛍️ محل / مطعم', nameLbl: 'اسم المحل أو المطعم' },
-  service: { label: '🛠️ خدمة / ورشة', nameLbl: 'اسم الخدمة أو الفني' }
+  doctor: { label: 'دكتور / عيادة', nameLbl: 'اسم الطبيب واللقب العلمي' },
+  shop: { label: 'محل / مطعم', nameLbl: 'اسم المحل أو المطعم' },
+  service: { label: 'خدمة / ورشة', nameLbl: 'اسم الخدمة أو الفني' }
 };
 const SPECS = ['باطنة','أطفال','نساء وتوليد','جلدية وتجميل','أسنان','عظام','عيون','قلب وأوعية دموية','أنف وأذن وحنجرة','مخ وأعصاب','أخرى'];
 const CATS = {
   shop: ['مطعم وكافيه','سوبر ماركت وبقالة','صيدلية','ملابس وأحذية','إلكترونيات وموبايلات','أدوات منزلية','مواد بناء وتشطيبات','أخرى'],
   service: ['سباكة وأعمال صحية','كهربائي وتأسيس','نجارة ودهانات','صيانة أجهزة منزلية','نقل ورفع أثاث','تصوير ومناسبات','أخرى']
 };
-const ALL_CATS = ['الكل','❤️ المفضلة','دكاترة', ...CATS.shop, ...CATS.service];
+const CAT_TABS = [
+  { k: 'الكل', i: '🧭' },
+  { k: 'المفضلة', i: '❤️' },
+  { k: 'دكاترة', i: '🩺' },
+  { k: 'محل / مطعم', i: '🛍️' },
+  { k: 'خدمة', i: '🛠️' }
+];
 const CENTER = [30.46, 30.93];
 
 let me = null, profile = null, unsubs = [], guest = false, mode = 'login';
@@ -403,7 +469,8 @@ $('guestBtn').onclick = () => {
   $('navAdd').classList.add('hidden');
   $('navMine').classList.add('hidden');
   $('bellBtn').classList.add('hidden');
-  $('logoutBtn').textContent = 'دخول';
+  $('logoutBtn').title = 'دخول';
+  $('logoutBtn').textContent = '🔑';
   $('logoutBtn').onclick = () => location.reload();
   unsubs.push(onSnapshot(query(collection(db, 'businesses'), where('status', '==', 'approved')), s => {
     approved = s.docs.map(d => ({ id: d.id, ...d.data() })); renderBrowse();
@@ -424,7 +491,8 @@ onAuthStateChanged(auth, async user => {
   $('navAdd').classList.remove('hidden');
   $('navMine').classList.remove('hidden');
   $('bellBtn').classList.remove('hidden');
-  $('logoutBtn').textContent = 'خروج';
+  $('logoutBtn').textContent = '⏻';
+  $('logoutBtn').title = 'خروج';
   $('logoutBtn').onclick = () => signOut(auth);
   const s = await getDoc(doc(db, 'users', user.uid));
   profile = s.exists() ? { uid: user.uid, ...s.data() } : { uid: user.uid, name: 'مستخدم', role: 'user', phone: '' };
@@ -496,11 +564,15 @@ async function notifyOwner(bizId, title, body) {
   } catch (e) {}
 }
 
-/* ---------- التصفح ---------- */
+/* ---------- التصنيفات والتصفح ---------- */
 function buildCats() {
-  $('catChips').innerHTML = ALL_CATS.map(c => `<button class="chip ${c === browseCat ? 'on' : ''}" data-cat="${esc(c)}">${esc(c)}</button>`).join('');
+  $('catChips').innerHTML = CAT_TABS.map(c => `<button class="cat ${c.k === browseCat ? 'on' : ''}" data-cat="${esc(c.k)}">
+    <span class="ci">${c.i}</span><span>${esc(c.k)}</span></button>`).join('');
 }
-$('catChips').onclick = e => { const b = e.target.closest('[data-cat]'); if (b) { browseCat = b.dataset.cat; buildCats(); renderBrowse(); } };
+$('catChips').onclick = e => {
+  const b = e.target.closest('[data-cat]'); if (!b) return;
+  browseCat = b.dataset.cat; buildCats(); renderBrowse();
+};
 $('searchInput').oninput = e => { q = e.target.value.trim().toLowerCase(); renderBrowse(); };
 $('fOpen').onclick = () => { onlyOpen = !onlyOpen; $('fOpen').classList.toggle('active', onlyOpen); renderBrowse(); };
 $('fNear').onclick = () => {
@@ -522,8 +594,11 @@ $('fMap').onclick = () => {
 
 function filtered() {
   return approved.filter(b => {
-    const catOk = browseCat === 'الكل' || (browseCat === '❤️ المفضلة' && favs.includes(b.id))
-      || (browseCat === 'دكاترة' && b.type === 'doctor') || b.category === browseCat;
+    const catOk = browseCat === 'الكل'
+      || (browseCat === 'المفضلة' && favs.includes(b.id))
+      || (browseCat === 'دكاترة' && b.type === 'doctor')
+      || (browseCat === 'محل / مطعم' && b.type === 'shop')
+      || (browseCat === 'خدمة' && b.type === 'service');
     const qOk = !q || [b.name, b.specialty, b.category, b.address, b.landmark].some(x => x && x.toLowerCase().includes(q));
     return catOk && qOk && (!onlyOpen || isOpen(b.hours));
   }).map(b => ({ ...b, km: userPos ? dist(userPos.lat, userPos.lng, b.lat, b.lng) : null }))
@@ -536,29 +611,34 @@ function renderBrowse() {
   $('browseList').innerHTML = list.length ? list.map(b => {
     const open = isOpen(b.hours), ph = b.phone || b.ownerPhone || '', fav = favs.includes(b.id);
     const rt = ratingOf(b.id);
-    return `<div class="card" data-open="${b.id}" style="cursor:pointer">
+    const isDoc = b.type === 'doctor';
+    return `<div class="card ${b.verified ? 'fe' : ''}" data-open="${b.id}" style="cursor:pointer">
       <button class="fav" data-fav="${b.id}">${fav ? '❤️' : '🤍'}</button>
-      <div class="row" style="padding-left:36px">
+      <div class="row" style="padding-left:34px">
         <div>
-          <div style="display:flex;gap:5px;flex-wrap:wrap">
-            <span class="badge p">${esc(TYPES[b.type]?.label || b.category)}</span>
-            ${b.verified ? '<span class="badge v">✓ موثق</span>' : ''}
-          </div>
-          <h3 class="ct" style="margin-top:6px">${esc(b.name)}</h3>
+          <div class="type">${esc(TYPES[b.type]?.label || b.category)}</div>
+          <div class="name">${esc(b.name)}</div>
+          <div class="spec">${isDoc ? esc(b.specialty) : esc(b.category)}</div>
         </div>
-        <span class="badge ${open ? 'ok' : ''}">${open ? '<span class="dot"></span> مفتوح' : '⚪ مغلق'}</span>
+        <div class="tags">
+          ${b.verified ? '<span class="badge v">✓ موثق</span>' : ''}
+          <span class="badge ${open ? 'ok' : ''}">${open ? '<span class="dot"></span> مفتوح' : '⚪ مغلق'}</span>
+        </div>
       </div>
-      <p class="muted" style="margin-top:6px">${b.type === 'doctor' ? '🩺 ' + esc(b.specialty) : esc(b.category)}</p>
-      ${b.desc ? `<p class="muted">${esc(b.desc)}</p>` : ''}
-      <p class="muted">📍 ${esc(b.address)}${b.landmark ? ' (بجوار ' + esc(b.landmark) + ')' : ''}</p>
-      ${b.km != null ? `<p style="color:var(--p);font-size:12px;font-weight:700">🚗 ${fmtDist(b.km)}</p>` : ''}
-      ${rt.n && !guest ? `<p class="rt">⭐ ${rt.avg.toFixed(1)} (${rt.n} تقييم)</p>` : ''}
-      ${ph && !guest ? `<div class="acts">
-        <a class="btn sm" href="tel:${ph}" onclick="event.stopPropagation()">📞 اتصال</a>
-        <a class="btn sm g" target="_blank" href="https://wa.me/2${ph}" onclick="event.stopPropagation()">💬 واتساب</a>
-      </div>` : ''}
+      <div class="info">
+        ${b.price && isDoc ? `<div>💰 الكشف: ${esc(b.price)} جنيه</div>` : ''}
+        <div>📍 ${esc(b.address)}${b.landmark ? ' (بجوار ' + esc(b.landmark) + ')' : ''}</div>
+        ${b.km != null ? `<div class="dist">🚗 ${fmtDist(b.km)}</div>` : ''}
+      </div>
+      <div class="foot">
+        ${ph && !guest ? `<div class="acts">
+          <a class="btn sm g" target="_blank" href="https://wa.me/2${ph}" onclick="event.stopPropagation()">💬 واتساب</a>
+          <a class="btn sm s" href="tel:${ph}" onclick="event.stopPropagation()">📞 اتصال</a>
+        </div>` : '<div></div>'}
+        ${rt.n && !guest ? `<span class="rt">⭐ ${rt.avg.toFixed(1)} (${rt.n} تقييم)</span>` : ''}
+      </div>
     </div>`;
-  }).join('') : '<div class="empty">لا توجد نتائج</div>';
+  }).join('') : '<div class="empty">لا توجد نتائج مطابقة</div>';
 }
 
 function renderMap() {
@@ -611,7 +691,7 @@ function openModal(b) {
   $('mItems').innerHTML = (b.items || []).map(i => `<div class="lr"><span>${esc(i.name)}</span><strong style="color:var(--p)">${esc(i.price)} جنيه</strong></div>`).join('');
   $('mHours').innerHTML = (b.hours || []).map(h => `<div class="lr"><span>${h.day}</span><span>${h.open ? h.from + ' إلى ' + h.to : 'مغلق'}</span></div>`).join('');
   $('mActs').innerHTML = `
-    ${ph ? `<a class="btn" href="tel:${ph}">📞 اتصال</a><a class="btn g" target="_blank" href="https://wa.me/2${ph}">💬 واتساب</a>` : ''}
+    ${ph ? `<a class="btn g" target="_blank" href="https://wa.me/2${ph}">💬 واتساب</a><a class="btn" href="tel:${ph}">📞 اتصال</a>` : ''}
     ${b.lat ? `<a class="btn s" style="grid-column:span 2" target="_blank" href="https://www.google.com/maps?q=${b.lat},${b.lng}">📍 فتح في الخريطة</a>` : ''}
     <button class="btn s" data-report style="grid-column:span 2">⚠️ إبلاغ عن خطأ في البيانات</button>`;
   renderRatings(b);
@@ -626,7 +706,7 @@ function renderRatings(b) {
   const mine = list.find(r => r.reviewerId === me.uid);
   $('mRatings').dataset.bizId = b.id;
   $('mRatings').dataset.picked = mine ? mine.rating : 0;
-  $('mRatings').innerHTML = `<div style="border:1px solid var(--b);border-radius:14px;padding:12px">
+  $('mRatings').innerHTML = `<div class="rt-bar">
     <div class="row"><strong>⭐ التقييمات</strong>
       <span class="muted">${rt.n ? rt.avg.toFixed(1) + ' من 5 (' + rt.n + ')' : 'لا توجد تقييمات بعد'}</span></div>
     ${list.slice(0, 5).map(r => `<div style="margin-top:8px">
@@ -706,7 +786,8 @@ $('geoBtn').onclick = () => {
 
 /* ---------- الإضافة والتعديل ---------- */
 function buildTypeChips() {
-  $('typeChips').innerHTML = Object.entries(TYPES).map(([k, v]) => `<button type="button" class="chip ${type === k ? 'on' : ''}" data-type="${k}">${v.label}</button>`).join('');
+  $('typeChips').innerHTML = Object.entries(TYPES).map(([k, v]) =>
+    `<button type="button" class="chip ${type === k ? 'on' : ''}" data-type="${k}">${v.label}</button>`).join('');
 }
 $('typeChips').onclick = e => { const b = e.target.closest('[data-type]'); if (b) { type = b.dataset.type; buildTypeChips(); applyType(); } };
 function applyType() {
@@ -815,14 +896,18 @@ $('cancelEdit').onclick = () => { cancelEdit(); switchTab('mine'); };
 /* ---------- أنشطتي ---------- */
 function renderMine() {
   if (!myBiz.length) {
-    $('mineList').innerHTML = `<div class="empty"><p>لم تضف أي نشاط حتى الآن</p><button class="btn sm" style="margin-top:14px" data-first>أضف نشاطك الأول ✨</button></div>`;
+    $('mineList').innerHTML = `<div class="empty">
+      <p>لم تضف أي نشاط حتى الآن</p>
+      <small>أضف عيادتك، مطعمك أو محلك التجاري مجاناً ليراك أهالي منوف</small>
+      <button class="btn sm" data-first>أضف نشاطك الأول ✨</button>
+    </div>`;
     return;
   }
   $('mineList').innerHTML = myBiz.map(b => `<div class="card">
     <div class="row"><h3 class="ct">${esc(b.name)}</h3>${badge(b.status)}</div>
     <p class="muted" style="margin:6px 0">📍 ${esc(b.address)}</p>
     ${b.status === 'rejected' && b.rejectReason ? `<p style="color:#f87171;font-size:13px;margin-bottom:6px">سبب الرفض: ${esc(b.rejectReason)}</p>` : ''}
-    <div class="acts wr">
+    <div class="acts-w">
       <button class="btn sm s" data-edit="${b.id}">تعديل ✏️</button>
       <button class="btn sm d" data-del="${b.id}">حذف 🗑️</button>
     </div></div>`).join('');
@@ -881,7 +966,7 @@ function renderAdmin() {
         <strong>${esc(r.bizName)}</strong>
         <p class="muted" style="margin:4px 0">${esc(r.text)}</p>
         <p class="muted">من: ${esc(r.reporterName || '')} · ${esc(r.reporterPhone || '')}</p>
-        <div class="acts wr">
+        <div class="acts-w">
           <a class="btn sm g" target="_blank" href="https://wa.me/2${esc(r.reporterPhone)}">💬 المُبلِّغ</a>
           <button class="btn sm" data-rdel="${r.id}">تم الحل ✓</button>
         </div></div>`).join('') : '';
@@ -894,7 +979,7 @@ function renderAdmin() {
     <span class="muted">👤 ${esc(b.ownerName || '')} · 📞 ${esc(b.phone || b.ownerPhone || '')}</span></div>${badge(b.status)}</div>
     <p style="color:var(--p);font-weight:700;font-size:13px;margin-top:6px">${b.type === 'doctor' ? 'طبيب (' + esc(b.specialty) + ')' : esc(b.category)}</p>
     <p class="muted">📍 ${esc(b.address)}</p>
-    <div class="acts wr">
+    <div class="acts-w">
       <a class="btn sm g" target="_blank" href="https://wa.me/2${esc(b.phone || b.ownerPhone)}">💬 واتساب</a>
       ${b.type === 'doctor' ? `<button class="btn sm s" data-showreg="${b.id}">رقم القيد</button>` : ''}
       ${b.status === 'approved' ? `<button class="btn sm s" data-verify="${b.id}">${b.verified ? 'إلغاء التوثيق' : 'توثيق ✓'}</button>` : ''}
@@ -952,10 +1037,10 @@ $('contactBtn').onclick = () => {
 function switchTab(n) {
   if (n !== 'add' && editId) cancelEdit();
   ['browse', 'add', 'mine', 'admin'].forEach(t => $('tab-' + t).classList.toggle('hidden', t !== n));
-  document.querySelectorAll('.nav button').forEach(b => b.classList.toggle('on', b.dataset.tab === n));
+  document.querySelectorAll('.nav button[data-tab]').forEach(b => b.classList.toggle('on', b.dataset.tab === n));
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 document.querySelector('.nav').onclick = e => { const b = e.target.closest('[data-tab]'); if (b) switchTab(b.dataset.tab); };
 </script>
 </body>
-  </html>
+</html>
