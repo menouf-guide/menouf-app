@@ -125,6 +125,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
       <div class="field"><label>كلمة المرور</label><input id="password" type="password" placeholder="••••••••"></div>
       <button class="btn" id="authBtn" type="submit" style="margin-top:10px">دخول</button>
       <div style="text-align:center;margin-top:18px"><button type="button" id="toggleAuth" style="color:var(--p);font-weight:700;font-size:13.5px">ليس لديك حساب؟ سجّل الآن</button></div>
+      <button type="button" id="guestBtn" class="btn s" style="margin-top:12px">👀 تصفح كزائر</button>
     </form>
   </div>
 </section>
@@ -223,8 +224,8 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
 
   <nav class="nav">
     <button class="on" data-tab="browse"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>تصفح</button>
-    <button data-tab="add"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg><span id="navAddLbl">أضف نشاط</span></button>
-    <button data-tab="mine"><svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>أنشطتي</button>
+    <button data-tab="add" id="navAdd"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg><span id="navAddLbl">أضف نشاط</span></button>
+    <button data-tab="mine" id="navMine"><svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>أنشطتي</button>
     <button data-tab="admin" id="adminTab" class="hidden"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>الإدارة</button>
   </nav>
 </section>
@@ -312,14 +313,13 @@ const CATS = {
 const ALL_CATS = ['الكل','❤️ المفضلة','دكاترة', ...CATS.shop, ...CATS.service];
 const CENTER = [30.46, 30.93];
 
-let me = null, profile = null, unsubs = [];
+let me = null, profile = null, unsubs = [], guest = false, mode = 'login';
 let approved = [], myBiz = [], allBiz = [], reports = [], reviews = [], notifs = [], announces = [];
 let userCount = null, type = null, items = [], browseCat = 'الكل', q = '', editId = null, adminFilter = 'pending';
 let map = null, marker = null, bMap = null, bMarkers = [], curBiz = null;
 let userPos = null, onlyOpen = false, nearMe = false, mapView = false;
 let favs = JSON.parse(localStorage.getItem('menouf_favs') || '[]');
 let lastAnnSeen = Number(localStorage.getItem('menouf_ann_seen') || 0);
-let mode = 'login';
 
 function toast(msg) {
   const t = $('toast'); t.textContent = msg; t.classList.add('show');
@@ -369,7 +369,7 @@ $('mShare').onclick = async () => {
   else window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
 };
 
-/* ---------- الدخول ---------- */
+/* ---------- الدخول والزائر ---------- */
 function setMode(m) {
   mode = m;
   $('nameField').classList.toggle('hidden', m !== 'register');
@@ -378,6 +378,7 @@ function setMode(m) {
   $('toggleAuth').textContent = m === 'login' ? 'ليس لديك حساب؟ سجّل الآن' : 'عندك حساب؟ ادخل من هنا';
 }
 $('toggleAuth').onclick = () => setMode(mode === 'login' ? 'register' : 'login');
+
 $('authForm').onsubmit = async e => {
   e.preventDefault();
   const phone = $('phone').value.replace(/\D/g, ''), pass = $('password').value;
@@ -394,12 +395,37 @@ $('authForm').onsubmit = async e => {
   } catch (err) { toast(err.code === 'name' ? 'اكتب اسمك' : friendly(err)); }
   $('authBtn').disabled = false;
 };
+
+$('guestBtn').onclick = () => {
+  guest = true;
+  $('authView').classList.add('hidden');
+  $('appView').classList.remove('hidden');
+  $('navAdd').classList.add('hidden');
+  $('navMine').classList.add('hidden');
+  $('bellBtn').classList.add('hidden');
+  $('logoutBtn').textContent = 'دخول';
+  $('logoutBtn').onclick = () => location.reload();
+  unsubs.push(onSnapshot(query(collection(db, 'businesses'), where('status', '==', 'approved')), s => {
+    approved = s.docs.map(d => ({ id: d.id, ...d.data() })); renderBrowse();
+  }, () => toast('تعذر تحميل الأنشطة')));
+  buildCats(); buildTypeChips(); buildHours(); switchTab('browse');
+};
+
 $('logoutBtn').onclick = () => signOut(auth);
 
 onAuthStateChanged(auth, async user => {
   unsubs.forEach(u => u()); unsubs = [];
-  if (!user) { $('appView').classList.add('hidden'); $('authView').classList.remove('hidden'); setMode('login'); return; }
+  if (!user) {
+    if (guest) return;
+    $('appView').classList.add('hidden'); $('authView').classList.remove('hidden'); setMode('login'); return;
+  }
+  guest = false;
   me = user;
+  $('navAdd').classList.remove('hidden');
+  $('navMine').classList.remove('hidden');
+  $('bellBtn').classList.remove('hidden');
+  $('logoutBtn').textContent = 'خروج';
+  $('logoutBtn').onclick = () => signOut(auth);
   const s = await getDoc(doc(db, 'users', user.uid));
   profile = s.exists() ? { uid: user.uid, ...s.data() } : { uid: user.uid, name: 'مستخدم', role: 'user', phone: '' };
   $('authView').classList.add('hidden'); $('appView').classList.remove('hidden');
@@ -419,9 +445,9 @@ function listen() {
     updateBell();
   }));
   unsubs.push(onSnapshot(collection(db, 'announcements'), s => {
-    const newList = s.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => tsMs(b.createdAt) - tsMs(a.createdAt));
-    if (announces.length && newList.length && tsMs(newList[0].createdAt) > tsMs(announces[0].createdAt)) toast('📢 ' + newList[0].title);
-    announces = newList; updateBell();
+    const list = s.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => tsMs(b.createdAt) - tsMs(a.createdAt));
+    if (announces.length && list.length && tsMs(list[0].createdAt) > tsMs(announces[0].createdAt)) toast('📢 ' + list[0].title);
+    announces = list; updateBell();
   }));
   unsubs.push(onSnapshot(collection(db, 'reviews'), s => {
     reviews = s.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -526,8 +552,8 @@ function renderBrowse() {
       ${b.desc ? `<p class="muted">${esc(b.desc)}</p>` : ''}
       <p class="muted">📍 ${esc(b.address)}${b.landmark ? ' (بجوار ' + esc(b.landmark) + ')' : ''}</p>
       ${b.km != null ? `<p style="color:var(--p);font-size:12px;font-weight:700">🚗 ${fmtDist(b.km)}</p>` : ''}
-      ${rt.n ? `<p class="rt">⭐ ${rt.avg.toFixed(1)} (${rt.n} تقييم)</p>` : ''}
-      ${ph ? `<div class="acts">
+      ${rt.n && !guest ? `<p class="rt">⭐ ${rt.avg.toFixed(1)} (${rt.n} تقييم)</p>` : ''}
+      ${ph && !guest ? `<div class="acts">
         <a class="btn sm" href="tel:${ph}" onclick="event.stopPropagation()">📞 اتصال</a>
         <a class="btn sm g" target="_blank" href="https://wa.me/2${ph}" onclick="event.stopPropagation()">💬 واتساب</a>
       </div>` : ''}
@@ -567,6 +593,7 @@ $('browseList').onclick = e => {
 
 /* ---------- تفاصيل النشاط والتقييمات ---------- */
 function openModal(b) {
+  if (guest) return toast('سجّل دخولك عشان تشوف التفاصيل والتقييمات');
   curBiz = b;
   const open = isOpen(b.hours), ph = b.phone || b.ownerPhone || '';
   const km = userPos ? dist(userPos.lat, userPos.lng, b.lat, b.lng) : null;
@@ -610,11 +637,12 @@ function renderRatings(b) {
         ${[1,2,3,4,5].map(n => `<button type="button" data-star="${n}" class="${n <= (mine?.rating || 0) ? 'on' : ''}">★</button>`).join('')}
       </div>
       <input id="revText" placeholder="اكتب رأيك (اختياري)" value="${esc(mine?.text || '')}" style="margin-top:8px">
-      <button class="btn sm" id="revSave" style="margin-top:8px">${mine ? 'تعديل تقييمي' : 'إضافة تقييم'}</button>`}
+      <button class="btn sm" id="revSave" data-edit="${mine ? 1 : ''}" style="margin-top:8px">${mine ? 'تعديل تقييمي' : 'إضافة تقييم'}</button>`}
   </div>`;
 }
 
 $('mRatings').onclick = async e => {
+  if (guest) return toast('سجّل دخولك عشان تقيّم');
   const st = e.target.closest('[data-star]');
   if (st) {
     $('mRatings').dataset.picked = st.dataset.star;
@@ -622,20 +650,23 @@ $('mRatings').onclick = async e => {
     return;
   }
   if (e.target.closest('#revSave')) {
-    const rating = +$('mRatings').dataset.picked, bizId = $('mRatings').dataset.bizId;
+    const bizId = $('mRatings').dataset.bizId, rating = +$('mRatings').dataset.picked;
     if (!rating) return toast('اختار عدد النجوم');
+    const already = reviews.some(r => r.bizId === bizId && r.reviewerId === me.uid);
+    if (already && !$('revSave').dataset.edit) return toast('قيّمت هذا النشاط قبل كده');
     try {
       await setDoc(doc(db, 'reviews', bizId + '_' + me.uid), {
         bizId, reviewerId: me.uid, reviewerName: profile.name, rating,
         text: $('revText').value.trim().slice(0, 200), createdAt: serverTimestamp()
       });
       toast('تم حفظ تقييمك ⭐');
-    } catch (err) { toast('تعذر حفظ التقييم'); }
+    } catch (err) { toast('تعذر حفظ التقييم، ممكن تكون قيّمت قبل كده'); }
   }
 };
 
 $('mActs').onclick = async e => {
   if (!e.target.closest('[data-report]')) return;
+  if (guest) return toast('سجّل دخولك عشان تبلّغ');
   const t = prompt('اكتب الخطأ (رقم غلط، عنوان غلط، نشاط مغلق...)');
   if (!t || !t.trim()) return;
   try {
@@ -809,7 +840,7 @@ $('mineList').onclick = async e => {
 /* ---------- لوحة الإدارة ---------- */
 function renderAdminStats() {
   const c = s => allBiz.filter(b => b.status === s).length;
-  const all = reviews.length ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1) : '—';
+  const avg = reviews.length ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1) : '—';
   $('adminStats').innerHTML = `<div class="card"><div class="ct" style="margin-bottom:10px">📊 الإحصائيات</div>
     <div class="stat-grid">
       <div class="stat"><span class="muted">المستخدمين</span><b>${userCount ?? '…'}</b></div>
@@ -819,7 +850,7 @@ function renderAdminStats() {
       <div class="stat"><span class="muted">مخفية</span><b>${c('hidden')}</b></div>
       <div class="stat"><span class="muted">مرفوضة</span><b>${c('rejected')}</b></div>
       <div class="stat"><span class="muted">البلاغات</span><b>${reports.length}</b></div>
-      <div class="stat"><span class="muted">التقييمات · المتوسط</span><b>${reviews.length} · ⭐${all}</b></div>
+      <div class="stat"><span class="muted">التقييمات · المتوسط</span><b>${reviews.length} · ⭐${avg}</b></div>
     </div></div>`;
 }
 async function loadUserCount() {
@@ -912,7 +943,8 @@ $('adminList').onclick = async e => {
 /* ---------- التواصل مع الإدارة ---------- */
 $('contactBtn').onclick = () => {
   const names = myBiz.map(b => b.name).join('، ') || 'لا يوجد نشاط مسجل';
-  const msg = `مرحباً، معك ${profile.name} (${profile.phone}).\nالنشاط/الخدمة: ${names}`;
+  const who = guest ? 'زائر من التطبيق' : `${profile.name} (${profile.phone})`;
+  const msg = `مرحباً، معك ${who}.\nالنشاط/الخدمة: ${names}`;
   window.open(`https://wa.me/2${ADMIN_PHONE}?text=${encodeURIComponent(msg)}`, '_blank');
 };
 
@@ -926,4 +958,4 @@ function switchTab(n) {
 document.querySelector('.nav').onclick = e => { const b = e.target.closest('[data-tab]'); if (b) switchTab(b.dataset.tab); };
 </script>
 </body>
-</html>
+  </html>
