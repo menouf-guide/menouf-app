@@ -200,10 +200,16 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
         <button class="tool" id="fOpen">🟢 مفتوح الآن</button>
         <button class="tool" id="fMap">🗺️ الخريطة</button>
         <button class="tool" id="fNear">📍 الأقرب لمكاني</button>
+        <button class="tool" id="fTrain">🚆 القطارات</button>
       </div>
 
       <div class="sec">التصنيفات</div>
       <div class="cats" id="catChips"></div>
+
+      <div id="trainBox" class="hidden">
+        <div class="chips" id="trainChips"></div>
+        <div id="trainList"></div>
+      </div>
 
       <div id="browseMapBox" class="hidden"></div>
 
@@ -269,6 +275,14 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
         <div class="field"><input id="annTitle" placeholder="عنوان الإعلان"></div>
         <div class="field"><textarea id="annBody" placeholder="نص الإعلان"></textarea></div>
         <button class="btn" id="annSend" type="button">نشر الإعلان</button>
+      </div>
+      <div class="card">
+        <div class="ct" style="margin-bottom:10px">🚆 مواعيد القطارات</div>
+        <div class="field"><label>الاتجاه</label><select id="tDir"></select></div>
+        <div class="field"><label>الميعاد</label><input id="tTime" type="time"></div>
+        <div class="field"><label>ملاحظة (اختياري)</label><input id="tNote" placeholder="مثال: اكسبريس"></div>
+        <button class="btn" id="tAdd" type="button">إضافة ميعاد</button>
+        <div id="tList" style="margin-top:12px"></div>
       </div>
       <div class="chips" id="adminChips">
         <button type="button" class="chip on" data-f="pending">⏳ قيد المراجعة (<span id="cP">0</span>)</button>
@@ -379,6 +393,25 @@ const CAT_TABS = [
 ];
 const CENTER = [30.46, 30.93];
 
+/* ---------- القطارات ---------- */
+const DIR_LABEL = {
+  out_cairo: 'من منوف ← القاهرة',
+  out_tanta: 'من منوف ← طنطا',
+  out_benha: 'من منوف ← بنها',
+  out_kafr: 'من منوف ← كفر الزيات',
+  in_cairo: 'القاهرة ← منوف',
+  in_tanta: 'طنطا ← منوف',
+  in_benha: 'بنها ← منوف',
+  in_kafr: 'كفر الزيات ← منوف'
+};
+const SHORT_DIR = {
+  out_cairo: 'القاهرة', out_tanta: 'طنطا', out_benha: 'بنها', out_kafr: 'كفر الزيات',
+  in_cairo: 'القاهرة', in_tanta: 'طنطا', in_benha: 'بنها', in_kafr: 'كفر الزيات'
+};
+$('tDir').innerHTML = Object.entries(DIR_LABEL).map(([k, v]) => `<option value="${k}">${v}</option>`).join('');
+
+let trains = [], trainDir = 'out_cairo', trainOn = false;
+
 /* ---------- البحث بالمرادفات ---------- */
 const normAr = s => String(s || '').toLowerCase()
   .replace(/[\u064B-\u065F\u0640]/g, '')
@@ -455,7 +488,7 @@ const fmtPeriods = h => {
 let me = null, profile = null, unsubs = [], guest = false, mode = 'login';
 let approved = [], myBiz = [], allBiz = [], reports = [], reviews = [], notifs = [], announces = [];
 let loadingPage = false;
-let userCount = null, type = null, items = [], browseCat = 'الكل', q = '', editId = null, adminFilter = 'pending';
+let userCount = null, type = null, items = [], browseCat = 'الكل', q = '', editId = null, editOrigType = null, adminFilter = 'pending';
 let map = null, marker = null, bMap = null, bMarkers = [], curBiz = null;
 let userPos = null, onlyOpen = false, nearMe = false, mapView = false;
 let currentTab = 'browse', adminTimer = null;
@@ -511,6 +544,77 @@ async function loadApproved() {
   }
 }
 
+/* ---------- القطارات: عرض ---------- */
+function listenTrains() {
+  return onSnapshot(collection(db, 'trains'), s => {
+    trains = s.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderTrains(); renderTrainAdmin();
+  }, () => {});
+}
+
+function renderTrains() {
+  const dirs = Object.keys(DIR_LABEL);
+  $('trainChips').innerHTML = dirs.map(k =>
+    `<button class="chip ${k === trainDir ? 'on' : ''}" data-tdir="${k}">${esc(SHORT_DIR[k])} ${k.startsWith('out') ? '←' : '→'}</button>`).join('');
+  const list = trains.filter(t => t.dir === trainDir).sort((a, b) => a.time.localeCompare(b.time));
+  const now = new Date();
+  const cur = now.getHours() * 60 + now.getMinutes();
+  const nextIdx = list.findIndex(t => toMin(t.time) >= cur);
+  $('trainList').innerHTML = `<div class="ct" style="margin:6px 0 10px">${esc(DIR_LABEL[trainDir])}</div>` +
+    (list.length ? list.map((t, i) => `
+      <div class="lr" style="${i === nextIdx ? 'border-color:var(--p)' : ''}">
+        <span><strong>${esc(t.time)}</strong>${t.note ? ' · ' + esc(t.note) : ''}</span>
+        ${i === nextIdx ? '<span class="badge p">الجاي</span>' : ''}
+      </div>`).join('') : '<div class="empty">لا توجد مواعيد لهذا الاتجاه</div>');
+}
+
+function renderTrainAdmin() {
+  $('tList').innerHTML = trains.slice()
+    .sort((a, b) => a.dir.localeCompare(b.dir) || a.time.localeCompare(b.time))
+    .map(t => `<div class="lr">
+      <span>${esc(DIR_LABEL[t.dir] || t.dir)} · <strong>${esc(t.time)}</strong>${t.note ? ' · ' + esc(t.note) : ''}</span>
+      <button style="color:var(--d);font-weight:700" data-tdel="${t.id}">حذف</button>
+    </div>`).join('') || '<div class="empty">لا توجد مواعيد</div>';
+}
+
+function applyView() {
+  $('trainBox').classList.toggle('hidden', !trainOn);
+  $('browseList').classList.toggle('hidden', trainOn || mapView);
+  $('browseMapBox').classList.toggle('hidden', trainOn || !mapView);
+}
+
+$('fTrain').onclick = () => {
+  trainOn = !trainOn;
+  $('fTrain').classList.toggle('active', trainOn);
+  if (trainOn) { mapView = false; $('fMap').classList.remove('active'); }
+  applyView();
+  renderTrains();
+};
+
+$('trainChips').onclick = e => {
+  const b = e.target.closest('[data-tdir]'); if (!b) return;
+  trainDir = b.dataset.tdir; renderTrains();
+};
+
+$('tAdd').onclick = async () => {
+  const time = $('tTime').value;
+  if (!time) return toast('اختار الميعاد');
+  try {
+    await addDoc(collection(db, 'trains'), {
+      dir: $('tDir').value, time, note: $('tNote').value.trim() || null, createdAt: serverTimestamp()
+    });
+    $('tTime').value = ''; $('tNote').value = '';
+    toast('تم إضافة الميعاد ✅');
+  } catch (e) { toast('تعذر الإضافة'); }
+};
+
+$('tList').onclick = async e => {
+  const b = e.target.closest('[data-tdel]'); if (!b) return;
+  if (!confirm('حذف الميعاد؟')) return;
+  try { await deleteDoc(doc(db, 'trains', b.dataset.tdel)); toast('تم الحذف'); }
+  catch (e) { toast('تعذر الحذف'); }
+};
+
 /* ---------- طوارئ ومشاركة ---------- */
 $('emergencyBtn').onclick = () => $('emergencyModal').classList.remove('hidden');
 $('closeEmergency').onclick = () => $('emergencyModal').classList.add('hidden');
@@ -560,6 +664,7 @@ $('guestBtn').onclick = async () => {
   $('logoutBtn').title = 'دخول';
   $('logoutBtn').textContent = '🔑';
   $('logoutBtn').onclick = () => location.reload();
+  unsubs.push(listenTrains());
   buildCats(); buildTypeChips(); buildHours();
   currentTab = 'browse'; switchTab('browse');
   await loadApproved();
@@ -592,6 +697,7 @@ onAuthStateChanged(auth, async user => {
 });
 
 function listen() {
+  unsubs.push(listenTrains());
   unsubs.push(onSnapshot(query(collection(db, 'businesses'), where('ownerId', '==', me.uid)), s => {
     myBiz = s.docs.map(d => ({ id: d.id, ...d.data() })); renderMine();
   }));
@@ -673,8 +779,8 @@ $('fNear').onclick = () => {
 $('fMap').onclick = () => {
   mapView = !mapView;
   $('fMap').classList.toggle('active', mapView);
-  $('browseList').classList.toggle('hidden', mapView);
-  $('browseMapBox').classList.toggle('hidden', !mapView);
+  if (mapView) { trainOn = false; $('fTrain').classList.remove('active'); }
+  applyView();
   if (mapView) renderMap();
   renderBrowse();
 };
@@ -970,11 +1076,16 @@ $('bizForm').onsubmit = async e => {
   $('saveBtn').disabled = true;
   try {
     if (editId) {
+      const typeChanged = editOrigType !== type;
       const batch = writeBatch(db);
-      batch.update(doc(db, 'businesses', editId), { ...data, regNo: deleteField() });
+      const upd = typeChanged ? { ...data, verified: false } : data;
+      batch.update(doc(db, 'businesses', editId), { ...upd, regNo: deleteField() });
       if (d) batch.set(doc(db, 'regs', editId), { regNo });
+      else if (editOrigType === 'doctor') batch.delete(doc(db, 'regs', editId));
       await batch.commit();
-      toast('تم حفظ التعديلات وإعادة النشاط للمراجعة ✅');
+      toast(typeChanged
+        ? 'تم الحفظ، والنشاط رجع للمراجعة، وشلنا التوثيق لأن النوع اتغير ✅'
+        : 'تم حفظ التعديلات وإعادة النشاط للمراجعة ✅');
     } else {
       const ref = doc(collection(db, 'businesses'));
       await setDoc(ref, { ...data, ownerId: me.uid, ownerName: profile.name, createdAt: serverTimestamp() });
@@ -989,7 +1100,7 @@ $('bizForm').onsubmit = async e => {
 };
 
 async function startEdit(b) {
-  editId = b.id; type = b.type; buildTypeChips(); applyType();
+  editId = b.id; editOrigType = b.type; type = b.type; buildTypeChips(); applyType();
   $('bName').value = b.name || ''; $('bPhone').value = b.phone || b.ownerPhone || '';
   if (b.type === 'doctor') {
     $('bSpec').value = b.specialty || ''; $('bPrice').value = b.price || '';
@@ -1014,7 +1125,7 @@ async function startEdit(b) {
   if (b.lat && b.lng) showMap(b.lat, b.lng);
 }
 function cancelEdit() {
-  editId = null; $('bizForm').reset(); items = []; renderItems();
+  editId = null; editOrigType = null; $('bizForm').reset(); items = []; renderItems();
   type = null; buildTypeChips(); $('typeFields').classList.add('hidden'); buildHours();
   $('geoStatus').textContent = ''; $('pickMap').classList.add('hidden'); $('editNotice').classList.add('hidden');
   $('formTitle').textContent = 'اختار نوع النشاط';
