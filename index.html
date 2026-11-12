@@ -27,7 +27,6 @@ a{text-decoration:none;color:inherit}
 @keyframes blink{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.9);background:rgba(239,68,68,.15)}50%{box-shadow:0 0 0 12px rgba(239,68,68,0);background:rgba(239,68,68,.6)}}
 .wrap{max-width:520px;margin:0 auto;padding:12px 16px 120px;animation:fadeIn .4s ease-out}
 
-/* الهيدر */
 header{position:sticky;top:0;z-index:25;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:linear-gradient(180deg,rgba(40,34,10,.95),rgba(8,9,12,.92));border-bottom:1px solid var(--bg2)}
 .brand{display:flex;align-items:center;gap:10px}
 .logo{width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid var(--p);box-shadow:0 0 14px var(--pglow)}
@@ -38,7 +37,6 @@ header{position:sticky;top:0;z-index:25;display:flex;justify-content:space-betwe
 .ib.alert{border-color:rgba(239,68,68,.6);animation:blink 1.2s infinite}
 .ib:active{transform:scale(.92)}
 
-/* البحث والفلاتر */
 .search{display:flex;align-items:center;gap:8px;background:rgba(18,20,26,.95);border:1px solid var(--bg2);border-radius:16px;padding:0 14px;margin:14px 0 12px}
 .search input{border:0;background:transparent;padding:13px 0;color:#fff;font-size:14.5px;flex:1;width:100%}
 .search input::placeholder{color:#64748b}
@@ -48,7 +46,6 @@ header{position:sticky;top:0;z-index:25;display:flex;justify-content:space-betwe
 #bellCount{background:var(--d);color:#fff;border-radius:999px;padding:0 6px;font-size:11px;font-weight:800;margin-right:4px}
 .sec{font-size:17px;font-weight:900;color:#fff;margin:14px 0 10px}
 
-/* التصنيفات */
 .cats{display:flex;gap:12px;overflow-x:auto;padding:4px 2px 8px;scrollbar-width:none}
 .cats::-webkit-scrollbar{display:none}
 .cat{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:64px;font-size:12px;font-weight:700;color:var(--m)}
@@ -56,7 +53,6 @@ header{position:sticky;top:0;z-index:25;display:flex;justify-content:space-betwe
 .cat.on{color:var(--p)}
 .cat.on .ci{background:var(--pg);box-shadow:0 6px 18px var(--pglow);border-color:transparent}
 
-/* الكروت */
 .card{background:var(--card);border:1px solid var(--b);border-radius:20px;padding:16px;margin-bottom:14px;box-shadow:0 8px 28px rgba(0,0,0,.35);position:relative;transition:transform .2s}
 .card:active{transform:scale(.99)}
 .card.fe{border-color:var(--bg2)}
@@ -75,7 +71,6 @@ header{position:sticky;top:0;z-index:25;display:flex;justify-content:space-betwe
 .rt{font-size:12.5px;color:var(--p);font-weight:700;white-space:nowrap}
 .fav{position:absolute;top:14px;left:14px;width:32px;height:32px;border-radius:50%;border:1px solid var(--b);background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:15px}
 
-/* الأزرار */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:12px 14px;border-radius:14px;font-weight:800;font-size:14.5px;text-align:center;background:var(--pg);color:#0d0e12;box-shadow:0 6px 16px var(--pglow)}
 .btn:active{transform:scale(.96)}
 .btn.s{background:rgba(255,196,0,.08);color:var(--p);border:1px solid var(--bg2);box-shadow:none}
@@ -84,7 +79,6 @@ header{position:sticky;top:0;z-index:25;display:flex;justify-content:space-betwe
 .btn.g{background:linear-gradient(135deg,#059669,#10b981);color:#fff;box-shadow:none}
 .btn:disabled{opacity:.5}
 
-/* الفورم */
 .field{margin-bottom:14px}
 .field label{display:block;font-size:13.5px;font-weight:700;margin-bottom:6px;color:#e2e8f0}
 input,select,textarea{width:100%;background:rgba(15,17,23,.85);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:13px 16px;color:#fff;font-size:14.5px}
@@ -102,12 +96,17 @@ textarea{min-height:85px;resize:vertical}
 .badge.r{color:#f87171;background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.3)}
 .badge.v{color:var(--v);border-color:rgba(56,189,248,.35);background:rgba(56,189,248,.1)}
 .acts-w{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;margin-top:12px;padding-top:12px;border-top:1px dashed rgba(255,255,255,.08)}
-.day{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);flex-wrap:wrap}
-.day input{width:105px;padding:7px 8px;font-size:13px;border-radius:10px}
+
+.day{padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.day-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.day-times{display:grid;grid-template-columns:auto 1fr auto 1fr;gap:6px;align-items:center;margin-top:8px;font-size:12.5px;color:var(--m)}
+.day-times input{padding:7px 8px;font-size:13px;border-radius:10px;width:100%}
+.day-times .sub{grid-column:1/-1;font-size:11.5px;color:#64748b;margin-top:2px}
 .tg{width:46px;height:26px;background:#2d313d;border-radius:999px;position:relative;cursor:pointer;flex:none;transition:.25s}
 .tg::after{content:"";position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.25s}
 .tg.on{background:var(--p)}
 .tg.on::after{transform:translateX(-20px);background:#0d0e12}
+
 #pickMap{height:270px;border-radius:16px;margin:10px 0;border:1px solid var(--bg2)}
 #browseMapBox{position:relative;z-index:1;isolation:isolate;height:480px;border-radius:18px;margin-bottom:16px;border:1px solid var(--bg2);background:#e5e7eb}
 .leaflet-container{background:#e5e7eb}
@@ -119,7 +118,6 @@ textarea{min-height:85px;resize:vertical}
 .empty small{display:block;color:var(--m);font-size:13px;font-weight:600;line-height:1.7;margin-bottom:14px}
 .edit{background:rgba(255,196,0,.12);border:1px solid var(--bg2);color:var(--p);padding:12px 14px;border-radius:14px;font-size:13.5px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
 
-/* شريط التنقل السفلي */
 .nav{position:fixed;bottom:12px;left:12px;right:12px;max-width:496px;margin:0 auto;z-index:35;display:flex;justify-content:space-around;align-items:flex-end;padding:8px 6px 10px;background:rgba(14,16,22,.96);border:1px solid rgba(255,255,255,.1);border-radius:26px;box-shadow:0 12px 35px rgba(0,0,0,.6)}
 .nav .tb{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11.5px;font-weight:700;color:var(--m);min-width:64px;flex:1;padding:4px 0}
 .nav .tb .ic{font-size:20px;line-height:1}
@@ -128,7 +126,6 @@ textarea{min-height:85px;resize:vertical}
 .fab{width:62px;height:62px;border-radius:50%;background:var(--pg);color:#0d0e12;font-size:32px;font-weight:900;display:flex;align-items:center;justify-content:center;margin-top:-34px;box-shadow:0 8px 22px var(--pglow);border:4px solid #0e1016;padding:0;line-height:1}
 .fabwrap span{color:var(--p);font-size:11.5px;font-weight:700;margin-top:4px;white-space:nowrap}
 
-/* عام */
 .toast{position:fixed;bottom:100px;left:50%;transform:translate(-50%,20px);background:rgba(24,27,36,.96);border:1px solid var(--bg2);padding:12px 22px;border-radius:999px;font-weight:700;opacity:0;transition:.3s;pointer-events:none;z-index:100;max-width:90%;text-align:center}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .modal{position:fixed;inset:0;background:rgba(4,5,8,.75);backdrop-filter:blur(8px);display:flex;align-items:flex-end;justify-content:center;z-index:60}
@@ -243,7 +240,8 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
             <input type="hidden" id="bLat"><input type="hidden" id="bLng">
           </div>
           <div class="card">
-            <div class="ct" style="margin-bottom:10px">مواعيد العمل</div>
+            <div class="ct" style="margin-bottom:6px">مواعيد العمل</div>
+            <p class="muted" style="margin-bottom:6px">لكل يوم فترة أولى، وفترة تانية اختيارية. لو النشاط بيفتح لبعد نص الليل اكتب وقت القفل أقل من وقت الفتح (مثلاً 18:00 لـ 02:00).</p>
             <div id="hours"></div>
           </div>
           <div class="card">
@@ -347,7 +345,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, deleteDoc, collection, addDoc, query, where, onSnapshot, updateDoc, serverTimestamp, deleteField, getAggregateFromServer, count } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, deleteDoc, collection, addDoc, query, where, onSnapshot, updateDoc, serverTimestamp, deleteField, getAggregateFromServer, count, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const app = initializeApp(window.FIREBASE_CONFIG);
 const auth = getAuth(app);
@@ -380,6 +378,80 @@ const CAT_TABS = [
 ];
 const CENTER = [30.46, 30.93];
 
+/* ---------- البحث بالمرادفات ---------- */
+const normAr = s => String(s || '').toLowerCase()
+  .replace(/[\u064B-\u065F\u0640]/g, '')
+  .replace(/[إأآ]/g, 'ا').replace(/ى/g, 'ي').replace(/ة/g, 'ه').replace(/ؤ/g, 'و').replace(/ئ/g, 'ي');
+
+const SYN = [
+  ['مطعم','مطاعم','مطبخ','كافيه','كافيهات','اكل','وجبات','برجر','شاورما'],
+  ['دكتور','دكاترة','طبيب','اطباء','عياده','عيادات','مركز طبي'],
+  ['صيدليه','صيدليات','دوا','ادويه'],
+  ['سباك','سباكه','سباكين'],
+  ['كهربائي','كهربا','كهرباء','كهربائيين'],
+  ['نجار','نجاره','نجارين'],
+  ['محل','محلات','متجر','سوبر ماركت','سوبرماركت','بقاله','بقالات'],
+  ['ملابس','هدوم','فستان','جزم','احذيه'],
+  ['تصوير','مصور','مصورين'],
+  ['نقل','عفش','ترحيل'],
+  ['موبايل','موبايلات','تليفون','تليفونات','الكترونيات']
+].map(g => g.map(normAr));
+
+function expandTerm(term) {
+  const t = normAr(term);
+  const out = new Set([t]);
+  SYN.forEach(g => {
+    const hit = g.some(x => x === t || (x.length >= 3 && t.length >= 3 && (t.startsWith(x) || x.startsWith(t))));
+    if (hit) g.forEach(x => out.add(x));
+  });
+  return [...out];
+}
+
+function matchesQuery(b, query) {
+  const hay = normAr([b.name, b.specialty, b.category, b.address, b.landmark, b.desc, TYPES[b.type]?.label].join(' '));
+  return normAr(query).split(/\s+/).filter(Boolean)
+    .every(w => expandTerm(w).some(x => hay.includes(x)));
+}
+
+/* ---------- المواعيد: فترتين، ودعم الفتح لبعد نص الليل ---------- */
+const toMin = s => { const [h, m] = String(s).split(':').map(Number); return h * 60 + m; };
+const periodsOf = t => {
+  const p = [];
+  if (t.from && t.to) p.push([t.from, t.to]);
+  if (t.from2 && t.to2) p.push([t.from2, t.to2]);
+  return p;
+};
+
+// فهرس الجدول: 0 = السبت ... 6 = الجمعة
+function isOpen(hours) {
+  if (!Array.isArray(hours)) return false;
+  const now = new Date();
+  const cur = now.getHours() * 60 + now.getMinutes();
+  const today = (now.getDay() + 1) % 7;
+  const yesterday = (today + 6) % 7;
+
+  const t = hours[today];
+  if (t && t.open) {
+    for (const [f, to] of periodsOf(t)) {
+      const a = toMin(f), b = toMin(to);
+      if (a <= b ? (cur >= a && cur <= b) : cur >= a) return true;
+    }
+  }
+  const y = hours[yesterday];
+  if (y && y.open) {
+    for (const [f, to] of periodsOf(y)) {
+      const a = toMin(f), b = toMin(to);
+      if (a > b && cur <= b) return true;
+    }
+  }
+  return false;
+}
+
+const fmtPeriods = h => {
+  if (!h.open) return 'مغلق';
+  return periodsOf(h).map(([f, t]) => `${f} إلى ${t}`).join(' ، ') || 'مغلق';
+};
+
 let me = null, profile = null, unsubs = [], guest = false, mode = 'login';
 let approved = [], myBiz = [], allBiz = [], reports = [], reviews = [], notifs = [], announces = [];
 let userCount = null, type = null, items = [], browseCat = 'الكل', q = '', editId = null, adminFilter = 'pending';
@@ -398,14 +470,6 @@ function friendly(err) {
   if (c.includes('weak-password')) return 'كلمة المرور 6 خانات على الأقل';
   if (c.includes('invalid-credential') || c.includes('wrong-password') || c.includes('user-not-found')) return 'الرقم أو كلمة المرور غلط';
   return 'حدث خطأ، حاول مجدداً';
-}
-function isOpen(hours) {
-  if (!Array.isArray(hours)) return false;
-  const now = new Date(), t = hours[(now.getDay() + 1) % 7];
-  if (!t || !t.open) return false;
-  const cur = now.getHours() * 60 + now.getMinutes();
-  const [fh, fm] = t.from.split(':').map(Number), [th, tm] = t.to.split(':').map(Number);
-  return cur >= fh * 60 + fm && cur <= th * 60 + tm;
 }
 function dist(lat1, lon1, lat2, lon2) {
   if (!lat1 || !lon1 || !lat2 || !lon2) return null;
@@ -574,7 +638,7 @@ $('catChips').onclick = e => {
   const b = e.target.closest('[data-cat]'); if (!b) return;
   browseCat = b.dataset.cat; buildCats(); renderBrowse();
 };
-$('searchInput').oninput = e => { q = e.target.value.trim().toLowerCase(); renderBrowse(); };
+$('searchInput').oninput = e => { q = e.target.value.trim(); renderBrowse(); };
 $('fOpen').onclick = () => { onlyOpen = !onlyOpen; $('fOpen').classList.toggle('active', onlyOpen); renderBrowse(); };
 $('fNear').onclick = () => {
   if (nearMe) { nearMe = false; $('fNear').classList.remove('active'); return renderBrowse(); }
@@ -600,7 +664,7 @@ function filtered() {
       || (browseCat === 'دكاترة' && b.type === 'doctor')
       || (browseCat === 'محل / مطعم' && b.type === 'shop')
       || (browseCat === 'خدمة' && b.type === 'service');
-    const qOk = !q || [b.name, b.specialty, b.category, b.address, b.landmark].some(x => x && x.toLowerCase().includes(q));
+    const qOk = !q || matchesQuery(b, q);
     return catOk && qOk && (!onlyOpen || isOpen(b.hours));
   }).map(b => ({ ...b, km: userPos ? dist(userPos.lat, userPos.lng, b.lat, b.lng) : null }))
     .sort((a, b) => nearMe && a.km != null && b.km != null ? a.km - b.km : 0);
@@ -690,7 +754,7 @@ function openModal(b) {
   $('mPrice').textContent = b.price || '';
   $('mItemsBox').classList.toggle('hidden', !(b.items && b.items.length));
   $('mItems').innerHTML = (b.items || []).map(i => `<div class="lr"><span>${esc(i.name)}</span><strong style="color:var(--p)">${esc(i.price)} جنيه</strong></div>`).join('');
-  $('mHours').innerHTML = (b.hours || []).map(h => `<div class="lr"><span>${h.day}</span><span>${h.open ? h.from + ' إلى ' + h.to : 'مغلق'}</span></div>`).join('');
+  $('mHours').innerHTML = (b.hours || []).map(h => `<div class="lr"><span>${h.day}</span><span style="text-align:left">${esc(fmtPeriods(h))}</span></div>`).join('');
   $('mActs').innerHTML = `
     ${ph ? `<a class="btn g" target="_blank" href="https://wa.me/2${ph}">💬 واتساب</a><a class="btn" href="tel:${ph}">📞 اتصال</a>` : ''}
     ${b.lat ? `<a class="btn s" style="grid-column:span 2" target="_blank" href="https://www.google.com/maps?q=${b.lat},${b.lng}">📍 فتح في الخريطة</a>` : ''}
@@ -800,17 +864,36 @@ function applyType() {
   if (d) $('bSpec').innerHTML = '<option value="">اختار التخصص</option>' + SPECS.map(s => `<option>${s}</option>`).join('');
   else $('bCat').innerHTML = '<option value="">اختار التصنيف</option>' + CATS[type].map(s => `<option>${s}</option>`).join('');
 }
+
 function buildHours() {
-  $('hours').innerHTML = DAYS.map((d, i) => `<div class="day"><span style="font-weight:700">${d}</span>
-    <div style="display:flex;gap:6px;align-items:center">
+  $('hours').innerHTML = DAYS.map((d, i) => `<div class="day">
+    <div class="day-head">
+      <span style="font-weight:700">${d}</span>
       <div class="tg ${i !== 6 ? 'on' : ''}" data-day="${i}"></div>
-      <input type="time" id="f${i}" value="09:00"><span>-</span><input type="time" id="t${i}" value="21:00">
-    </div></div>`).join('');
+    </div>
+    <div class="day-times">
+      <span>من</span><input type="time" id="f${i}" value="09:00">
+      <span>إلى</span><input type="time" id="t${i}" value="21:00">
+      <span class="sub">فترة تانية (اختياري)</span>
+      <span>من</span><input type="time" id="g${i}" value="">
+      <span>إلى</span><input type="time" id="h${i}" value="">
+    </div>
+  </div>`).join('');
 }
 $('hours').onclick = e => { const t = e.target.closest('[data-day]'); if (t) t.classList.toggle('on'); };
-const collectHours = () => DAYS.map((d, i) => ({
-  day: d, open: document.querySelector(`[data-day="${i}"]`).classList.contains('on'), from: $('f' + i).value, to: $('t' + i).value
-}));
+
+const collectHours = () => DAYS.map((d, i) => {
+  const from2 = $('g' + i).value, to2 = $('h' + i).value;
+  return {
+    day: d,
+    open: document.querySelector(`[data-day="${i}"]`).classList.contains('on'),
+    from: $('f' + i).value,
+    to: $('t' + i).value,
+    from2: from2 || null,
+    to2: to2 || null
+  };
+});
+
 function renderItems() {
   $('itemsBox').innerHTML = items.map((it, i) => `<div class="lr"><span><strong>${esc(it.name)}</strong> · ${esc(it.price)} جنيه</span>
     <button type="button" style="color:var(--d);font-weight:700" data-rm="${i}">حذف</button></div>`).join('');
@@ -833,8 +916,16 @@ $('bizForm').onsubmit = async e => {
   if (d && $('bReg').value.trim().length < 3) return toast('اكتب رقم القيد بالنقابة');
   if (!d && !$('bCat').value) return toast('اختار التصنيف');
   if (!$('bLat').value) return toast('حدد مكان النشاط على الخريطة');
+
   const hours = collectHours();
   if (!hours.some(h => h.open)) return toast('فعّل يوم عمل واحد على الأقل');
+  for (const h of hours) {
+    if (!h.open) continue;
+    if (!h.from || !h.to) return toast(`اكتب مواعيد يوم ${h.day}`);
+    if (h.from2 && !h.to2 || !h.from2 && h.to2) return toast(`أكمل الفترة التانية ليوم ${h.day}`);
+    if (h.from === h.to) return toast(`وقت الفتح والقفل ليوم ${h.day} متساويين`);
+  }
+
   const regNo = $('bReg').value.trim();
   const data = {
     phone, type, name: $('bName').value.trim(),
@@ -848,17 +939,23 @@ $('bizForm').onsubmit = async e => {
   $('saveBtn').disabled = true;
   try {
     if (editId) {
-      await updateDoc(doc(db, 'businesses', editId), { ...data, regNo: deleteField() });
-      if (d) await setDoc(doc(db, 'regs', editId), { regNo });
+      const batch = writeBatch(db);
+      batch.update(doc(db, 'businesses', editId), { ...data, regNo: deleteField() });
+      if (d) batch.set(doc(db, 'regs', editId), { regNo });
+      await batch.commit();
       toast('تم حفظ التعديلات وإعادة النشاط للمراجعة ✅');
     } else {
       const ref = doc(collection(db, 'businesses'));
-      await setDoc(ref, { ...data, ownerId: me.uid, ownerName: profile.name, ownerPhone: profile.phone, createdAt: serverTimestamp() });
-      if (d) await setDoc(doc(db, 'regs', ref.id), { regNo });
+      const batch = writeBatch(db);
+      batch.set(ref, { ...data, ownerId: me.uid, ownerName: profile.name, ownerPhone: profile.phone, createdAt: serverTimestamp() });
+      if (d) batch.set(doc(db, 'regs', ref.id), { regNo });
+      await batch.commit();
       toast('تم إرسال نشاطك وسيظهر بعد المراجعة ✅');
     }
     cancelEdit(); switchTab('mine');
-  } catch (err) { toast('حدث خطأ أثناء الحفظ'); }
+  } catch (err) {
+    toast('تعذر الحفظ: ' + (err.code || err.message));
+  }
   $('saveBtn').disabled = false;
 };
 
@@ -867,6 +964,7 @@ async function startEdit(b) {
   $('bName').value = b.name || ''; $('bPhone').value = b.phone || b.ownerPhone || '';
   if (b.type === 'doctor') {
     $('bSpec').value = b.specialty || ''; $('bPrice').value = b.price || '';
+    $('bReg').value = b.regNo || '';
     getDoc(doc(db, 'regs', b.id)).then(s => { if (s.exists()) $('bReg').value = s.data().regNo; }).catch(() => {});
   } else $('bCat').value = b.category || '';
   $('bDesc').value = b.desc || ''; $('bAddr').value = b.address || ''; $('bLandmark').value = b.landmark || '';
@@ -875,6 +973,8 @@ async function startEdit(b) {
     document.querySelector(`[data-day="${i}"]`)?.classList.toggle('on', !!h.open);
     if (h.from) $('f' + i).value = h.from;
     if (h.to) $('t' + i).value = h.to;
+    $('g' + i).value = h.from2 || '';
+    $('h' + i).value = h.to2 || '';
   });
   items = [...(b.items || [])]; renderItems();
   $('editNotice').classList.remove('hidden');
