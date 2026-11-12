@@ -262,6 +262,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
 
     <div id="tab-admin" class="hidden">
       <div class="ct" style="margin-bottom:12px;color:var(--p)">لوحة الإدارة 🛡️</div>
+      <button class="btn s" id="cleanBtn" style="margin-bottom:12px">🧹 تنظيف بيانات الأنشطة القديمة</button>
       <div id="adminStats"></div>
       <div class="card">
         <div class="ct" style="margin-bottom:10px">📢 إرسال إعلان للمستخدمين</div>
@@ -345,7 +346,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, deleteDoc, collection, addDoc, query, where, onSnapshot, updateDoc, serverTimestamp, deleteField, getAggregateFromServer, count, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, deleteDoc, collection, addDoc, query, where, onSnapshot, updateDoc, serverTimestamp, deleteField, getAggregateFromServer, count } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const app = initializeApp(window.FIREBASE_CONFIG);
 const auth = getAuth(app);
@@ -422,7 +423,6 @@ const periodsOf = t => {
   return p;
 };
 
-// فهرس الجدول: 0 = السبت ... 6 = الجمعة
 function isOpen(hours) {
   if (!Array.isArray(hours)) return false;
   const now = new Date();
@@ -805,7 +805,7 @@ $('mRatings').onclick = async e => {
         text: $('revText').value.trim().slice(0, 200), createdAt: serverTimestamp()
       });
       toast('تم حفظ تقييمك ⭐');
-    } catch (err) { toast('تعذر حفظ التقييم، ممكن تكون قيّمت قبل كده'); }
+    } catch (err) { toast('تعذر حفظ التقييم'); }
   }
 };
 
@@ -815,12 +815,13 @@ $('mActs').onclick = async e => {
   const t = prompt('اكتب الخطأ (رقم غلط، عنوان غلط، نشاط مغلق...)');
   if (!t || !t.trim()) return;
   try {
-    await addDoc(collection(db, 'reports'), {
+    await setDoc(doc(db, 'reports', curBiz.id + '_' + me.uid), {
       bizId: curBiz.id, bizName: curBiz.name, reporterId: me.uid,
-      reporterName: profile.name, reporterPhone: profile.phone, text: t.trim(), createdAt: serverTimestamp()
+      reporterName: profile.name, reporterPhone: profile.phone,
+      text: t.trim().slice(0, 500), createdAt: serverTimestamp()
     });
     toast('تم إرسال البلاغ للإدارة ✅');
-  } catch (err) { toast('تعذر إرسال البلاغ'); }
+  } catch (err) { toast('إنت بلّغت عن النشاط ده قبل كده'); }
 };
 
 /* ---------- الخريطة لتحديد الموقع ---------- */
@@ -922,7 +923,7 @@ $('bizForm').onsubmit = async e => {
   for (const h of hours) {
     if (!h.open) continue;
     if (!h.from || !h.to) return toast(`اكتب مواعيد يوم ${h.day}`);
-    if (h.from2 && !h.to2 || !h.from2 && h.to2) return toast(`أكمل الفترة التانية ليوم ${h.day}`);
+    if ((h.from2 && !h.to2) || (!h.from2 && h.to2)) return toast(`أكمل الفترة التانية ليوم ${h.day}`);
     if (h.from === h.to) return toast(`وقت الفتح والقفل ليوم ${h.day} متساويين`);
   }
 
@@ -939,17 +940,13 @@ $('bizForm').onsubmit = async e => {
   $('saveBtn').disabled = true;
   try {
     if (editId) {
-      const batch = writeBatch(db);
-      batch.update(doc(db, 'businesses', editId), { ...data, regNo: deleteField() });
-      if (d) batch.set(doc(db, 'regs', editId), { regNo });
-      await batch.commit();
+      await updateDoc(doc(db, 'businesses', editId), { ...data, regNo: deleteField() });
+      if (d) await setDoc(doc(db, 'regs', editId), { regNo });
       toast('تم حفظ التعديلات وإعادة النشاط للمراجعة ✅');
     } else {
       const ref = doc(collection(db, 'businesses'));
-      const batch = writeBatch(db);
-      batch.set(ref, { ...data, ownerId: me.uid, ownerName: profile.name, ownerPhone: profile.phone, createdAt: serverTimestamp() });
-      if (d) batch.set(doc(db, 'regs', ref.id), { regNo });
-      await batch.commit();
+      await setDoc(ref, { ...data, ownerId: me.uid, ownerName: profile.name, createdAt: serverTimestamp() });
+      if (d) await setDoc(doc(db, 'regs', ref.id), { regNo });
       toast('تم إرسال نشاطك وسيظهر بعد المراجعة ✅');
     }
     cancelEdit(); switchTab('mine');
@@ -1054,6 +1051,23 @@ $('annSend').onclick = async () => {
     $('annTitle').value = ''; $('annBody').value = '';
     toast('تم نشر الإعلان للمستخدمين ✅');
   } catch (e) { toast('تعذر نشر الإعلان'); }
+};
+
+$('cleanBtn').onclick = async () => {
+  if (!confirm('هيتنقل رقم القيد لمكانه الآمن ويتشال من الأنشطة القديمة. تكمل؟')) return;
+  let n = 0;
+  try {
+    for (const b of allBiz) {
+      const upd = {};
+      if (b.regNo) {
+        await setDoc(doc(db, 'regs', b.id), { regNo: b.regNo });
+        upd.regNo = deleteField();
+      }
+      if (b.ownerPhone) upd.ownerPhone = deleteField();
+      if (Object.keys(upd).length) { await updateDoc(doc(db, 'businesses', b.id), upd); n++; }
+    }
+    toast(`تم تنظيف ${n} نشاط ✅`);
+  } catch (err) { toast('حصل خطأ أثناء التنظيف: ' + (err.code || err.message)); }
 };
 
 function renderAdmin() {
