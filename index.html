@@ -276,14 +276,20 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
         <div class="field"><textarea id="annBody" placeholder="نص الإعلان"></textarea></div>
         <button class="btn" id="annSend" type="button">نشر الإعلان</button>
       </div>
+
       <div class="card">
         <div class="ct" style="margin-bottom:10px">🚆 مواعيد القطارات</div>
         <div class="field"><label>الاتجاه</label><select id="tDir"></select></div>
-        <div class="field"><label>الميعاد</label><input id="tTime" type="time"></div>
-        <div class="field"><label>ملاحظة (اختياري)</label><input id="tNote" placeholder="مثال: اكسبريس"></div>
-        <button class="btn" id="tAdd" type="button">إضافة ميعاد</button>
+        <div class="field"><label>القيام (من منوف)</label><input id="tDep" type="time"></div>
+        <div class="field"><label>الوصول</label><input id="tArr" type="time"></div>
+        <div class="field"><label>رقم القطار</label><input id="tNum" inputmode="numeric" placeholder="مثال: 562"></div>
+        <div class="field"><label>نوع القطار</label><select id="tType"></select></div>
+        <div class="field"><label>ملاحظات (اختياري)</label><textarea id="tNote" placeholder="مثال: لا يعمل أيام الجمع والأجازات الرسمية"></textarea></div>
+        <button class="btn" id="tSave" type="button">إضافة ميعاد</button>
+        <button class="btn s" id="tCancel" type="button" style="margin-top:8px;display:none">إلغاء التعديل</button>
         <div id="tList" style="margin-top:12px"></div>
       </div>
+
       <div class="chips" id="adminChips">
         <button type="button" class="chip on" data-f="pending">⏳ قيد المراجعة (<span id="cP">0</span>)</button>
         <button type="button" class="chip" data-f="approved">✅ المنشورة (<span id="cA">0</span>)</button>
@@ -393,7 +399,7 @@ const CAT_TABS = [
 ];
 const CENTER = [30.46, 30.93];
 
-/* ---------- القطارات ---------- */
+/* ---------- القطارات: بيانات ومساعدات ---------- */
 const DIR_LABEL = {
   out_cairo: 'من منوف ← القاهرة',
   out_tanta: 'من منوف ← طنطا',
@@ -408,9 +414,15 @@ const SHORT_DIR = {
   out_cairo: 'القاهرة', out_tanta: 'طنطا', out_benha: 'بنها', out_kafr: 'كفر الزيات',
   in_cairo: 'القاهرة', in_tanta: 'طنطا', in_benha: 'بنها', in_kafr: 'كفر الزيات'
 };
-$('tDir').innerHTML = Object.entries(DIR_LABEL).map(([k, v]) => `<option value="${k}">${v}</option>`).join('');
+const TRAIN_TYPES = ['محسن', 'روسي', 'مكيف روسي', 'اكسبريس', 'عادي'];
 
-let trains = [], trainDir = 'out_cairo', trainOn = false;
+$('tDir').innerHTML = Object.entries(DIR_LABEL).map(([k, v]) => `<option value="${k}">${v}</option>`).join('');
+$('tType').innerHTML = TRAIN_TYPES.map(t => `<option>${t}</option>`).join('');
+
+// ميعاد القيام: بيقرأ الحقل الجديد، ولو مش موجود بيقرأ القديم
+const tDep = t => t.depart || t.time || '';
+
+let trains = [], trainDir = 'out_cairo', trainOn = false, editTrainId = null;
 
 /* ---------- البحث بالمرادفات ---------- */
 const normAr = s => String(s || '').toLowerCase()
@@ -544,7 +556,7 @@ async function loadApproved() {
   }
 }
 
-/* ---------- القطارات: عرض ---------- */
+/* ---------- القطارات: عرض للزوار والمستخدمين ---------- */
 function listenTrains() {
   return onSnapshot(collection(db, 'trains'), s => {
     trains = s.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -553,29 +565,111 @@ function listenTrains() {
 }
 
 function renderTrains() {
-  const dirs = Object.keys(DIR_LABEL);
-  $('trainChips').innerHTML = dirs.map(k =>
+  $('trainChips').innerHTML = Object.keys(DIR_LABEL).map(k =>
     `<button class="chip ${k === trainDir ? 'on' : ''}" data-tdir="${k}">${esc(SHORT_DIR[k])} ${k.startsWith('out') ? '←' : '→'}</button>`).join('');
-  const list = trains.filter(t => t.dir === trainDir).sort((a, b) => a.time.localeCompare(b.time));
+
+  const list = trains.filter(t => t.dir === trainDir).sort((a, b) => tDep(a).localeCompare(tDep(b)));
   const now = new Date();
   const cur = now.getHours() * 60 + now.getMinutes();
-  const nextIdx = list.findIndex(t => toMin(t.time) >= cur);
+  const nextIdx = list.findIndex(t => tDep(t) && toMin(tDep(t)) >= cur);
+
   $('trainList').innerHTML = `<div class="ct" style="margin:6px 0 10px">${esc(DIR_LABEL[trainDir])}</div>` +
     (list.length ? list.map((t, i) => `
-      <div class="lr" style="${i === nextIdx ? 'border-color:var(--p)' : ''}">
-        <span><strong>${esc(t.time)}</strong>${t.note ? ' · ' + esc(t.note) : ''}</span>
-        ${i === nextIdx ? '<span class="badge p">الجاي</span>' : ''}
+      <div class="card" style="padding:12px;margin-bottom:10px;${i === nextIdx ? 'border-color:var(--p)' : ''}">
+        <div class="row">
+          <div>
+            <div class="muted">قيام</div>
+            <div style="font-size:20px;font-weight:900;color:var(--p)">${esc(tDep(t))}</div>
+          </div>
+          <div style="text-align:left">
+            <div class="muted">وصول</div>
+            <div style="font-size:18px;font-weight:800">${esc(t.arrive || '-')}</div>
+          </div>
+          ${i === nextIdx ? '<span class="badge p">الجاي</span>' : ''}
+        </div>
+        ${(t.num || t.type) ? `<div class="info" style="margin-top:6px">🚆 ${t.num ? 'قطار ' + esc(t.num) : ''}${t.num && t.type ? ' · ' : ''}${t.type ? esc(t.type) : ''}</div>` : ''}
+        ${t.note ? `<div class="muted" style="margin-top:6px">📝 ${esc(t.note)}</div>` : ''}
       </div>`).join('') : '<div class="empty">لا توجد مواعيد لهذا الاتجاه</div>');
 }
 
+/* ---------- القطارات: الإدارة ---------- */
 function renderTrainAdmin() {
   $('tList').innerHTML = trains.slice()
-    .sort((a, b) => a.dir.localeCompare(b.dir) || a.time.localeCompare(b.time))
-    .map(t => `<div class="lr">
-      <span>${esc(DIR_LABEL[t.dir] || t.dir)} · <strong>${esc(t.time)}</strong>${t.note ? ' · ' + esc(t.note) : ''}</span>
-      <button style="color:var(--d);font-weight:700" data-tdel="${t.id}">حذف</button>
+    .sort((a, b) => a.dir.localeCompare(b.dir) || tDep(a).localeCompare(tDep(b)))
+    .map(t => `<div class="lr" style="flex-direction:column;align-items:stretch;gap:6px">
+      <div><strong>${esc(DIR_LABEL[t.dir] || t.dir)}</strong></div>
+      <div class="muted">قيام <b>${esc(tDep(t))}</b> · وصول <b>${esc(t.arrive || '-')}</b>${t.num ? ' · قطار ' + esc(t.num) : ''}${t.type ? ' · ' + esc(t.type) : ''}</div>
+      ${t.note ? `<div class="muted">📝 ${esc(t.note)}</div>` : ''}
+      <div style="display:flex;gap:8px;justify-content:flex-end">
+        <button class="btn sm s" data-tedit="${t.id}">تعديل ✏️</button>
+        <button class="btn sm d" data-tdel="${t.id}">حذف 🗑️</button>
+      </div>
     </div>`).join('') || '<div class="empty">لا توجد مواعيد</div>';
 }
+
+function resetTrainForm() {
+  editTrainId = null;
+  $('tDep').value = ''; $('tArr').value = ''; $('tNum').value = ''; $('tNote').value = '';
+  $('tType').value = TRAIN_TYPES[0];
+  $('tSave').textContent = 'إضافة ميعاد';
+  $('tCancel').style.display = 'none';
+}
+
+function startTrainEdit(t) {
+  editTrainId = t.id;
+  $('tDir').value = t.dir;
+  $('tDep').value = tDep(t);
+  $('tArr').value = t.arrive || '';
+  $('tNum').value = t.num || '';
+  $('tType').value = t.type || TRAIN_TYPES[0];
+  $('tNote').value = t.note || '';
+  $('tSave').textContent = 'حفظ التعديل';
+  $('tCancel').style.display = '';
+  $('tDep').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+$('tSave').onclick = async () => {
+  const dep = $('tDep').value, arr = $('tArr').value;
+  if (!dep) return toast('اكتب ميعاد القيام');
+  if (!arr) return toast('اكتب ميعاد الوصول');
+  const data = {
+    dir: $('tDir').value,
+    depart: dep,
+    arrive: arr,
+    num: $('tNum').value.trim() || null,
+    type: $('tType').value || null,
+    note: $('tNote').value.trim() || null
+  };
+  try {
+    if (editTrainId) {
+      await updateDoc(doc(db, 'trains', editTrainId), data);
+      toast('تم حفظ التعديل ✅');
+    } else {
+      await addDoc(collection(db, 'trains'), { ...data, createdAt: serverTimestamp() });
+      toast('تم إضافة القطار ✅');
+    }
+    resetTrainForm();
+  } catch (e) { toast('تعذر الحفظ'); }
+};
+
+$('tCancel').onclick = () => resetTrainForm();
+
+$('tList').onclick = async e => {
+  const ed = e.target.closest('[data-tedit]');
+  if (ed) {
+    const t = trains.find(x => x.id === ed.dataset.tedit);
+    if (t) startTrainEdit(t);
+    return;
+  }
+  const del = e.target.closest('[data-tdel]');
+  if (!del) return;
+  if (!confirm('حذف الميعاد؟')) return;
+  try {
+    await deleteDoc(doc(db, 'trains', del.dataset.tdel));
+    if (editTrainId === del.dataset.tdel) resetTrainForm();
+    toast('تم الحذف');
+  } catch (err) { toast('تعذر الحذف'); }
+};
 
 function applyView() {
   $('trainBox').classList.toggle('hidden', !trainOn);
@@ -594,25 +688,6 @@ $('fTrain').onclick = () => {
 $('trainChips').onclick = e => {
   const b = e.target.closest('[data-tdir]'); if (!b) return;
   trainDir = b.dataset.tdir; renderTrains();
-};
-
-$('tAdd').onclick = async () => {
-  const time = $('tTime').value;
-  if (!time) return toast('اختار الميعاد');
-  try {
-    await addDoc(collection(db, 'trains'), {
-      dir: $('tDir').value, time, note: $('tNote').value.trim() || null, createdAt: serverTimestamp()
-    });
-    $('tTime').value = ''; $('tNote').value = '';
-    toast('تم إضافة الميعاد ✅');
-  } catch (e) { toast('تعذر الإضافة'); }
-};
-
-$('tList').onclick = async e => {
-  const b = e.target.closest('[data-tdel]'); if (!b) return;
-  if (!confirm('حذف الميعاد؟')) return;
-  try { await deleteDoc(doc(db, 'trains', b.dataset.tdel)); toast('تم الحذف'); }
-  catch (e) { toast('تعذر الحذف'); }
 };
 
 /* ---------- طوارئ ومشاركة ---------- */
@@ -1309,4 +1384,4 @@ function switchTab(n) {
 document.querySelector('.nav').onclick = e => { const b = e.target.closest('[data-tab]'); if (b) switchTab(b.dataset.tab); };
 </script>
 </body>
-</html>
+  </html>
