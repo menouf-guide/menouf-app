@@ -346,7 +346,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, getDoc, getDocs, setDoc, deleteDoc, collection, addDoc, query, where, orderBy, limit, startAfter, onSnapshot, updateDoc, serverTimestamp, deleteField, getAggregateFromServer, count } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, getDoc, getDocs, setDoc, deleteDoc, collection, addDoc, query, where, orderBy, onSnapshot, updateDoc, serverTimestamp, deleteField, getAggregateFromServer, count, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const app = initializeApp(window.FIREBASE_CONFIG);
 const auth = getAuth(app);
@@ -356,7 +356,6 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt
 const PHONE_RE = /^01[0125]\d{8}$/;
 const emailOf = p => p + '@menouf.app';
 const ADMIN_PHONE = '01002480665';
-const PAGE = 20;
 const tsMs = x => x?.toMillis?.() ?? 0;
 const fd = ms => ms ? new Date(ms).toLocaleString('ar-EG') : '';
 
@@ -455,7 +454,7 @@ const fmtPeriods = h => {
 
 let me = null, profile = null, unsubs = [], guest = false, mode = 'login';
 let approved = [], myBiz = [], allBiz = [], reports = [], reviews = [], notifs = [], announces = [];
-let pageCursor = null, hasMore = false, loadingPage = false;
+let loadingPage = false;
 let userCount = null, type = null, items = [], browseCat = 'الكل', q = '', editId = null, adminFilter = 'pending';
 let map = null, marker = null, bMap = null, bMarkers = [], curBiz = null;
 let userPos = null, onlyOpen = false, nearMe = false, mapView = false;
@@ -491,31 +490,20 @@ const ratingOf = id => {
   return { n: list.length, avg: list.length ? list.reduce((s, r) => s + r.rating, 0) / list.length : 0 };
 };
 
-/* ---------- تحميل الأنشطة بصفحات ---------- */
-async function loadFirstPage() {
-  pageCursor = null; approved = []; hasMore = false;
-  await loadPage();
-}
-
-async function loadPage() {
+/* ---------- تحميل كل الأنشطة المعتمدة ---------- */
+async function loadApproved() {
   if (loadingPage) return;
   loadingPage = true;
   renderBrowse();
   try {
-    const base = [where('status', '==', 'approved'), orderBy('createdAt', 'desc')];
-    const qy = pageCursor
-      ? query(collection(db, 'businesses'), ...base, startAfter(pageCursor), limit(PAGE))
-      : query(collection(db, 'businesses'), ...base, limit(PAGE));
+    const qy = query(collection(db, 'businesses'), where('status', '==', 'approved'), orderBy('createdAt', 'desc'));
     const s = await getDocs(qy);
-    const docs = s.docs.map(d => ({ id: d.id, ...d.data() }));
-    approved = pageCursor ? [...approved, ...docs] : docs;
-    if (s.docs.length) pageCursor = s.docs[s.docs.length - 1];
-    hasMore = s.docs.length === PAGE;
+    approved = s.docs.map(d => ({ id: d.id, ...d.data() }));
   } catch (err) {
     const msg = String(err.message || '');
     if (msg.includes('index')) {
       const link = msg.match(/https?:\/\/\S+/);
-      alert('مرة واحدة بس: افتح الرابط ده وإضغط Create عشان يتعمل الفهرس:\n' + (link ? link[0] : msg));
+      alert('مرة واحدة بس: افتح الرابط ده واضغط Create عشان يتعمل الفهرس:\n' + (link ? link[0] : msg));
     } else toast('تعذر تحميل الأنشطة: ' + (err.code || err.message));
   } finally {
     loadingPage = false;
@@ -574,7 +562,7 @@ $('guestBtn').onclick = async () => {
   $('logoutBtn').onclick = () => location.reload();
   buildCats(); buildTypeChips(); buildHours();
   currentTab = 'browse'; switchTab('browse');
-  await loadFirstPage();
+  await loadApproved();
 };
 
 $('logoutBtn').onclick = () => signOut(auth);
@@ -600,7 +588,7 @@ onAuthStateChanged(auth, async user => {
   $('adminTab').classList.toggle('hidden', profile.role !== 'admin');
   listen(); buildCats(); buildTypeChips(); buildHours();
   currentTab = 'browse'; switchTab('browse');
-  await loadFirstPage();
+  await loadApproved();
 });
 
 function listen() {
@@ -741,9 +729,7 @@ function renderBrowse() {
 
   let footer = '';
   if (loadingPage) footer = '<div class="empty">جاري التحميل...</div>';
-  else if (!list.length && !hasMore) footer = '<div class="empty">لا توجد نتائج مطابقة</div>';
-  else if (hasMore) footer = `<button id="moreBtn" class="btn s" style="margin:6px 0 14px">عرض المزيد ⬇️</button>
-    ${q || onlyOpen || browseCat !== 'الكل' ? '<p class="muted" style="text-align:center;margin-bottom:12px">لو مالقتش اللي بتدور عليه، اضغط عرض المزيد</p>' : ''}`;
+  else if (!list.length) footer = '<div class="empty">لا توجد نتائج مطابقة</div>';
 
   $('browseList').innerHTML = cards + footer;
 }
@@ -765,7 +751,6 @@ function renderMap() {
 window.openById = id => { const b = approved.find(x => x.id === id); if (b) openModal(b); };
 
 $('browseList').onclick = e => {
-  if (e.target.closest('#moreBtn')) return loadPage();
   const f = e.target.closest('[data-fav]');
   if (f) {
     const id = f.dataset.fav;
@@ -985,8 +970,10 @@ $('bizForm').onsubmit = async e => {
   $('saveBtn').disabled = true;
   try {
     if (editId) {
-      await updateDoc(doc(db, 'businesses', editId), { ...data, regNo: deleteField() });
-      if (d) await setDoc(doc(db, 'regs', editId), { regNo });
+      const batch = writeBatch(db);
+      batch.update(doc(db, 'businesses', editId), { ...data, regNo: deleteField() });
+      if (d) batch.set(doc(db, 'regs', editId), { regNo });
+      await batch.commit();
       toast('تم حفظ التعديلات وإعادة النشاط للمراجعة ✅');
     } else {
       const ref = doc(collection(db, 'businesses'));
@@ -1203,14 +1190,12 @@ $('contactBtn').onclick = () => {
 /* ---------- التنقل ---------- */
 function switchTab(n) {
   if (n !== 'add' && editId) cancelEdit();
-  const prev = currentTab;
   currentTab = n;
   ['browse', 'add', 'mine', 'admin'].forEach(t => $('tab-' + t).classList.toggle('hidden', t !== n));
   document.querySelectorAll('.nav [data-tab]').forEach(b => b.classList.toggle('on', b.dataset.tab === n));
   window.scrollTo({ top: 0, behavior: 'smooth' });
-  if (n === 'browse' && prev !== 'browse' && (me || guest)) loadFirstPage();
 }
 document.querySelector('.nav').onclick = e => { const b = e.target.closest('[data-tab]'); if (b) switchTab(b.dataset.tab); };
 </script>
 </body>
-  </html>
+</html>
