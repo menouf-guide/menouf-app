@@ -14,7 +14,7 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-:root{--bg:#08090c;--card:rgba(22,24,31,.9);--p:#ffc400;--pg:linear-gradient(135deg,#ffd000,#e5a700);--pglow:rgba(255,196,0,.28);--t:#f8fafc;--m:#94a3b8;--b:rgba(255,255,255,.08);--bg2:rgba(245,196,0,.25);--d:#ef4444;--v:#38bdf8}
+:root{--bg:#08090c;--card:rgba(22,24,31,.9);--p:#ffc400;--pg:linear-gradient(135deg,#ffd000,#e5a700);--pglow:rgba(255,196,0,.28);--t:#f8fafc;--m:#94a3b8;--b:rgba(255,255,255,.08);--bg2:rgba(245,196,0,.25);--d:#ef4444;--v:#38bdf8;--e:#22c55e;--eg:linear-gradient(135deg,#22c55e,#15803d)}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:Cairo,system-ui,sans-serif;background:radial-gradient(circle at 50% 0%,rgba(245,196,0,.10),transparent 50%),var(--bg);color:var(--t);min-height:100vh;font-size:15px;line-height:1.6;overflow-x:hidden}
 button,input,select,textarea{font:inherit;outline:none}
@@ -33,18 +33,40 @@ header{position:sticky;top:0;z-index:25;display:flex;justify-content:space-betwe
 .brand h1{font-size:18px;font-weight:900;color:var(--p);line-height:1.2}
 .brand small{color:var(--m);font-size:11.5px}
 .hact{display:flex;gap:6px}
-.ib{width:38px;height:38px;border-radius:50%;border:1px solid var(--bg2);background:rgba(255,196,0,.08);font-size:16px;display:flex;align-items:center;justify-content:center}
+.ib{width:38px;height:38px;border-radius:50%;border:1px solid var(--bg2);background:rgba(255,196,0,.08);font-size:16px;display:flex;align-items:center;justify-content:center;color:#fff}
 .ib.alert{border-color:rgba(239,68,68,.6);animation:blink 1.2s infinite}
 .ib:active{transform:scale(.92)}
 
-.search{display:flex;align-items:center;gap:8px;background:rgba(18,20,26,.95);border:1px solid var(--bg2);border-radius:16px;padding:0 14px;margin:14px 0 12px}
+/* نبض منوف */
+.pulse-card{background:linear-gradient(135deg,rgba(255,196,0,.12),rgba(34,197,94,.08) 70%,rgba(18,20,27,.95));border:1px solid var(--bg2);border-radius:20px;padding:14px 16px;margin:12px 0 14px;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.pulse-top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+.pulse-greet{font-size:14.5px;font-weight:800;color:#fff}
+.pulse-weather{font-size:12.5px;font-weight:800;color:var(--p);background:rgba(0,0,0,.35);padding:4px 10px;border-radius:999px;border:1px solid var(--bg2);white-space:nowrap}
+.pulse-train{display:flex;align-items:center;justify-content:space-between;gap:8px;background:rgba(0,0,0,.35);border:1px solid rgba(34,197,94,.28);border-radius:12px;padding:8px 12px;font-size:12.5px;font-weight:700;color:#d1fae5;cursor:pointer}
+.pulse-train strong{color:var(--e)}
+
+/* عروض اليوم */
+.deals-wrap{margin:2px 0 12px}
+.deals-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.deals-head span{font-size:14px;font-weight:900;color:var(--p)}
+.deals-head small{font-size:11.5px;color:var(--m)}
+.deals{display:flex;gap:12px;overflow-x:auto;padding:2px 2px 6px;scrollbar-width:none}
+.deals::-webkit-scrollbar{display:none}
+.deal-item{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:74px;max-width:78px;cursor:pointer}
+.deal-ring{width:64px;height:64px;border-radius:50%;padding:3px;background:linear-gradient(135deg,#ffd000,#ef4444,#22c55e);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(255,196,0,.22)}
+.deal-inner{width:100%;height:100%;border-radius:50%;background:#11141c;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:var(--p);text-align:center;line-height:1.15;border:2px solid #08090c;padding:4px}
+.deal-item b{font-size:11px;font-weight:700;color:#e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;text-align:center}
+
+.search{display:flex;align-items:center;gap:8px;background:rgba(18,20,26,.95);border:1px solid var(--bg2);border-radius:16px;padding:0 12px;margin:10px 0}
 .search input{border:0;background:transparent;padding:13px 0;color:#fff;font-size:14.5px;flex:1;width:100%}
 .search input::placeholder{color:#64748b}
+.mic-btn{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,196,0,.1);color:var(--p);font-size:16px;flex:none}
+.mic-btn.rec{background:rgba(239,68,68,.25);color:#f87171;animation:pulse 1s infinite}
 .tools{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
 .tool{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:11px 14px;border-radius:14px;background:rgba(18,20,26,.95);border:1px solid var(--b);font-size:13px;font-weight:700;color:#e2e8f0;position:relative}
 .tool.active{border-color:var(--bg2);background:rgba(255,196,0,.12);color:var(--p)}
 #bellCount{background:var(--d);color:#fff;border-radius:999px;padding:0 6px;font-size:11px;font-weight:800;margin-right:4px}
-.sec{font-size:17px;font-weight:900;color:#fff;margin:14px 0 10px}
+.sec{font-size:17px;font-weight:900;color:#fff;margin:14px 0 10px;display:flex;justify-content:space-between;align-items:center}
 
 .cats{display:flex;gap:12px;overflow-x:auto;padding:4px 2px 8px;scrollbar-width:none}
 .cats::-webkit-scrollbar{display:none}
@@ -56,6 +78,7 @@ header{position:sticky;top:0;z-index:25;display:flex;justify-content:space-betwe
 .card{background:var(--card);border:1px solid var(--b);border-radius:20px;padding:16px;margin-bottom:14px;box-shadow:0 8px 28px rgba(0,0,0,.35);position:relative;transition:transform .2s}
 .card:active{transform:scale(.99)}
 .card.fe{border-color:var(--bg2)}
+.card-cover{width:100%;height:130px;object-fit:cover;border-radius:14px;margin-bottom:10px;border:1px solid var(--b);display:block}
 .ct{font-size:17px;font-weight:800;color:#fff}
 .muted{color:var(--m);font-size:13px}
 .row{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
@@ -69,7 +92,7 @@ header{position:sticky;top:0;z-index:25;display:flex;justify-content:space-betwe
 .acts{display:flex;gap:8px;flex:1}
 .acts .btn{flex:1}
 .rt{font-size:12.5px;color:var(--p);font-weight:700;white-space:nowrap}
-.fav{position:absolute;top:14px;left:14px;width:32px;height:32px;border-radius:50%;border:1px solid var(--b);background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:15px}
+.fav{position:absolute;top:14px;left:14px;width:32px;height:32px;border-radius:50%;border:1px solid var(--b);background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;font-size:15px;z-index:2}
 
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:12px 14px;border-radius:14px;font-weight:800;font-size:14.5px;text-align:center;background:var(--pg);color:#0d0e12;box-shadow:0 6px 16px var(--pglow)}
 .btn:active{transform:scale(.96)}
@@ -112,11 +135,15 @@ textarea{min-height:85px;resize:vertical}
 .leaflet-container{background:#e5e7eb}
 .leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#fff;color:#111}
 .leaflet-popup-content{color:#111}
-.lr{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border:1px solid var(--b);border-radius:12px;margin-bottom:6px;background:rgba(255,255,255,.03);font-size:14px}
+.lr{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 14px;border:1px solid var(--b);border-radius:12px;margin-bottom:6px;background:rgba(255,255,255,.03);font-size:14px}
 .empty{text-align:center;color:var(--m);padding:40px 16px;font-weight:700}
 .empty p{font-size:15px;color:#e2e8f0;margin-bottom:6px}
 .empty small{display:block;color:var(--m);font-size:13px;font-weight:600;line-height:1.7;margin-bottom:14px}
 .edit{background:rgba(255,196,0,.12);border:1px solid var(--bg2);color:var(--p);padding:12px 14px;border-radius:14px;font-size:13.5px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
+
+.qty-box{display:flex;align-items:center;gap:6px;flex:none}
+.qty-btn{width:28px;height:28px;border-radius:50%;background:rgba(255,196,0,.15);color:var(--p);border:1px solid var(--bg2);font-weight:900;display:flex;align-items:center;justify-content:center}
+.cart-bar{background:linear-gradient(135deg,rgba(34,197,94,.18),rgba(255,196,0,.12));border:1px solid rgba(34,197,94,.45);border-radius:16px;padding:12px;margin-top:10px}
 
 .nav{position:fixed;bottom:12px;left:12px;right:12px;max-width:496px;margin:0 auto;z-index:35;display:flex;justify-content:space-around;align-items:flex-end;padding:8px 6px 10px;background:rgba(14,16,22,.96);border:1px solid rgba(255,255,255,.1);border-radius:26px;box-shadow:0 12px 35px rgba(0,0,0,.6)}
 .nav .tb{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11.5px;font-weight:700;color:var(--m);min-width:64px;flex:1;padding:4px 0}
@@ -190,9 +217,25 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
 
   <div class="wrap">
     <div id="tab-browse">
+      <!-- نبض منوف -->
+      <div class="pulse-card">
+        <div class="pulse-top">
+          <div class="pulse-greet" id="pulseGreet">أهلاً بكم في منوف</div>
+          <div class="pulse-weather" id="pulseWeather">🌤️ منوف</div>
+        </div>
+        <div class="pulse-train" id="pulseTrain"><span>🚆 مواعيد القطارات في منوف</span><span style="color:var(--p)">الجدول ←</span></div>
+      </div>
+
+      <!-- عروض اليوم -->
+      <div id="dealsBar" class="deals-wrap hidden">
+        <div class="deals-head"><span>🔥 عروض اليوم في منوف</span><small>اضغط على العرض للتفاصيل</small></div>
+        <div class="deals" id="dealsList"></div>
+      </div>
+
       <div class="search">
         <span>🔍</span>
         <input id="searchInput" placeholder="ابحث بالاسم أو التخصص أو العنوان...">
+        <button type="button" class="mic-btn hidden" id="voiceBtn" title="بحث صوتي">🎙️</button>
       </div>
 
       <div class="tools">
@@ -200,7 +243,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
         <button class="tool" id="fOpen">🟢 مفتوح الآن</button>
         <button class="tool" id="fMap">🗺️ الخريطة</button>
         <button class="tool" id="fNear">📍 الأقرب لمكاني</button>
-        <button class="tool" id="fTrain">🚆 القطارات</button>
+        <button class="tool" id="fTrain" style="grid-column:span 2;justify-content:center">🚆 القطارات</button>
       </div>
 
       <div class="sec">التصنيفات</div>
@@ -213,7 +256,10 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
 
       <div id="browseMapBox" class="hidden"></div>
 
-      <div class="sec">قائمة الأنشطة</div>
+      <div class="sec">
+        <span>قائمة الأنشطة</span>
+        <small id="countLabel" class="muted"></small>
+      </div>
       <div id="browseList"></div>
     </div>
 
@@ -233,6 +279,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
             <div class="field" id="catF"><label>التصنيف</label><select id="bCat"></select></div>
             <div class="field" id="regF"><label>رقم القيد في النقابة (للتوثيق، لا يظهر للعامة)</label><input id="bReg" inputmode="numeric"></div>
             <div class="field" id="priceF"><label>سعر الكشف (اختياري)</label><input id="bPrice" inputmode="numeric"></div>
+            <div class="field"><label>رابط صورة للمكان أو اللوجو (اختياري)</label><input id="bImg" type="url" placeholder="https://..."></div>
             <div class="field"><label>نبذة (اختياري)</label><textarea id="bDesc" maxlength="160"></textarea></div>
           </div>
           <div class="card">
@@ -251,10 +298,11 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
             <div id="hours"></div>
           </div>
           <div class="card">
-            <div class="ct" style="margin-bottom:10px">الخدمات أو المنتجات وأسعارها (اختياري)</div>
+            <div class="ct" style="margin-bottom:10px">الخدمات أو المنيو والأسعار (اختياري)</div>
+            <p class="muted" style="margin-bottom:8px">العميل يقدر يختار منها ويبعت الطلب على واتساب.</p>
             <div id="itemsBox"></div>
             <div style="display:flex;gap:6px;margin-top:8px">
-              <input id="iName" placeholder="الخدمة / المنتج" style="flex:2">
+              <input id="iName" placeholder="الخدمة / الصنف" style="flex:2">
               <input id="iPrice" placeholder="السعر" inputmode="numeric" style="flex:1">
               <button type="button" class="btn s sm" id="addItem">+</button>
             </div>
@@ -276,7 +324,10 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
         <div class="field"><textarea id="annBody" placeholder="نص الإعلان"></textarea></div>
         <button class="btn" id="annSend" type="button">نشر الإعلان</button>
       </div>
-
+      <div class="card">
+        <div class="ct" style="margin-bottom:10px">🔥 عروض أصحاب الأنشطة</div>
+        <div id="adminOffersBox"><div class="empty" style="padding:12px">لا توجد عروض</div></div>
+      </div>
       <div class="card">
         <div class="ct" style="margin-bottom:10px">🚆 مواعيد القطارات</div>
         <div class="field"><label>الاتجاه</label><select id="tDir"></select></div>
@@ -289,7 +340,6 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
         <button class="btn s" id="tCancel" type="button" style="margin-top:8px;display:none">إلغاء التعديل</button>
         <div id="tList" style="margin-top:12px"></div>
       </div>
-
       <div class="chips" id="adminChips">
         <button type="button" class="chip on" data-f="pending">⏳ قيد المراجعة (<span id="cP">0</span>)</button>
         <button type="button" class="chip" data-f="approved">✅ المنشورة (<span id="cA">0</span>)</button>
@@ -314,9 +364,14 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
 <div id="bizModal" class="modal hidden">
   <div class="sheet">
     <div class="row" style="margin-bottom:12px">
-      <div style="display:flex;gap:6px;flex-wrap:wrap"><span id="mBadge" class="badge"></span><span id="mVerified" class="badge v hidden">✓ موثق</span></div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <span id="mBadge" class="badge"></span>
+        <span id="mVerified" class="badge v hidden">✓ موثق</span>
+        <span id="mFeatured" class="badge p hidden">⭐ مميز</span>
+      </div>
       <div style="display:flex;gap:6px"><button id="mShare" class="ib" title="مشاركة">📤</button><button id="closeModal" style="font-size:26px;color:var(--m);line-height:1">&times;</button></div>
     </div>
+    <img id="mCover" class="card-cover hidden" alt="">
     <h2 id="mTitle" class="ct" style="font-size:21px;margin-bottom:4px"></h2>
     <p id="mSub" style="color:var(--p);font-weight:700;margin-bottom:10px"></p>
     <p id="mDesc" class="muted" style="margin-bottom:14px"></p>
@@ -325,11 +380,62 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
       <div id="mDist" class="muted" style="color:var(--p);font-weight:700;margin-top:4px"></div>
       <div id="mPriceBox" class="hidden" style="margin-top:4px">💰 الكشف: <strong id="mPrice" style="color:var(--p)"></strong> جنيه</div>
     </div>
-    <div id="mItemsBox" class="hidden" style="margin-bottom:14px"><div style="color:var(--p);font-weight:700;margin-bottom:6px">الخدمات والأسعار</div><div id="mItems"></div></div>
+
+    <div id="mItemsBox" class="hidden" style="margin-bottom:14px">
+      <div style="color:var(--p);font-weight:800;margin-bottom:6px">🛒 الخدمات والأسعار</div>
+      <div id="mItems"></div>
+      <div id="mCartBar" class="cart-bar hidden">
+        <strong id="mCartTxt" style="font-size:13.5px;color:#fff;display:block;margin-bottom:8px"></strong>
+        <button type="button" id="mCartWa" class="btn g">💬 إرسال الطلب عبر واتساب</button>
+      </div>
+    </div>
+
+    <div id="mDocBookBox" class="hidden" style="border:1px solid rgba(16,185,129,.3);border-radius:14px;padding:12px;margin-bottom:14px;background:rgba(16,185,129,.06)">
+      <div style="color:#34d399;font-weight:800;margin-bottom:8px">📅 حجز كشف عبر واتساب</div>
+      <div class="field" style="margin-bottom:8px"><input id="mBookName" placeholder="اسم المريض"></div>
+      <div class="field" style="margin-bottom:8px"><select id="mBookDay"></select></div>
+      <button type="button" id="mBookWa" class="btn g">💬 تأكيد الحجز على واتساب العيادة</button>
+    </div>
+
     <div style="color:var(--p);font-weight:700;margin-bottom:6px">مواعيد العمل</div>
     <div id="mHours" style="margin-bottom:6px"></div>
     <div id="mRatings"></div>
     <div id="mActs" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;padding-top:12px;border-top:1px dashed rgba(255,255,255,.08)"></div>
+  </div>
+</div>
+
+<!-- تفاصيل العرض -->
+<div id="dealModal" class="modal hidden">
+  <div class="sheet">
+    <div class="row" style="margin-bottom:12px">
+      <span class="badge p">🔥 عرض اليوم</span>
+      <button id="closeDeal" style="font-size:26px;color:var(--m);line-height:1">&times;</button>
+    </div>
+    <h3 id="dTitle" class="ct" style="font-size:20px;margin-bottom:4px"></h3>
+    <p id="dBizName" style="color:#34d399;font-weight:800;margin-bottom:8px"></p>
+    <div id="dDiscount" style="display:inline-block;background:var(--d);color:#fff;padding:4px 12px;border-radius:999px;font-weight:900;font-size:13px;margin-bottom:10px"></div>
+    <p id="dDesc" style="color:#e2e8f0;margin-bottom:12px;line-height:1.8"></p>
+    <p id="dExp" class="muted" style="margin-bottom:14px"></p>
+    <button type="button" id="dGoBiz" class="btn">📍 فتح صفحة النشاط</button>
+  </div>
+</div>
+
+<!-- إضافة عرض -->
+<div id="offerModal" class="modal hidden">
+  <div class="sheet">
+    <div class="row" style="margin-bottom:12px">
+      <h3 class="ct" style="color:var(--p)">🔥 أضف عرض</h3>
+      <button id="closeOffer" style="font-size:26px;color:var(--m)">&times;</button>
+    </div>
+    <p id="oBizName" class="muted" style="margin-bottom:12px"></p>
+    <input type="hidden" id="oBizId">
+    <div class="field"><label>عنوان العرض</label><input id="oTitle" placeholder="مثال: وجبة شاورما سوبر" maxlength="50"></div>
+    <div class="field"><label>الخصم أو الميزة (يظهر داخل الدائرة)</label><input id="oDiscount" placeholder="خصم 25%" maxlength="16"></div>
+    <div class="field"><label>تفاصيل العرض</label><textarea id="oDesc" placeholder="اشرح العرض والشروط..." maxlength="200"></textarea></div>
+    <div class="field"><label>مدة العرض</label>
+      <select id="oDays"><option value="1">24 ساعة</option><option value="2">48 ساعة</option><option value="3">3 أيام</option><option value="7">أسبوع</option></select>
+    </div>
+    <button type="button" id="oSave" class="btn">إرسال العرض للمراجعة 🔥</button>
   </div>
 </div>
 
@@ -366,7 +472,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, getDoc, getDocs, setDoc, deleteDoc, collection, addDoc, query, where, orderBy, onSnapshot, updateDoc, serverTimestamp, deleteField, getAggregateFromServer, count, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, getDoc, getDocs, setDoc, deleteDoc, collection, addDoc, query, where, orderBy, onSnapshot, updateDoc, serverTimestamp, deleteField, getAggregateFromServer, count, writeBatch, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const app = initializeApp(window.FIREBASE_CONFIG);
 const auth = getAuth(app);
@@ -395,11 +501,12 @@ const CAT_TABS = [
   { k: 'المفضلة', i: '❤️' },
   { k: 'دكاترة', i: '🩺' },
   { k: 'محل / مطعم', i: '🛍️' },
+  { k: 'صيدليات', i: '💊' },
   { k: 'خدمة', i: '🛠️' }
 ];
 const CENTER = [30.46, 30.93];
 
-/* ---------- القطارات: بيانات ومساعدات ---------- */
+/* ---------- القطارات ---------- */
 const DIR_LABEL = {
   out_cairo: 'من منوف ← القاهرة',
   out_tanta: 'من منوف ← طنطا',
@@ -418,8 +525,6 @@ const TRAIN_TYPES = ['محسن', 'روسي', 'مكيف روسي', 'اكسبري�
 
 $('tDir').innerHTML = Object.entries(DIR_LABEL).map(([k, v]) => `<option value="${k}">${v}</option>`).join('');
 $('tType').innerHTML = TRAIN_TYPES.map(t => `<option>${t}</option>`).join('');
-
-// ميعاد القيام: بيقرأ الحقل الجديد، ولو مش موجود بيقرأ القديم
 const tDep = t => t.depart || t.time || '';
 
 let trains = [], trainDir = 'out_cairo', trainOn = false, editTrainId = null;
@@ -430,7 +535,7 @@ const normAr = s => String(s || '').toLowerCase()
   .replace(/[إأآ]/g, 'ا').replace(/ى/g, 'ي').replace(/ة/g, 'ه').replace(/ؤ/g, 'و').replace(/ئ/g, 'ي');
 
 const SYN = [
-  ['مطعم','مطاعم','مطبخ','كافيه','كافيهات','اكل','وجبات','برجر','شاورما'],
+  ['مطعم','مطاعم','مطبخ','كافيه','كافيهات','اكل','وجبات','برجر','شاورما','بيتزا','كشري'],
   ['دكتور','دكاترة','طبيب','اطباء','عياده','عيادات','مركز طبي'],
   ['صيدليه','صيدليات','دوا','ادويه'],
   ['سباك','سباكه','سباكين'],
@@ -452,11 +557,9 @@ function expandTerm(term) {
   });
   return [...out];
 }
-
 function matchesQuery(b, query) {
   const hay = normAr([b.name, b.specialty, b.category, b.address, b.landmark, b.desc, TYPES[b.type]?.label].join(' '));
-  return normAr(query).split(/\s+/).filter(Boolean)
-    .every(w => expandTerm(w).some(x => hay.includes(x)));
+  return normAr(query).split(/\s+/).filter(Boolean).every(w => expandTerm(w).some(x => hay.includes(x)));
 }
 
 /* ---------- المواعيد ---------- */
@@ -467,14 +570,12 @@ const periodsOf = t => {
   if (t.from2 && t.to2) p.push([t.from2, t.to2]);
   return p;
 };
-
 function isOpen(hours) {
   if (!Array.isArray(hours)) return false;
   const now = new Date();
   const cur = now.getHours() * 60 + now.getMinutes();
   const today = (now.getDay() + 1) % 7;
   const yesterday = (today + 6) % 7;
-
   const t = hours[today];
   if (t && t.open) {
     for (const [f, to] of periodsOf(t)) {
@@ -491,21 +592,20 @@ function isOpen(hours) {
   }
   return false;
 }
+const fmtPeriods = h => !h.open ? 'مغلق' : (periodsOf(h).map(([f, t]) => `${f} إلى ${t}`).join(' ، ') || 'مغلق');
 
-const fmtPeriods = h => {
-  if (!h.open) return 'مغلق';
-  return periodsOf(h).map(([f, t]) => `${f} إلى ${t}`).join(' ، ') || 'مغلق';
-};
-
+/* ---------- الحالة العامة ---------- */
 let me = null, profile = null, unsubs = [], guest = false, mode = 'login';
-let approved = [], myBiz = [], allBiz = [], reports = [], reviews = [], notifs = [], announces = [];
-let loadingPage = false;
+let approved = [], myBiz = [], allBiz = [], reports = [], reviews = [], notifs = [], announces = [], offers = [];
+let myStats = {};
+let loadingPage = false, deepHandled = false;
 let userCount = null, type = null, items = [], browseCat = 'الكل', q = '', editId = null, editOrigType = null, adminFilter = 'pending';
-let map = null, marker = null, bMap = null, bMarkers = [], curBiz = null;
+let map = null, marker = null, bMap = null, bMarkers = [], curBiz = null, cart = {};
 let userPos = null, onlyOpen = false, nearMe = false, mapView = false;
 let currentTab = 'browse', adminTimer = null;
 let favs = JSON.parse(localStorage.getItem('menouf_favs') || '[]');
 let lastAnnSeen = Number(localStorage.getItem('menouf_ann_seen') || 0);
+const deepBizId = new URLSearchParams(location.search).get('biz');
 
 function toast(msg) {
   const t = $('toast'); t.textContent = msg; t.classList.add('show');
@@ -535,7 +635,52 @@ const ratingOf = id => {
   return { n: list.length, avg: list.length ? list.reduce((s, r) => s + r.rating, 0) / list.length : 0 };
 };
 
-/* ---------- تحميل كل الأنشطة المعتمدة ---------- */
+/* ---------- نبض منوف ---------- */
+function initPulse() {
+  const hr = new Date().getHours();
+  $('pulseGreet').textContent = hr < 12 ? '☀️ صباح الخير يا أهل منوف' : hr < 17 ? '🌤️ طاب يومكم في منوف' : '🌙 مساء الخير يا أهل منوف';
+  fetch('https://api.open-meteo.com/v1/forecast?latitude=30.465&longitude=30.931&current=temperature_2m,weather_code&timezone=Africa%2FCairo')
+    .then(r => r.json())
+    .then(d => {
+      const temp = Math.round(d?.current?.temperature_2m);
+      const code = d?.current?.weather_code ?? 0;
+      const ic = code <= 1 ? '☀️' : code <= 3 ? '⛅' : code >= 51 ? '🌧️' : '🌤️';
+      if (!isNaN(temp)) $('pulseWeather').textContent = `${ic} منوف ${temp}°`;
+    }).catch(() => {});
+}
+function updateNextTrainPulse() {
+  const now = new Date(), cur = now.getHours() * 60 + now.getMinutes();
+  const out = trains.filter(t => String(t.dir || '').startsWith('out_') && tDep(t))
+    .map(t => ({ ...t, m: toMin(tDep(t)) }))
+    .filter(t => t.m >= cur)
+    .sort((a, b) => a.m - b.m);
+  if (!out.length) {
+    $('pulseTrain').innerHTML = `<span>🚆 مواعيد القطارات في منوف</span><span style="color:var(--p)">الجدول ←</span>`;
+    return;
+  }
+  const nx = out[0], diff = nx.m - cur;
+  const txt = diff === 0 ? 'يتحرك الآن' : diff < 60 ? `بعد ${diff} دقيقة` : `بعد ${Math.floor(diff / 60)} س و ${diff % 60} د`;
+  $('pulseTrain').innerHTML = `<span>🚆 القطار القادم (<strong>${esc(SHORT_DIR[nx.dir])}</strong>): ${esc(tDep(nx))} · <strong>${txt}</strong></span><span style="color:var(--p)">الجدول ←</span>`;
+}
+$('pulseTrain').onclick = () => { if (!trainOn) $('fTrain').click(); };
+
+/* ---------- البحث الصوتي ---------- */
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+if (SR) {
+  $('voiceBtn').classList.remove('hidden');
+  $('voiceBtn').onclick = () => {
+    const rec = new SR();
+    rec.lang = 'ar-EG';
+    $('voiceBtn').classList.add('rec');
+    toast('اتكلم دلوقتي 🎙️');
+    rec.onresult = e => { const txt = e.results[0][0].transcript; $('searchInput').value = txt; q = txt.trim(); renderBrowse(); };
+    rec.onerror = () => toast('تعذر التقاط الصوت');
+    rec.onend = () => $('voiceBtn').classList.remove('rec');
+    rec.start();
+  };
+}
+
+/* ---------- تحميل البيانات ---------- */
 async function loadApproved() {
   if (loadingPage) return;
   loadingPage = true;
@@ -544,6 +689,11 @@ async function loadApproved() {
     const qy = query(collection(db, 'businesses'), where('status', '==', 'approved'), orderBy('createdAt', 'desc'));
     const s = await getDocs(qy);
     approved = s.docs.map(d => ({ id: d.id, ...d.data() }));
+    if (deepBizId && !deepHandled) {
+      deepHandled = true;
+      const target = approved.find(x => x.id === deepBizId);
+      if (target) openModal(target);
+    }
   } catch (err) {
     const msg = String(err.message || '');
     if (msg.includes('index')) {
@@ -556,35 +706,116 @@ async function loadApproved() {
   }
 }
 
-/* ---------- القطارات: عرض للزوار والمستخدمين ---------- */
-function listenTrains() {
-  return onSnapshot(collection(db, 'trains'), s => {
-    trains = s.docs.map(d => ({ id: d.id, ...d.data() }));
-    renderTrains(); renderTrainAdmin();
+async function loadReviewsOnce() {
+  try {
+    const s = await getDocs(collection(db, 'reviews'));
+    reviews = s.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderBrowse(); renderAdminStats();
+  } catch (e) {}
+}
+
+function listenOffers() {
+  const isAdm = profile?.role === 'admin';
+  const qy = isAdm ? collection(db, 'offers') : query(collection(db, 'offers'), where('status', '==', 'approved'));
+  return onSnapshot(qy, s => {
+    offers = s.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderDeals(); renderAdminOffers(); renderAdminStats();
   }, () => {});
 }
 
+/* ---------- عروض اليوم ---------- */
+function activeOffers() {
+  const now = Date.now();
+  return offers.filter(o => o.status === 'approved' && (!o.expiresAt || o.expiresAt > now))
+    .sort((a, b) => tsMs(b.createdAt) - tsMs(a.createdAt));
+}
+function renderDeals() {
+  const list = activeOffers();
+  $('dealsBar').classList.toggle('hidden', !list.length);
+  $('dealsList').innerHTML = list.map(o => `
+    <div class="deal-item" data-deal="${o.id}">
+      <div class="deal-ring"><div class="deal-inner">${esc(o.discount || 'عرض')}</div></div>
+      <b>${esc(o.bizName || '')}</b>
+    </div>`).join('');
+}
+$('dealsList').onclick = e => {
+  const el = e.target.closest('[data-deal]'); if (!el) return;
+  const o = offers.find(x => x.id === el.dataset.deal); if (!o) return;
+  $('dTitle').textContent = o.title;
+  $('dBizName').textContent = '🏪 ' + (o.bizName || '');
+  $('dDiscount').textContent = o.discount || 'عرض خاص';
+  $('dDesc').textContent = o.desc || '';
+  $('dExp').textContent = o.expiresAt ? '⏳ ساري حتى: ' + fd(o.expiresAt) : '';
+  $('dGoBiz').onclick = () => {
+    $('dealModal').classList.add('hidden');
+    const b = approved.find(x => x.id === o.bizId);
+    if (b) openModal(b); else toast('النشاط غير متاح حالياً');
+  };
+  $('dealModal').classList.remove('hidden');
+};
+$('closeDeal').onclick = () => $('dealModal').classList.add('hidden');
+$('dealModal').onclick = e => { if (e.target.id === 'dealModal') $('dealModal').classList.add('hidden'); };
+
+$('closeOffer').onclick = () => $('offerModal').classList.add('hidden');
+$('offerModal').onclick = e => { if (e.target.id === 'offerModal') $('offerModal').classList.add('hidden'); };
+$('oSave').onclick = async () => {
+  const bizId = $('oBizId').value, title = $('oTitle').value.trim(), discount = $('oDiscount').value.trim();
+  if (!title || !discount) return toast('اكتب عنوان العرض والخصم');
+  const days = Number($('oDays').value || 1);
+  const isAdm = profile?.role === 'admin';
+  try {
+    await addDoc(collection(db, 'offers'), {
+      bizId, bizName: $('oBizName').dataset.name || '',
+      title, discount, desc: $('oDesc').value.trim(),
+      expiresAt: Date.now() + days * 86400000,
+      status: isAdm ? 'approved' : 'pending',
+      createdAt: serverTimestamp()
+    });
+    $('offerModal').classList.add('hidden');
+    $('oTitle').value = ''; $('oDiscount').value = ''; $('oDesc').value = '';
+    toast(isAdm ? 'تم نشر العرض ✅' : 'تم إرسال العرض وهيظهر بعد موافقة الإدارة 🔥');
+  } catch (e) { toast('تعذر إرسال العرض'); }
+};
+
+function renderAdminOffers() {
+  const box = $('adminOffersBox');
+  if (!offers.length) { box.innerHTML = '<div class="empty" style="padding:10px">لا توجد عروض</div>'; return; }
+  box.innerHTML = offers.map(o => `<div class="lr" style="flex-direction:column;align-items:stretch;gap:6px">
+    <div class="row"><strong>${esc(o.title)} (${esc(o.discount)})</strong>${badge(o.status || 'pending')}</div>
+    <div class="muted">${esc(o.bizName || '')} · ${esc(o.desc || '')}</div>
+    <div style="display:flex;gap:6px;justify-content:flex-end">
+      ${o.status !== 'approved' ? `<button class="btn sm" data-oapp="${o.id}">نشر ✅</button>` : ''}
+      <button class="btn sm d" data-odel="${o.id}">حذف 🗑️</button>
+    </div>
+  </div>`).join('');
+}
+$('adminOffersBox').onclick = async e => {
+  const appB = e.target.closest('[data-oapp]'), delB = e.target.closest('[data-odel]');
+  try {
+    if (appB) { await updateDoc(doc(db, 'offers', appB.dataset.oapp), { status: 'approved' }); toast('تم نشر العرض 🔥'); }
+    if (delB && confirm('حذف العرض؟')) { await deleteDoc(doc(db, 'offers', delB.dataset.odel)); toast('تم الحذف'); }
+  } catch (err) { toast('تعذر التنفيذ'); }
+};
+
+/* ---------- القطارات: عرض ---------- */
+function listenTrains() {
+  return onSnapshot(collection(db, 'trains'), s => {
+    trains = s.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderTrains(); renderTrainAdmin(); updateNextTrainPulse();
+  }, () => {});
+}
 function renderTrains() {
   $('trainChips').innerHTML = Object.keys(DIR_LABEL).map(k =>
     `<button class="chip ${k === trainDir ? 'on' : ''}" data-tdir="${k}">${esc(SHORT_DIR[k])} ${k.startsWith('out') ? '←' : '→'}</button>`).join('');
-
   const list = trains.filter(t => t.dir === trainDir).sort((a, b) => tDep(a).localeCompare(tDep(b)));
-  const now = new Date();
-  const cur = now.getHours() * 60 + now.getMinutes();
+  const now = new Date(), cur = now.getHours() * 60 + now.getMinutes();
   const nextIdx = list.findIndex(t => tDep(t) && toMin(tDep(t)) >= cur);
-
   $('trainList').innerHTML = `<div class="ct" style="margin:6px 0 10px">${esc(DIR_LABEL[trainDir])}</div>` +
     (list.length ? list.map((t, i) => `
       <div class="card" style="padding:12px;margin-bottom:10px;${i === nextIdx ? 'border-color:var(--p)' : ''}">
         <div class="row">
-          <div>
-            <div class="muted">قيام</div>
-            <div style="font-size:20px;font-weight:900;color:var(--p)">${esc(tDep(t))}</div>
-          </div>
-          <div style="text-align:left">
-            <div class="muted">وصول</div>
-            <div style="font-size:18px;font-weight:800">${esc(t.arrive || '-')}</div>
-          </div>
+          <div><div class="muted">قيام</div><div style="font-size:20px;font-weight:900;color:var(--p)">${esc(tDep(t))}</div></div>
+          <div style="text-align:left"><div class="muted">وصول</div><div style="font-size:18px;font-weight:800">${esc(t.arrive || '-')}</div></div>
           ${i === nextIdx ? '<span class="badge p">الجاي</span>' : ''}
         </div>
         ${(t.num || t.type) ? `<div class="info" style="margin-top:6px">🚆 ${t.num ? 'قطار ' + esc(t.num) : ''}${t.num && t.type ? ' · ' : ''}${t.type ? esc(t.type) : ''}</div>` : ''}
@@ -606,7 +837,6 @@ function renderTrainAdmin() {
       </div>
     </div>`).join('') || '<div class="empty">لا توجد مواعيد</div>';
 }
-
 function resetTrainForm() {
   editTrainId = null;
   $('tDep').value = ''; $('tArr').value = ''; $('tNum').value = ''; $('tNote').value = '';
@@ -614,81 +844,50 @@ function resetTrainForm() {
   $('tSave').textContent = 'إضافة ميعاد';
   $('tCancel').style.display = 'none';
 }
-
 function startTrainEdit(t) {
   editTrainId = t.id;
-  $('tDir').value = t.dir;
-  $('tDep').value = tDep(t);
-  $('tArr').value = t.arrive || '';
-  $('tNum').value = t.num || '';
-  $('tType').value = t.type || TRAIN_TYPES[0];
-  $('tNote').value = t.note || '';
-  $('tSave').textContent = 'حفظ التعديل';
-  $('tCancel').style.display = '';
+  $('tDir').value = t.dir; $('tDep').value = tDep(t); $('tArr').value = t.arrive || '';
+  $('tNum').value = t.num || ''; $('tType').value = t.type || TRAIN_TYPES[0]; $('tNote').value = t.note || '';
+  $('tSave').textContent = 'حفظ التعديل'; $('tCancel').style.display = '';
   $('tDep').scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
-
 $('tSave').onclick = async () => {
   const dep = $('tDep').value, arr = $('tArr').value;
   if (!dep) return toast('اكتب ميعاد القيام');
   if (!arr) return toast('اكتب ميعاد الوصول');
   const data = {
-    dir: $('tDir').value,
-    depart: dep,
-    arrive: arr,
+    dir: $('tDir').value, depart: dep, arrive: arr,
     num: $('tNum').value.trim() || null,
     type: $('tType').value || null,
     note: $('tNote').value.trim() || null
   };
   try {
-    if (editTrainId) {
-      await updateDoc(doc(db, 'trains', editTrainId), data);
-      toast('تم حفظ التعديل ✅');
-    } else {
-      await addDoc(collection(db, 'trains'), { ...data, createdAt: serverTimestamp() });
-      toast('تم إضافة القطار ✅');
-    }
+    if (editTrainId) { await updateDoc(doc(db, 'trains', editTrainId), data); toast('تم حفظ التعديل ✅'); }
+    else { await addDoc(collection(db, 'trains'), { ...data, createdAt: serverTimestamp() }); toast('تم إضافة القطار ✅'); }
     resetTrainForm();
   } catch (e) { toast('تعذر الحفظ'); }
 };
-
 $('tCancel').onclick = () => resetTrainForm();
-
 $('tList').onclick = async e => {
   const ed = e.target.closest('[data-tedit]');
-  if (ed) {
-    const t = trains.find(x => x.id === ed.dataset.tedit);
-    if (t) startTrainEdit(t);
-    return;
-  }
+  if (ed) { const t = trains.find(x => x.id === ed.dataset.tedit); if (t) startTrainEdit(t); return; }
   const del = e.target.closest('[data-tdel]');
-  if (!del) return;
-  if (!confirm('حذف الميعاد؟')) return;
-  try {
-    await deleteDoc(doc(db, 'trains', del.dataset.tdel));
-    if (editTrainId === del.dataset.tdel) resetTrainForm();
-    toast('تم الحذف');
-  } catch (err) { toast('تعذر الحذف'); }
+  if (!del || !confirm('حذف الميعاد؟')) return;
+  try { await deleteDoc(doc(db, 'trains', del.dataset.tdel)); if (editTrainId === del.dataset.tdel) resetTrainForm(); toast('تم الحذف'); }
+  catch (err) { toast('تعذر الحذف'); }
 };
-
 function applyView() {
   $('trainBox').classList.toggle('hidden', !trainOn);
   $('browseList').classList.toggle('hidden', trainOn || mapView);
   $('browseMapBox').classList.toggle('hidden', trainOn || !mapView);
 }
-
 $('fTrain').onclick = () => {
   trainOn = !trainOn;
   $('fTrain').classList.toggle('active', trainOn);
   if (trainOn) { mapView = false; $('fMap').classList.remove('active'); }
-  applyView();
-  renderTrains();
+  applyView(); renderTrains();
 };
-
-$('trainChips').onclick = e => {
-  const b = e.target.closest('[data-tdir]'); if (!b) return;
-  trainDir = b.dataset.tdir; renderTrains();
-};
+$('trainChips').onclick = e => { const b = e.target.closest('[data-tdir]'); if (b) { trainDir = b.dataset.tdir; renderTrains(); } };
 
 /* ---------- طوارئ ومشاركة ---------- */
 $('emergencyBtn').onclick = () => $('emergencyModal').classList.remove('hidden');
@@ -697,8 +896,9 @@ $('emergencyModal').onclick = e => { if (e.target.id === 'emergencyModal') $('em
 
 $('mShare').onclick = async () => {
   const b = curBiz; if (!b) return;
-  const text = `📍 ${b.name}\n${b.type === 'doctor' ? '🩺 طبيب: ' + b.specialty : '🏷️ ' + b.category}\n📌 ${b.address}\n📞 ${b.phone || b.ownerPhone || ''}\nمن تطبيق "منوف في جيبك" 📲`;
-  if (navigator.share) { try { await navigator.share({ title: b.name, text }); } catch (e) {} }
+  const url = `${location.origin}${location.pathname}?biz=${b.id}`;
+  const text = `📍 ${b.name}\n${b.type === 'doctor' ? '🩺 ' + b.specialty : '🏷️ ' + b.category}\n📌 ${b.address}\n🔗 التفاصيل على تطبيق منوف في جيبك:\n${url}`;
+  if (navigator.share) { try { await navigator.share({ title: b.name, text, url }); } catch (e) {} }
   else window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
 };
 
@@ -731,18 +931,15 @@ $('authForm').onsubmit = async e => {
 
 $('guestBtn').onclick = async () => {
   guest = true;
-  $('authView').classList.add('hidden');
-  $('appView').classList.remove('hidden');
-  $('navAdd').classList.add('hidden');
-  $('navMine').classList.add('hidden');
-  $('bellBtn').classList.add('hidden');
-  $('logoutBtn').title = 'دخول';
-  $('logoutBtn').textContent = '🔑';
+  $('authView').classList.add('hidden'); $('appView').classList.remove('hidden');
+  $('navAdd').classList.add('hidden'); $('navMine').classList.add('hidden'); $('bellBtn').classList.add('hidden');
+  $('logoutBtn').title = 'دخول'; $('logoutBtn').textContent = '🔑';
   $('logoutBtn').onclick = () => location.reload();
-  unsubs.push(listenTrains());
+  initPulse();
+  unsubs.push(listenTrains(), listenOffers());
   buildCats(); buildTypeChips(); buildHours();
   currentTab = 'browse'; switchTab('browse');
-  await loadApproved();
+  await Promise.all([loadApproved(), loadReviewsOnce()]);
 };
 
 $('logoutBtn').onclick = () => signOut(auth);
@@ -754,27 +951,26 @@ onAuthStateChanged(auth, async user => {
     if (guest) return;
     $('appView').classList.add('hidden'); $('authView').classList.remove('hidden'); setMode('login'); return;
   }
-  guest = false;
-  me = user;
-  $('navAdd').classList.remove('hidden');
-  $('navMine').classList.remove('hidden');
-  $('bellBtn').classList.remove('hidden');
-  $('logoutBtn').textContent = '🚪';
-  $('logoutBtn').title = 'خروج';
-  $('logoutBtn').onclick = () => signOut(auth);
+  guest = false; me = user;
+  $('navAdd').classList.remove('hidden'); $('navMine').classList.remove('hidden'); $('bellBtn').classList.remove('hidden');
+  $('logoutBtn').textContent = '🚪'; $('logoutBtn').title = 'خروج'; $('logoutBtn').onclick = () => signOut(auth);
   const s = await getDoc(doc(db, 'users', user.uid));
   profile = s.exists() ? { uid: user.uid, ...s.data() } : { uid: user.uid, name: 'مستخدم', role: 'user', phone: '' };
   $('authView').classList.add('hidden'); $('appView').classList.remove('hidden');
   $('adminTab').classList.toggle('hidden', profile.role !== 'admin');
-  listen(); buildCats(); buildTypeChips(); buildHours();
+  initPulse(); listen(); buildCats(); buildTypeChips(); buildHours();
   currentTab = 'browse'; switchTab('browse');
-  await loadApproved();
+  await Promise.all([loadApproved(), loadReviewsOnce()]);
 });
 
 function listen() {
-  unsubs.push(listenTrains());
+  unsubs.push(listenTrains(), listenOffers());
   unsubs.push(onSnapshot(query(collection(db, 'businesses'), where('ownerId', '==', me.uid)), s => {
-    myBiz = s.docs.map(d => ({ id: d.id, ...d.data() })); renderMine();
+    myBiz = s.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderMine();
+    myBiz.forEach(b => {
+      getDoc(doc(db, 'bizStats', b.id)).then(st => { if (st.exists()) { myStats[b.id] = st.data(); renderMine(); } }).catch(() => {});
+    });
   }));
   unsubs.push(onSnapshot(query(collection(db, 'notifications'), where('userId', '==', me.uid)), s => {
     notifs = s.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => tsMs(b.createdAt) - tsMs(a.createdAt));
@@ -784,11 +980,6 @@ function listen() {
     const list = s.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => tsMs(b.createdAt) - tsMs(a.createdAt));
     if (announces.length && list.length && tsMs(list[0].createdAt) > tsMs(announces[0].createdAt)) toast('📢 ' + list[0].title);
     announces = list; updateBell();
-  }));
-  unsubs.push(onSnapshot(collection(db, 'reviews'), s => {
-    reviews = s.docs.map(d => ({ id: d.id, ...d.data() }));
-    renderBrowse(); renderAdminStats();
-    if (curBiz && !$('bizModal').classList.contains('hidden')) renderRatings(curBiz);
   }));
   if (profile.role === 'admin') {
     unsubs.push(onSnapshot(collection(db, 'businesses'), s => { allBiz = s.docs.map(d => ({ id: d.id, ...d.data() })); renderAdmin(); }));
@@ -801,8 +992,7 @@ function listen() {
 /* ---------- الإشعارات ---------- */
 function updateBell() {
   const n = notifs.filter(x => !x.read).length + announces.filter(a => tsMs(a.createdAt) > lastAnnSeen).length;
-  $('bellCount').textContent = n;
-  $('bellCount').classList.toggle('hidden', !n);
+  $('bellCount').textContent = n; $('bellCount').classList.toggle('hidden', !n);
 }
 function renderNotifs() {
   const a = announces.map(x => `<div class="nitem unread"><span class="badge p">📢 إعلان من الإدارة</span>
@@ -814,10 +1004,8 @@ function renderNotifs() {
   $('notifList').innerHTML = (a + n) || '<div class="empty">لا توجد إشعارات حالياً</div>';
 }
 $('bellBtn').onclick = () => {
-  renderNotifs();
-  $('notifModal').classList.remove('hidden');
-  lastAnnSeen = Date.now();
-  localStorage.setItem('menouf_ann_seen', lastAnnSeen);
+  renderNotifs(); $('notifModal').classList.remove('hidden');
+  lastAnnSeen = Date.now(); localStorage.setItem('menouf_ann_seen', lastAnnSeen);
   notifs.filter(x => !x.read).forEach(x => updateDoc(doc(db, 'notifications', x.id), { read: true }).catch(() => {}));
   updateBell();
 };
@@ -827,9 +1015,7 @@ $('notifModal').onclick = e => { if (e.target.id === 'notifModal') $('notifModal
 async function notifyOwner(bizId, title, body) {
   const b = allBiz.find(x => x.id === bizId);
   if (!b || !b.ownerId) return;
-  try {
-    await addDoc(collection(db, 'notifications'), { userId: b.ownerId, title, body: `${b.name}: ${body}`, read: false, createdAt: serverTimestamp() });
-  } catch (e) {}
+  try { await addDoc(collection(db, 'notifications'), { userId: b.ownerId, title, body: `${b.name}: ${body}`, read: false, createdAt: serverTimestamp() }); } catch (e) {}
 }
 
 /* ---------- التصنيفات والتصفح ---------- */
@@ -837,10 +1023,7 @@ function buildCats() {
   $('catChips').innerHTML = CAT_TABS.map(c => `<button class="cat ${c.k === browseCat ? 'on' : ''}" data-cat="${esc(c.k)}">
     <span class="ci">${c.i}</span><span>${esc(c.k)}</span></button>`).join('');
 }
-$('catChips').onclick = e => {
-  const b = e.target.closest('[data-cat]'); if (!b) return;
-  browseCat = b.dataset.cat; buildCats(); renderBrowse();
-};
+$('catChips').onclick = e => { const b = e.target.closest('[data-cat]'); if (b) { browseCat = b.dataset.cat; buildCats(); renderBrowse(); } };
 $('searchInput').oninput = e => { q = e.target.value.trim(); renderBrowse(); };
 $('fOpen').onclick = () => { onlyOpen = !onlyOpen; $('fOpen').classList.toggle('active', onlyOpen); renderBrowse(); };
 $('fNear').onclick = () => {
@@ -852,12 +1035,9 @@ $('fNear').onclick = () => {
   }, () => toast('فعّل الـ GPS عشان نحدد موقعك'), { enableHighAccuracy: true });
 };
 $('fMap').onclick = () => {
-  mapView = !mapView;
-  $('fMap').classList.toggle('active', mapView);
+  mapView = !mapView; $('fMap').classList.toggle('active', mapView);
   if (mapView) { trainOn = false; $('fTrain').classList.remove('active'); }
-  applyView();
-  if (mapView) renderMap();
-  renderBrowse();
+  applyView(); if (mapView) renderMap(); renderBrowse();
 };
 
 function filtered() {
@@ -866,22 +1046,31 @@ function filtered() {
       || (browseCat === 'المفضلة' && favs.includes(b.id))
       || (browseCat === 'دكاترة' && b.type === 'doctor')
       || (browseCat === 'محل / مطعم' && b.type === 'shop')
+      || (browseCat === 'صيدليات' && (b.category === 'صيدلية' || normAr(b.name).includes('صيدلي')))
       || (browseCat === 'خدمة' && b.type === 'service');
     const qOk = !q || matchesQuery(b, q);
     return catOk && qOk && (!onlyOpen || isOpen(b.hours));
   }).map(b => ({ ...b, km: userPos ? dist(userPos.lat, userPos.lng, b.lat, b.lng) : null }))
-    .sort((a, b) => nearMe && a.km != null && b.km != null ? a.km - b.km : 0);
+    .sort((a, b) => {
+      if (nearMe && a.km != null && b.km != null) return a.km - b.km;
+      return (b.featured ? 1 : 0) - (a.featured ? 1 : 0);
+    });
+}
+
+function trackStat(bizId, field) {
+  setDoc(doc(db, 'bizStats', bizId), { [field]: increment(1) }, { merge: true }).catch(() => {});
 }
 
 function renderBrowse() {
   const list = filtered();
+  $('countLabel').textContent = list.length ? `(${list.length})` : '';
   if (mapView) renderMap();
   const cards = list.map(b => {
     const open = isOpen(b.hours), ph = b.phone || b.ownerPhone || '', fav = favs.includes(b.id);
-    const rt = ratingOf(b.id);
-    const isDoc = b.type === 'doctor';
-    return `<div class="card ${b.verified ? 'fe' : ''}" data-open="${b.id}" style="cursor:pointer">
+    const rt = ratingOf(b.id), isDoc = b.type === 'doctor';
+    return `<div class="card ${b.featured ? 'fe' : ''}" data-open="${b.id}" style="cursor:pointer">
       <button class="fav" data-fav="${b.id}">${fav ? '❤️' : '🤍'}</button>
+      ${b.imageUrl ? `<img class="card-cover" src="${esc(b.imageUrl)}" loading="lazy" alt="" onerror="this.remove()">` : ''}
       <div class="row" style="padding-left:34px">
         <div>
           <div class="type">${esc(TYPES[b.type]?.label || b.category)}</div>
@@ -889,6 +1078,7 @@ function renderBrowse() {
           <div class="spec">${isDoc ? esc(b.specialty) : esc(b.category)}</div>
         </div>
         <div class="tags">
+          ${b.featured ? '<span class="badge p">⭐ مميز</span>' : ''}
           ${b.verified ? '<span class="badge v">✓ موثق</span>' : ''}
           <span class="badge ${open ? 'ok' : ''}">${open ? '<span class="dot"></span> مفتوح' : '⚪ مغلق'}</span>
         </div>
@@ -900,10 +1090,10 @@ function renderBrowse() {
       </div>
       <div class="foot">
         ${ph && !guest ? `<div class="acts">
-          <a class="btn sm g" target="_blank" href="https://wa.me/2${ph}" onclick="event.stopPropagation()">💬 واتساب</a>
-          <a class="btn sm s" href="tel:${ph}" onclick="event.stopPropagation()">📞 اتصال</a>
+          <a class="btn sm g" target="_blank" href="https://wa.me/2${ph}" data-track-wa="${b.id}">💬 واتساب</a>
+          <a class="btn sm s" href="tel:${ph}" data-track-call="${b.id}">📞 اتصال</a>
         </div>` : '<div></div>'}
-        ${rt.n && !guest ? `<span class="rt">⭐ ${rt.avg.toFixed(1)} (${rt.n} تقييم)</span>` : ''}
+        ${rt.n && !guest ? `<span class="rt">⭐ ${rt.avg.toFixed(1)} (${rt.n})</span>` : ''}
       </div>
     </div>`;
   }).join('');
@@ -911,7 +1101,6 @@ function renderBrowse() {
   let footer = '';
   if (loadingPage) footer = '<div class="empty">جاري التحميل...</div>';
   else if (!list.length) footer = '<div class="empty">لا توجد نتائج مطابقة</div>';
-
   $('browseList').innerHTML = cards + footer;
 }
 
@@ -932,6 +1121,10 @@ function renderMap() {
 window.openById = id => { const b = approved.find(x => x.id === id); if (b) openModal(b); };
 
 $('browseList').onclick = e => {
+  const wa = e.target.closest('[data-track-wa]');
+  if (wa) { e.stopPropagation(); trackStat(wa.dataset.trackWa, 'waClicks'); return; }
+  const ca = e.target.closest('[data-track-call]');
+  if (ca) { e.stopPropagation(); trackStat(ca.dataset.trackCall, 'callClicks'); return; }
   const f = e.target.closest('[data-fav]');
   if (f) {
     const id = f.dataset.fav;
@@ -945,16 +1138,68 @@ $('browseList').onclick = e => {
   if (b) openModal(b);
 };
 
-/* ---------- تفاصيل النشاط والتقييمات ---------- */
+/* ---------- تفاصيل النشاط + السلة + حجز الكشف ---------- */
+function renderCartBar() {
+  const entries = Object.entries(cart).filter(([, qv]) => qv > 0);
+  if (!entries.length || !curBiz) { $('mCartBar').classList.add('hidden'); return; }
+  let total = 0, countItems = 0;
+  entries.forEach(([idx, qv]) => {
+    const it = curBiz.items[+idx];
+    if (it) { countItems += qv; total += (parseFloat(it.price) || 0) * qv; }
+  });
+  $('mCartTxt').textContent = `🛒 ${countItems} صنف · الإجمالي التقريبي: ${total} جنيه`;
+  $('mCartBar').classList.remove('hidden');
+}
+$('mItems').onclick = e => {
+  const plus = e.target.closest('[data-qplus]'), minus = e.target.closest('[data-qminus]');
+  if (!plus && !minus) return;
+  const idx = plus ? plus.dataset.qplus : minus.dataset.qminus;
+  cart[idx] = Math.max(0, (cart[idx] || 0) + (plus ? 1 : -1));
+  const lbl = document.querySelector(`[data-qval="${idx}"]`);
+  if (lbl) lbl.textContent = cart[idx];
+  renderCartBar();
+};
+$('mCartWa').onclick = () => {
+  if (!curBiz) return;
+  const ph = curBiz.phone || curBiz.ownerPhone || '';
+  if (!ph) return toast('لا يوجد رقم واتساب لهذا النشاط');
+  const lines = []; let total = 0;
+  Object.entries(cart).forEach(([idx, qv]) => {
+    if (qv > 0 && curBiz.items[+idx]) {
+      const it = curBiz.items[+idx], p = parseFloat(it.price) || 0;
+      lines.push(`• ${it.name} × ${qv} = ${p * qv} جنيه`);
+      total += p * qv;
+    }
+  });
+  const loc = userPos ? `\n📍 موقعي: https://www.google.com/maps?q=${userPos.lat},${userPos.lng}` : '';
+  const msg = `مرحباً ${curBiz.name}، أريد طلب التالي من تطبيق منوف في جيبك:\n${lines.join('\n')}\n💰 الإجمالي: ${total} جنيه${loc}`;
+  trackStat(curBiz.id, 'waClicks');
+  window.open(`https://wa.me/2${ph}?text=${encodeURIComponent(msg)}`, '_blank');
+};
+$('mBookWa').onclick = () => {
+  if (!curBiz) return;
+  const ph = curBiz.phone || curBiz.ownerPhone || '';
+  if (!ph) return toast('لا يوجد رقم واتساب للعيادة');
+  const pName = $('mBookName').value.trim() || profile?.name || 'مريض';
+  const day = $('mBookDay').value;
+  const msg = `السلام عليكم، أرغب في حجز كشف لدى ${curBiz.name} (${curBiz.specialty || ''}) عبر تطبيق منوف في جيبك.\n👤 الاسم: ${pName}\n📅 الموعد المطلوب: ${day}`;
+  trackStat(curBiz.id, 'waClicks');
+  window.open(`https://wa.me/2${ph}?text=${encodeURIComponent(msg)}`, '_blank');
+};
+
 function openModal(b) {
   if (guest) return toast('سجّل دخولك عشان تشوف التفاصيل والتقييمات');
-  curBiz = b;
+  curBiz = b; cart = {};
+  const isOwner = me && b.ownerId === me.uid;
+  if (!isOwner) trackStat(b.id, 'views');
   const open = isOpen(b.hours), ph = b.phone || b.ownerPhone || '';
   const km = userPos ? dist(userPos.lat, userPos.lng, b.lat, b.lng) : null;
-  const isOwner = b.ownerId === me.uid;
   $('mBadge').className = 'badge ' + (open ? 'ok' : '');
   $('mBadge').innerHTML = open ? '<span class="dot"></span> مفتوح الآن' : '⚪ مغلق الآن';
   $('mVerified').classList.toggle('hidden', !b.verified);
+  $('mFeatured').classList.toggle('hidden', !b.featured);
+  if (b.imageUrl) { $('mCover').src = b.imageUrl; $('mCover').classList.remove('hidden'); }
+  else $('mCover').classList.add('hidden');
   $('mTitle').textContent = b.name;
   $('mSub').textContent = b.type === 'doctor' ? 'طبيب متخصص في ' + b.specialty : b.category;
   $('mDesc').textContent = b.desc || '';
@@ -962,16 +1207,42 @@ function openModal(b) {
   $('mDist').textContent = km != null ? '🚗 ' + fmtDist(km) : '';
   $('mPriceBox').classList.toggle('hidden', !b.price);
   $('mPrice').textContent = b.price || '';
-  $('mItemsBox').classList.toggle('hidden', !(b.items && b.items.length));
-  $('mItems').innerHTML = (b.items || []).map(i => `<div class="lr"><span>${esc(i.name)}</span><strong style="color:var(--p)">${esc(i.price)} جنيه</strong></div>`).join('');
+
+  const hasItems = b.items && b.items.length > 0;
+  $('mItemsBox').classList.toggle('hidden', !hasItems);
+  $('mCartBar').classList.add('hidden');
+  if (hasItems) {
+    $('mItems').innerHTML = b.items.map((i, idx) => `<div class="lr">
+      <div><strong>${esc(i.name)}</strong><div style="color:var(--p);font-size:12.5px;font-weight:800">${esc(i.price)} جنيه</div></div>
+      ${ph && b.type !== 'doctor' ? `<div class="qty-box">
+        <button type="button" class="qty-btn" data-qminus="${idx}">-</button>
+        <span data-qval="${idx}" style="min-width:16px;text-align:center;font-weight:800">0</span>
+        <button type="button" class="qty-btn" data-qplus="${idx}">+</button>
+      </div>` : ''}
+    </div>`).join('');
+  }
+
+  const openDays = (b.hours || []).filter(h => h.open);
+  const canBookDoc = b.type === 'doctor' && ph && openDays.length > 0;
+  $('mDocBookBox').classList.toggle('hidden', !canBookDoc);
+  if (canBookDoc) {
+    $('mBookName').value = profile?.name || '';
+    $('mBookDay').innerHTML = openDays.map(h => `<option>${esc(h.day)} (${esc(fmtPeriods(h))})</option>`).join('');
+  }
+
   $('mHours').innerHTML = (b.hours || []).map(h => `<div class="lr"><span>${h.day}</span><span style="text-align:left">${esc(fmtPeriods(h))}</span></div>`).join('');
   $('mActs').innerHTML = `
-    ${ph ? `<a class="btn g" target="_blank" href="https://wa.me/2${ph}">💬 واتساب</a><a class="btn" href="tel:${ph}">📞 اتصال</a>` : ''}
-    ${b.lat ? `<a class="btn s" style="grid-column:span 2" target="_blank" href="https://www.google.com/maps?q=${b.lat},${b.lng}">📍 فتح في الخريطة</a>` : ''}
+    ${ph ? `<a class="btn g" target="_blank" href="https://wa.me/2${ph}" data-track-wa="${b.id}">💬 واتساب</a><a class="btn" href="tel:${ph}" data-track-call="${b.id}">📞 اتصال</a>` : ''}
+    ${b.lat ? `<a class="btn s" style="grid-column:span 2" target="_blank" href="https://www.google.com/maps?q=${b.lat},${b.lng}">📍 فتح في خرائط جوجل</a>` : ''}
     ${isOwner ? '' : '<button class="btn s" data-report style="grid-column:span 2">⚠️ إبلاغ عن خطأ في البيانات</button>'}`;
   renderRatings(b);
   $('bizModal').classList.remove('hidden');
 }
+$('mActs').addEventListener('click', e => {
+  const wa = e.target.closest('[data-track-wa]'), ca = e.target.closest('[data-track-call]');
+  if (wa) trackStat(wa.dataset.trackWa, 'waClicks');
+  if (ca) trackStat(ca.dataset.trackCall, 'callClicks');
+});
 $('closeModal').onclick = () => $('bizModal').classList.add('hidden');
 $('bizModal').onclick = e => { if (e.target.id === 'bizModal') $('bizModal').classList.add('hidden'); };
 
@@ -995,7 +1266,6 @@ function renderRatings(b) {
       <button class="btn sm" id="revSave" data-edit="${mine ? 1 : ''}" style="margin-top:8px">${mine ? 'تعديل تقييمي' : 'إضافة تقييم'}</button>`}
   </div>`;
 }
-
 $('mRatings').onclick = async e => {
   if (guest) return toast('سجّل دخولك عشان تقيّم');
   const st = e.target.closest('[data-star]');
@@ -1009,11 +1279,12 @@ $('mRatings').onclick = async e => {
     if (!rating) return toast('اختار عدد النجوم');
     const already = reviews.some(r => r.bizId === bizId && r.reviewerId === me.uid);
     if (already && !$('revSave').dataset.edit) return toast('قيّمت هذا النشاط قبل كده');
+    const revData = { bizId, reviewerId: me.uid, reviewerName: profile.name, rating, text: $('revText').value.trim().slice(0, 200), createdAt: serverTimestamp() };
     try {
-      await setDoc(doc(db, 'reviews', bizId + '_' + me.uid), {
-        bizId, reviewerId: me.uid, reviewerName: profile.name, rating,
-        text: $('revText').value.trim().slice(0, 200), createdAt: serverTimestamp()
-      });
+      await setDoc(doc(db, 'reviews', bizId + '_' + me.uid), revData);
+      reviews = reviews.filter(r => !(r.bizId === bizId && r.reviewerId === me.uid));
+      reviews.push({ id: bizId + '_' + me.uid, ...revData });
+      renderRatings(curBiz); renderBrowse();
       toast('تم حفظ تقييمك ⭐');
     } catch (err) { toast('تعذر حفظ التقييم'); }
   }
@@ -1099,10 +1370,8 @@ const collectHours = () => DAYS.map((d, i) => {
   return {
     day: d,
     open: document.querySelector(`[data-day="${i}"]`).classList.contains('on'),
-    from: $('f' + i).value,
-    to: $('t' + i).value,
-    from2: from2 || null,
-    to2: to2 || null
+    from: $('f' + i).value, to: $('t' + i).value,
+    from2: from2 || null, to2: to2 || null
   };
 });
 
@@ -1113,8 +1382,8 @@ function renderItems() {
 $('itemsBox').onclick = e => { const b = e.target.closest('[data-rm]'); if (b) { items.splice(+b.dataset.rm, 1); renderItems(); } };
 $('addItem').onclick = () => {
   const n = $('iName').value.trim();
-  if (!n) return toast('اكتب الخدمة أو المنتج');
-  if (items.length >= 15) return toast('الحد 15 بند');
+  if (!n) return toast('اكتب الخدمة أو الصنف');
+  if (items.length >= 20) return toast('الحد 20 بند');
   items.push({ name: n, price: $('iPrice').value.trim() || '0' });
   $('iName').value = ''; $('iPrice').value = ''; renderItems();
 };
@@ -1139,11 +1408,14 @@ $('bizForm').onsubmit = async e => {
   }
 
   const regNo = $('bReg').value.trim();
+  const img = $('bImg').value.trim();
+  if (img && !/^https:\/\//i.test(img)) return toast('رابط الصورة لازم يبدأ بـ https://');
   const data = {
     phone, type, name: $('bName').value.trim(),
     specialty: d ? $('bSpec').value : null,
     category: d ? 'دكاترة' : $('bCat').value,
     price: d ? $('bPrice').value.trim() : null,
+    imageUrl: img || null,
     desc: $('bDesc').value.trim(), address: $('bAddr').value.trim(), landmark: $('bLandmark').value.trim(),
     lat: Number($('bLat').value), lng: Number($('bLng').value),
     hours, items, status: 'pending', updatedAt: serverTimestamp()
@@ -1158,25 +1430,22 @@ $('bizForm').onsubmit = async e => {
       if (d) batch.set(doc(db, 'regs', editId), { regNo });
       else if (editOrigType === 'doctor') batch.delete(doc(db, 'regs', editId));
       await batch.commit();
-      toast(typeChanged
-        ? 'تم الحفظ، والنشاط رجع للمراجعة، وشلنا التوثيق لأن النوع اتغير ✅'
-        : 'تم حفظ التعديلات وإعادة النشاط للمراجعة ✅');
+      toast(typeChanged ? 'تم الحفظ، والنشاط رجع للمراجعة، وشلنا التوثيق لأن النوع اتغير ✅' : 'تم حفظ التعديلات وإعادة النشاط للمراجعة ✅');
     } else {
       const ref = doc(collection(db, 'businesses'));
-      await setDoc(ref, { ...data, ownerId: me.uid, ownerName: profile.name, createdAt: serverTimestamp() });
+      await setDoc(ref, { ...data, ownerId: me.uid, ownerName: profile.name, verified: false, featured: false, createdAt: serverTimestamp() });
       if (d) await setDoc(doc(db, 'regs', ref.id), { regNo });
       toast('تم إرسال نشاطك وسيظهر بعد المراجعة ✅');
     }
     cancelEdit(); switchTab('mine');
-  } catch (err) {
-    toast('تعذر الحفظ: ' + (err.code || err.message));
-  }
+  } catch (err) { toast('تعذر الحفظ: ' + (err.code || err.message)); }
   $('saveBtn').disabled = false;
 };
 
 async function startEdit(b) {
   editId = b.id; editOrigType = b.type; type = b.type; buildTypeChips(); applyType();
   $('bName').value = b.name || ''; $('bPhone').value = b.phone || b.ownerPhone || '';
+  $('bImg').value = b.imageUrl || '';
   if (b.type === 'doctor') {
     $('bSpec').value = b.specialty || ''; $('bPrice').value = b.price || '';
     $('bReg').value = b.regNo || '';
@@ -1200,7 +1469,8 @@ async function startEdit(b) {
   if (b.lat && b.lng) showMap(b.lat, b.lng);
 }
 function cancelEdit() {
-  editId = null; editOrigType = null; $('bizForm').reset(); items = []; renderItems();
+  editId = null; editOrigType = null;
+  $('bizForm').reset(); items = []; renderItems();
   type = null; buildTypeChips(); $('typeFields').classList.add('hidden'); buildHours();
   $('geoStatus').textContent = ''; $('pickMap').classList.add('hidden'); $('editNotice').classList.add('hidden');
   $('formTitle').textContent = 'اختار نوع النشاط';
@@ -1219,18 +1489,32 @@ function renderMine() {
     </div>`;
     return;
   }
-  $('mineList').innerHTML = myBiz.map(b => `<div class="card">
-    <div class="row"><h3 class="ct">${esc(b.name)}</h3>${badge(b.status)}</div>
-    <p class="muted" style="margin:6px 0">📍 ${esc(b.address)}</p>
-    ${b.status === 'rejected' && b.rejectReason ? `<p style="color:#f87171;font-size:13px;margin-bottom:6px">سبب الرفض: ${esc(b.rejectReason)}</p>` : ''}
-    <div class="acts-w">
-      <button class="btn sm s" data-edit="${b.id}">تعديل ✏️</button>
-      <button class="btn sm d" data-del="${b.id}">حذف 🗑️</button>
-    </div></div>`).join('');
+  $('mineList').innerHTML = myBiz.map(b => {
+    const st = myStats[b.id] || {};
+    const contacts = (st.waClicks || 0) + (st.callClicks || 0);
+    return `<div class="card ${b.featured ? 'fe' : ''}">
+      <div class="row"><h3 class="ct">${esc(b.name)}</h3>${badge(b.status)}</div>
+      <p class="muted" style="margin:6px 0">📍 ${esc(b.address)}</p>
+      ${b.status === 'approved' ? `<div style="display:flex;gap:12px;font-size:12.5px;color:var(--p);font-weight:700;margin:4px 0">
+        <span>👁️ ${st.views || 0} مشاهدة</span><span>📞 ${contacts} تواصل</span>
+      </div>` : ''}
+      ${b.status === 'rejected' && b.rejectReason ? `<p style="color:#f87171;font-size:13px;margin-bottom:6px">سبب الرفض: ${esc(b.rejectReason)}</p>` : ''}
+      <div class="acts-w">
+        ${b.status === 'approved' ? `<button class="btn sm" data-addoffer="${b.id}">🔥 أضف عرض</button>` : ''}
+        <button class="btn sm s" data-edit="${b.id}">تعديل ✏️</button>
+        <button class="btn sm d" data-del="${b.id}">حذف 🗑️</button>
+      </div>
+    </div>`;
+  }).join('');
 }
 $('mineList').onclick = async e => {
   const t = e.target.closest('button'); if (!t) return;
   if (t.hasAttribute('data-first')) { cancelEdit(); switchTab('add'); return; }
+  if (t.dataset.addoffer) {
+    const b = myBiz.find(x => x.id === t.dataset.addoffer); if (!b) return;
+    $('oBizId').value = b.id; $('oBizName').textContent = 'للنشاط: ' + b.name; $('oBizName').dataset.name = b.name;
+    $('offerModal').classList.remove('hidden'); return;
+  }
   if (t.dataset.edit) { const b = myBiz.find(x => x.id === t.dataset.edit); if (b) startEdit(b); return; }
   if (t.dataset.del && confirm('حذف النشاط نهائياً؟')) {
     try {
@@ -1260,8 +1544,7 @@ function renderAdminStats() {
 async function loadUserCount() {
   try {
     const r = await getAggregateFromServer(collection(db, 'users'), { n: count() });
-    userCount = r.data().n;
-    renderAdminStats();
+    userCount = r.data().n; renderAdminStats();
   } catch (e) {}
 }
 $('annSend').onclick = async () => {
@@ -1273,17 +1556,13 @@ $('annSend').onclick = async () => {
     toast('تم نشر الإعلان للمستخدمين ✅');
   } catch (e) { toast('تعذر نشر الإعلان'); }
 };
-
 $('cleanBtn').onclick = async () => {
   if (!confirm('هيتنقل رقم القيد لمكانه الآمن ويتشال من الأنشطة القديمة. تكمل؟')) return;
   let n = 0;
   try {
     for (const b of allBiz) {
       const upd = {};
-      if (b.regNo) {
-        await setDoc(doc(db, 'regs', b.id), { regNo: b.regNo });
-        upd.regNo = deleteField();
-      }
+      if (b.regNo) { await setDoc(doc(db, 'regs', b.id), { regNo: b.regNo }); upd.regNo = deleteField(); }
       if (b.ownerPhone) upd.ownerPhone = deleteField();
       if (Object.keys(upd).length) { await updateDoc(doc(db, 'businesses', b.id), upd); n++; }
     }
@@ -1310,7 +1589,7 @@ function renderAdmin() {
     adminFilter === 'pending' ? b.status === 'pending'
     : adminFilter === 'approved' ? b.status === 'approved'
     : (b.status === 'hidden' || b.status === 'rejected'));
-  const cards = list.map(b => `<div class="card">
+  const cards = list.map(b => `<div class="card ${b.featured ? 'fe' : ''}">
     <div class="row"><div><h3 class="ct">${esc(b.name)}</h3>
     <span class="muted">👤 ${esc(b.ownerName || '')} · 📞 ${esc(b.phone || b.ownerPhone || '')}</span></div>${badge(b.status)}</div>
     <p style="color:var(--p);font-weight:700;font-size:13px;margin-top:6px">${b.type === 'doctor' ? 'طبيب (' + esc(b.specialty) + ')' : esc(b.category)}</p>
@@ -1319,6 +1598,7 @@ function renderAdmin() {
       <a class="btn sm g" target="_blank" href="https://wa.me/2${esc(b.phone || b.ownerPhone)}">💬 واتساب</a>
       ${b.type === 'doctor' ? `<button class="btn sm s" data-showreg="${b.id}">رقم القيد</button>` : ''}
       ${b.status === 'approved' ? `<button class="btn sm s" data-verify="${b.id}">${b.verified ? 'إلغاء التوثيق' : 'توثيق ✓'}</button>` : ''}
+      ${b.status === 'approved' ? `<button class="btn sm s" data-feature="${b.id}">${b.featured ? 'إلغاء التميز' : 'تمييز ⭐'}</button>` : ''}
       ${b.status !== 'approved' ? `<button class="btn sm" data-approve="${b.id}">اعتماد ✅</button><button class="btn sm d" data-reject="${b.id}">رفض ❌</button>` : `<button class="btn sm s" data-hide="${b.id}">إخفاء ⏸️</button>`}
       <button class="btn sm d" data-del="${b.id}">حذف 🗑️</button>
     </div></div>`).join('');
@@ -1343,6 +1623,11 @@ $('adminList').onclick = async e => {
       const b = allBiz.find(x => x.id === d.verify);
       await updateDoc(doc(db, 'businesses', d.verify), { verified: !b.verified });
       toast(b.verified ? 'تم إلغاء التوثيق' : 'تم توثيق النشاط ✓');
+    }
+    else if (d.feature) {
+      const b = allBiz.find(x => x.id === d.feature);
+      await updateDoc(doc(db, 'businesses', d.feature), { featured: !b.featured });
+      toast(b.featured ? 'تم إلغاء التميز' : 'تم تمييز النشاط ⭐');
     }
     else if (d.approve) {
       await updateDoc(doc(db, 'businesses', d.approve), { status: 'approved' });
@@ -1384,4 +1669,4 @@ function switchTab(n) {
 document.querySelector('.nav').onclick = e => { const b = e.target.closest('[data-tab]'); if (b) switchTab(b.dataset.tab); };
 </script>
 </body>
-  </html>
+                                                                      </html>
