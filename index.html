@@ -14,7 +14,7 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-:root{--bg:#08090c;--card:rgba(22,24,31,.9);--p:#ffc400;--pg:linear-gradient(135deg,#ffd000,#e5a700);--pglow:rgba(255,196,0,.28);--t:#f8fafc;--m:#94a3b8;--b:rgba(255,255,255,.08);--bg2:rgba(245,196,0,.25);--d:#ef4444;--v:#38bdf8;--e:#22c55e;--eg:linear-gradient(135deg,#22c55e,#15803d)}
+:root{color-scheme:dark;--bg:#08090c;--card:rgba(22,24,31,.9);--p:#ffc400;--pg:linear-gradient(135deg,#ffd000,#e5a700);--pglow:rgba(255,196,0,.28);--t:#f8fafc;--m:#94a3b8;--b:rgba(255,255,255,.08);--bg2:rgba(245,196,0,.25);--d:#ef4444;--v:#38bdf8;--e:#22c55e;--eg:linear-gradient(135deg,#22c55e,#15803d)}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:Cairo,system-ui,sans-serif;background:radial-gradient(circle at 50% 0%,rgba(245,196,0,.10),transparent 50%),var(--bg);color:var(--t);min-height:100vh;font-size:15px;line-height:1.6;overflow-x:hidden}
 button,input,select,textarea{font:inherit;outline:none}
@@ -59,7 +59,10 @@ header{position:sticky;top:0;z-index:25;display:flex;justify-content:space-betwe
 
 .search{display:flex;align-items:center;gap:8px;background:rgba(18,20,26,.95);border:1px solid var(--bg2);border-radius:16px;padding:0 12px;margin:10px 0}
 .search input{border:0;background:transparent;padding:13px 0;color:#fff;font-size:14.5px;flex:1;width:100%}
+.search input:focus{box-shadow:none}
 .search input::placeholder{color:#64748b}
+.clear-btn{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.08);color:var(--m);font-size:12px;flex:none}
+.clear-btn:hover{color:#fff;background:rgba(255,255,255,.16)}
 .mic-btn{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,196,0,.1);color:var(--p);font-size:16px;flex:none}
 .mic-btn.rec{background:rgba(239,68,68,.25);color:#f87171;animation:pulse 1s infinite}
 .tools{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
@@ -135,7 +138,16 @@ textarea{min-height:85px;resize:vertical}
 .leaflet-container{background:#e5e7eb}
 .leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#fff;color:#111}
 .leaflet-popup-content{color:#111}
+.map-pin{width:34px;height:34px;border-radius:50%;background:#13151c;border:2.5px solid var(--p);display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 4px 10px rgba(0,0,0,.45)}
+.map-pin.doc{border-color:#38bdf8}
+.map-pin.shop{border-color:#ffc400}
+.map-pin.srv{border-color:#22c55e}
+.map-locate{background:#13151c;color:var(--p);border:1px solid var(--bg2);border-radius:999px;padding:8px 14px;font-family:Cairo,system-ui,sans-serif;font-size:13px;font-weight:800;box-shadow:0 4px 14px rgba(0,0,0,.45);display:flex;align-items:center;gap:5px;cursor:pointer}
+.user-dot{width:16px;height:16px;border-radius:50%;background:#38bdf8;border:3px solid #fff;box-shadow:0 0 0 6px rgba(56,189,248,.35)}
+
 .lr{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 14px;border:1px solid var(--b);border-radius:12px;margin-bottom:6px;background:rgba(255,255,255,.03);font-size:14px}
+.lr.today{border-color:var(--p);background:rgba(255,196,0,.1);color:#fff;font-weight:800}
+.hours-next{font-size:12.5px;font-weight:700;color:var(--p);background:rgba(255,196,0,.08);border:1px solid var(--bg2);border-radius:10px;padding:7px 12px;margin-bottom:8px}
 .empty{text-align:center;color:var(--m);padding:40px 16px;font-weight:700}
 .empty p{font-size:15px;color:#e2e8f0;margin-bottom:6px}
 .empty small{display:block;color:var(--m);font-size:13px;font-weight:600;line-height:1.7;margin-bottom:14px}
@@ -194,7 +206,10 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
       <div class="field"><label>رقم الموبايل</label><input id="phone" type="tel" inputmode="tel" placeholder="010xxxxxxxx" maxlength="11"></div>
       <div class="field"><label>كلمة المرور</label><input id="password" type="password" placeholder="••••••••"></div>
       <button class="btn" id="authBtn" type="submit" style="margin-top:10px">دخول</button>
-      <div style="text-align:center;margin-top:18px"><button type="button" id="toggleAuth" style="color:var(--p);font-weight:700;font-size:13.5px">ليس لديك حساب؟ سجّل الآن</button></div>
+      <div id="forgotWrap" style="text-align:center;margin-top:12px">
+        <button type="button" id="forgotBtn" style="color:var(--m);font-size:13px;font-weight:700">نسيت كلمة المرور؟ تواصل مع الإدارة 💬</button>
+      </div>
+      <div style="text-align:center;margin-top:14px"><button type="button" id="toggleAuth" style="color:var(--p);font-weight:700;font-size:13.5px">ليس لديك حساب؟ سجّل الآن</button></div>
       <button type="button" id="guestBtn" class="btn s" style="margin-top:12px">👀 تصفح كزائر</button>
     </form>
   </div>
@@ -235,6 +250,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
       <div class="search">
         <span>🔍</span>
         <input id="searchInput" placeholder="ابحث بالاسم أو التخصص أو العنوان...">
+        <button type="button" class="clear-btn hidden" id="clearSearch" title="مسح">✖</button>
         <button type="button" class="mic-btn hidden" id="voiceBtn" title="بحث صوتي">🎙️</button>
       </div>
 
@@ -243,11 +259,13 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
         <button class="tool" id="fOpen">🟢 مفتوح الآن</button>
         <button class="tool" id="fMap">🗺️ الخريطة</button>
         <button class="tool" id="fNear">📍 الأقرب لمكاني</button>
-        <button class="tool" id="fTrain" style="grid-column:span 2;justify-content:center">🚆 القطارات</button>
+        <button class="tool" id="fTopRated">⭐ الأعلى تقييماً</button>
+        <button class="tool" id="fTrain">🚆 القطارات</button>
       </div>
 
       <div class="sec">التصنيفات</div>
       <div class="cats" id="catChips"></div>
+      <div class="chips hidden" id="subCatChips" style="margin-top:4px;margin-bottom:8px"></div>
 
       <div id="trainBox" class="hidden">
         <div class="chips" id="trainChips"></div>
@@ -264,7 +282,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
     </div>
 
     <div id="tab-add" class="hidden">
-      <div id="editNotice" class="edit hidden"><span>⚠️ تعديل نشاط، عند الحفظ يعود للمراجعة</span><button type="button" id="cancelEdit" style="color:var(--d);font-weight:800">إلغاء ✖</button></div>
+      <div id="editNotice" class="edit hidden"><span id="editNoticeTxt">⚠️ تعديل نشاط، عند الحفظ يعود للمراجعة</span><button type="button" id="cancelEdit" style="color:var(--d);font-weight:800">إلغاء ✖</button></div>
       <form id="bizForm">
         <div class="card">
           <div class="ct" id="formTitle" style="margin-bottom:10px">اختار نوع النشاط</div>
@@ -340,6 +358,11 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
         <button class="btn s" id="tCancel" type="button" style="margin-top:8px;display:none">إلغاء التعديل</button>
         <div id="tList" style="margin-top:12px"></div>
       </div>
+      <div class="search" style="margin:0 0 12px">
+        <span>🔍</span>
+        <input id="adminSearch" placeholder="ابحث في الأنشطة بالاسم أو الموبايل أو العنوان...">
+        <button type="button" class="clear-btn hidden" id="clearAdminSearch" title="مسح">✖</button>
+      </div>
       <div class="chips" id="adminChips">
         <button type="button" class="chip on" data-f="pending">⏳ قيد المراجعة (<span id="cP">0</span>)</button>
         <button type="button" class="chip" data-f="approved">✅ المنشورة (<span id="cA">0</span>)</button>
@@ -398,6 +421,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
     </div>
 
     <div style="color:var(--p);font-weight:700;margin-bottom:6px">مواعيد العمل</div>
+    <div id="mHoursNext" class="hours-next hidden"></div>
     <div id="mHours" style="margin-bottom:6px"></div>
     <div id="mRatings"></div>
     <div id="mActs" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;padding-top:12px;border-top:1px dashed rgba(255,255,255,.08)"></div>
@@ -594,14 +618,43 @@ function isOpen(hours) {
 }
 const fmtPeriods = h => !h.open ? 'مغلق' : (periodsOf(h).map(([f, t]) => `${f} إلى ${t}`).join(' ، ') || 'مغلق');
 
+function nextOpenReminder(hours) {
+  if (!Array.isArray(hours) || !hours.length) return '';
+  const now = new Date();
+  const cur = now.getHours() * 60 + now.getMinutes();
+  const todayIdx = (now.getDay() + 1) % 7;
+  if (isOpen(hours)) {
+    const t = hours[todayIdx];
+    return t && t.open ? `🟢 مفتوح الآن (${fmtPeriods(t)})` : '🟢 مفتوح الآن';
+  }
+  const t = hours[todayIdx];
+  if (t && t.open) {
+    const later = periodsOf(t).map(([f]) => f).filter(f => toMin(f) > cur).sort((a, b) => toMin(a) - toMin(b));
+    if (later.length) return `⏰ يفتح لاحقاً اليوم الساعة ${later[0]}`;
+  }
+  for (let offset = 1; offset <= 7; offset++) {
+    const idx = (todayIdx + offset) % 7;
+    const h = hours[idx];
+    if (h && h.open) {
+      const ps = periodsOf(h).sort((a, b) => toMin(a[0]) - toMin(b[0]));
+      if (ps.length) {
+        const dayLbl = offset === 1 ? `غداً ${h.day}` : h.day;
+        return `⏰ أول فترة مفتوحة: ${dayLbl} الساعة ${ps[0][0]}`;
+      }
+    }
+  }
+  return '⚪ لا توجد مواعيد عمل محددة حالياً';
+}
+
 /* ---------- الحالة العامة ---------- */
 let me = null, profile = null, unsubs = [], guest = false, mode = 'login';
 let approved = [], myBiz = [], allBiz = [], reports = [], reviews = [], notifs = [], announces = [], offers = [];
 let myStats = {};
 let loadingPage = false, deepHandled = false;
-let userCount = null, type = null, items = [], browseCat = 'الكل', q = '', editId = null, editOrigType = null, adminFilter = 'pending';
-let map = null, marker = null, bMap = null, bMarkers = [], curBiz = null, cart = {};
-let userPos = null, onlyOpen = false, nearMe = false, mapView = false;
+let userCount = null, type = null, items = [], browseCat = 'الكل', browseSub = 'الكل', q = '', adminQ = '';
+let editId = null, editOrigType = null, editOrigStatus = null, adminEditing = false, adminFilter = 'pending';
+let map = null, marker = null, bMap = null, bMarkers = [], userMapMarker = null, curBiz = null, cart = {};
+let userPos = null, onlyOpen = false, nearMe = false, topRated = false, mapView = false;
 let currentTab = 'browse', adminTimer = null;
 let favs = JSON.parse(localStorage.getItem('menouf_favs') || '[]');
 let lastAnnSeen = Number(localStorage.getItem('menouf_ann_seen') || 0);
@@ -650,17 +703,22 @@ function initPulse() {
 }
 function updateNextTrainPulse() {
   const now = new Date(), cur = now.getHours() * 60 + now.getMinutes();
-  const out = trains.filter(t => String(t.dir || '').startsWith('out_') && tDep(t))
+  const allOut = trains.filter(t => String(t.dir || '').startsWith('out_') && tDep(t))
     .map(t => ({ ...t, m: toMin(tDep(t)) }))
-    .filter(t => t.m >= cur)
     .sort((a, b) => a.m - b.m);
-  if (!out.length) {
+  if (!allOut.length) {
     $('pulseTrain').innerHTML = `<span>🚆 مواعيد القطارات في منوف</span><span style="color:var(--p)">الجدول ←</span>`;
     return;
   }
-  const nx = out[0], diff = nx.m - cur;
-  const txt = diff === 0 ? 'يتحرك الآن' : diff < 60 ? `بعد ${diff} دقيقة` : `بعد ${Math.floor(diff / 60)} س و ${diff % 60} د`;
-  $('pulseTrain').innerHTML = `<span>🚆 القطار القادم (<strong>${esc(SHORT_DIR[nx.dir])}</strong>): ${esc(tDep(nx))} · <strong>${txt}</strong></span><span style="color:var(--p)">الجدول ←</span>`;
+  const todayOut = allOut.filter(t => t.m >= cur);
+  if (todayOut.length) {
+    const nx = todayOut[0], diff = nx.m - cur;
+    const txt = diff === 0 ? 'يتحرك الآن' : diff < 60 ? `بعد ${diff} دقيقة` : `بعد ${Math.floor(diff / 60)} س و ${diff % 60} د`;
+    $('pulseTrain').innerHTML = `<span>🚆 القطار القادم (<strong>${esc(SHORT_DIR[nx.dir])}</strong>): ${esc(tDep(nx))} · <strong>${txt}</strong></span><span style="color:var(--p)">الجدول ←</span>`;
+  } else {
+    const nx = allOut[0];
+    $('pulseTrain').innerHTML = `<span>🚆 القطار القادم (<strong>${esc(SHORT_DIR[nx.dir])}</strong>): ${esc(tDep(nx))} · <strong>(غداً)</strong></span><span style="color:var(--p)">الجدول ←</span>`;
+  }
 }
 $('pulseTrain').onclick = () => { if (!trainOn) $('fTrain').click(); };
 
@@ -673,7 +731,12 @@ if (SR) {
     rec.lang = 'ar-EG';
     $('voiceBtn').classList.add('rec');
     toast('اتكلم دلوقتي 🎙️');
-    rec.onresult = e => { const txt = e.results[0][0].transcript; $('searchInput').value = txt; q = txt.trim(); renderBrowse(); };
+    rec.onresult = e => {
+      const txt = e.results[0][0].transcript;
+      $('searchInput').value = txt; q = txt.trim();
+      $('clearSearch').classList.toggle('hidden', !q);
+      renderBrowse();
+    };
     rec.onerror = () => toast('تعذر التقاط الصوت');
     rec.onend = () => $('voiceBtn').classList.remove('rec');
     rec.start();
@@ -780,14 +843,22 @@ $('oSave').onclick = async () => {
 function renderAdminOffers() {
   const box = $('adminOffersBox');
   if (!offers.length) { box.innerHTML = '<div class="empty" style="padding:10px">لا توجد عروض</div>'; return; }
-  box.innerHTML = offers.map(o => `<div class="lr" style="flex-direction:column;align-items:stretch;gap:6px">
-    <div class="row"><strong>${esc(o.title)} (${esc(o.discount)})</strong>${badge(o.status || 'pending')}</div>
-    <div class="muted">${esc(o.bizName || '')} · ${esc(o.desc || '')}</div>
-    <div style="display:flex;gap:6px;justify-content:flex-end">
-      ${o.status !== 'approved' ? `<button class="btn sm" data-oapp="${o.id}">نشر ✅</button>` : ''}
-      <button class="btn sm d" data-odel="${o.id}">حذف 🗑️</button>
-    </div>
-  </div>`).join('');
+  const now = Date.now();
+  box.innerHTML = offers.map(o => {
+    const expired = !!(o.expiresAt && o.expiresAt <= now);
+    return `<div class="lr" style="flex-direction:column;align-items:stretch;gap:6px">
+      <div class="row">
+        <strong>${esc(o.title)} (${esc(o.discount)})</strong>
+        <div style="display:flex;gap:4px;flex-wrap:wrap">${expired ? '<span class="badge r">منتهي</span>' : ''}${badge(o.status || 'pending')}</div>
+      </div>
+      <div class="muted">${esc(o.bizName || '')} · ${esc(o.desc || '')}</div>
+      ${o.expiresAt ? `<div class="muted" style="font-size:11.5px">${expired ? 'انتهى في: ' : 'ساري حتى: '}${fd(o.expiresAt)}</div>` : ''}
+      <div style="display:flex;gap:6px;justify-content:flex-end">
+        ${o.status !== 'approved' ? `<button class="btn sm" data-oapp="${o.id}">نشر ✅</button>` : ''}
+        <button class="btn sm d" data-odel="${o.id}">حذف 🗑️</button>
+      </div>
+    </div>`;
+  }).join('');
 }
 $('adminOffersBox').onclick = async e => {
   const appB = e.target.closest('[data-oapp]'), delB = e.target.closest('[data-odel]');
@@ -809,14 +880,16 @@ function renderTrains() {
     `<button class="chip ${k === trainDir ? 'on' : ''}" data-tdir="${k}">${esc(SHORT_DIR[k])} ${k.startsWith('out') ? '←' : '→'}</button>`).join('');
   const list = trains.filter(t => t.dir === trainDir).sort((a, b) => tDep(a).localeCompare(tDep(b)));
   const now = new Date(), cur = now.getHours() * 60 + now.getMinutes();
-  const nextIdx = list.findIndex(t => tDep(t) && toMin(tDep(t)) >= cur);
+  let nextIdx = list.findIndex(t => tDep(t) && toMin(tDep(t)) >= cur);
+  let isTomorrow = false;
+  if (nextIdx === -1 && list.length > 0) { nextIdx = 0; isTomorrow = true; }
   $('trainList').innerHTML = `<div class="ct" style="margin:6px 0 10px">${esc(DIR_LABEL[trainDir])}</div>` +
     (list.length ? list.map((t, i) => `
       <div class="card" style="padding:12px;margin-bottom:10px;${i === nextIdx ? 'border-color:var(--p)' : ''}">
         <div class="row">
           <div><div class="muted">قيام</div><div style="font-size:20px;font-weight:900;color:var(--p)">${esc(tDep(t))}</div></div>
           <div style="text-align:left"><div class="muted">وصول</div><div style="font-size:18px;font-weight:800">${esc(t.arrive || '-')}</div></div>
-          ${i === nextIdx ? '<span class="badge p">الجاي</span>' : ''}
+          ${i === nextIdx ? `<span class="badge p">${isTomorrow ? 'الجاي (غداً)' : 'الجاي'}</span>` : ''}
         </div>
         ${(t.num || t.type) ? `<div class="info" style="margin-top:6px">🚆 ${t.num ? 'قطار ' + esc(t.num) : ''}${t.num && t.type ? ' · ' : ''}${t.type ? esc(t.type) : ''}</div>` : ''}
         ${t.note ? `<div class="muted" style="margin-top:6px">📝 ${esc(t.note)}</div>` : ''}
@@ -906,11 +979,20 @@ $('mShare').onclick = async () => {
 function setMode(m) {
   mode = m;
   $('nameField').classList.toggle('hidden', m !== 'register');
+  $('forgotWrap').classList.toggle('hidden', m !== 'login');
   $('authTitle').textContent = m === 'login' ? 'تسجيل الدخول' : 'حساب جديد';
   $('authBtn').textContent = m === 'login' ? 'دخول' : 'تسجيل';
   $('toggleAuth').textContent = m === 'login' ? 'ليس لديك حساب؟ سجّل الآن' : 'عندك حساب؟ ادخل من هنا';
 }
 $('toggleAuth').onclick = () => setMode(mode === 'login' ? 'register' : 'login');
+
+$('forgotBtn').onclick = () => {
+  const p = $('phone').value.replace(/\D/g, '');
+  const msg = p
+    ? `مرحباً إدارة تطبيق منوف في جيبك، نسيت كلمة المرور لحسابي رقم: ${p}`
+    : 'مرحباً إدارة تطبيق منوف في جيبك، نسيت كلمة المرور الخاصة بحسابي وأرجو المساعدة في استعادتها.';
+  window.open(`https://wa.me/2${ADMIN_PHONE}?text=${encodeURIComponent(msg)}`, '_blank');
+};
 
 $('authForm').onsubmit = async e => {
   e.preventDefault();
@@ -929,19 +1011,32 @@ $('authForm').onsubmit = async e => {
   $('authBtn').disabled = false;
 };
 
-$('guestBtn').onclick = async () => {
-  guest = true;
+function goToAuth() {
+  guest = false;
+  unsubs.forEach(u => u()); unsubs = [];
+  $('bizModal').classList.add('hidden');
+  $('dealModal').classList.add('hidden');
+  $('appView').classList.add('hidden');
+  $('authView').classList.remove('hidden');
+  setMode('login');
+}
+
+async function enterGuest() {
+  guest = true; me = null; profile = null;
   $('authView').classList.add('hidden'); $('appView').classList.remove('hidden');
-  $('navAdd').classList.add('hidden'); $('navMine').classList.add('hidden'); $('bellBtn').classList.add('hidden');
+  $('navAdd').classList.add('hidden'); $('navMine').classList.add('hidden');
+  $('adminTab').classList.add('hidden'); $('bellBtn').classList.add('hidden');
   $('logoutBtn').title = 'دخول'; $('logoutBtn').textContent = '🔑';
-  $('logoutBtn').onclick = () => location.reload();
+  $('logoutBtn').onclick = goToAuth;
   initPulse();
+  unsubs.forEach(u => u()); unsubs = [];
   unsubs.push(listenTrains(), listenOffers());
-  buildCats(); buildTypeChips(); buildHours();
+  buildCats(); buildSubCats(); buildTypeChips(); buildHours();
   currentTab = 'browse'; switchTab('browse');
   await Promise.all([loadApproved(), loadReviewsOnce()]);
-};
+}
 
+$('guestBtn').onclick = enterGuest;
 $('logoutBtn').onclick = () => signOut(auth);
 
 onAuthStateChanged(auth, async user => {
@@ -949,6 +1044,7 @@ onAuthStateChanged(auth, async user => {
   if (adminTimer) { clearInterval(adminTimer); adminTimer = null; }
   if (!user) {
     if (guest) return;
+    if (deepBizId && !deepHandled) { enterGuest(); return; }
     $('appView').classList.add('hidden'); $('authView').classList.remove('hidden'); setMode('login'); return;
   }
   guest = false; me = user;
@@ -958,7 +1054,7 @@ onAuthStateChanged(auth, async user => {
   profile = s.exists() ? { uid: user.uid, ...s.data() } : { uid: user.uid, name: 'مستخدم', role: 'user', phone: '' };
   $('authView').classList.add('hidden'); $('appView').classList.remove('hidden');
   $('adminTab').classList.toggle('hidden', profile.role !== 'admin');
-  initPulse(); listen(); buildCats(); buildTypeChips(); buildHours();
+  initPulse(); listen(); buildCats(); buildSubCats(); buildTypeChips(); buildHours();
   currentTab = 'browse'; switchTab('browse');
   await Promise.all([loadApproved(), loadReviewsOnce()]);
 });
@@ -1023,15 +1119,53 @@ function buildCats() {
   $('catChips').innerHTML = CAT_TABS.map(c => `<button class="cat ${c.k === browseCat ? 'on' : ''}" data-cat="${esc(c.k)}">
     <span class="ci">${c.i}</span><span>${esc(c.k)}</span></button>`).join('');
 }
-$('catChips').onclick = e => { const b = e.target.closest('[data-cat]'); if (b) { browseCat = b.dataset.cat; buildCats(); renderBrowse(); } };
-$('searchInput').oninput = e => { q = e.target.value.trim(); renderBrowse(); };
+function buildSubCats() {
+  let subs = null;
+  if (browseCat === 'دكاترة') subs = ['الكل', ...SPECS];
+  else if (browseCat === 'محل / مطعم') subs = ['الكل', ...CATS.shop];
+  else if (browseCat === 'خدمة') subs = ['الكل', ...CATS.service];
+  if (!subs) { $('subCatChips').classList.add('hidden'); $('subCatChips').innerHTML = ''; return; }
+  $('subCatChips').classList.remove('hidden');
+  $('subCatChips').innerHTML = subs.map(s => `<button type="button" class="chip ${s === browseSub ? 'on' : ''}" data-sub="${esc(s)}">${esc(s)}</button>`).join('');
+}
+$('catChips').onclick = e => {
+  const b = e.target.closest('[data-cat]'); if (!b) return;
+  browseCat = b.dataset.cat; browseSub = 'الكل';
+  buildCats(); buildSubCats(); renderBrowse();
+};
+$('subCatChips').onclick = e => {
+  const b = e.target.closest('[data-sub]'); if (!b) return;
+  browseSub = b.dataset.sub; buildSubCats(); renderBrowse();
+};
+
+$('searchInput').oninput = e => {
+  q = e.target.value.trim();
+  $('clearSearch').classList.toggle('hidden', !e.target.value);
+  renderBrowse();
+};
+$('clearSearch').onclick = () => {
+  $('searchInput').value = ''; q = '';
+  $('clearSearch').classList.add('hidden');
+  $('searchInput').focus();
+  renderBrowse();
+};
+
 $('fOpen').onclick = () => { onlyOpen = !onlyOpen; $('fOpen').classList.toggle('active', onlyOpen); renderBrowse(); };
+$('fTopRated').onclick = () => {
+  topRated = !topRated;
+  $('fTopRated').classList.toggle('active', topRated);
+  if (topRated && nearMe) { nearMe = false; $('fNear').classList.remove('active'); }
+  if (topRated) toast('مرتبة حسب الأعلى تقييماً ⭐');
+  renderBrowse();
+};
 $('fNear').onclick = () => {
   if (nearMe) { nearMe = false; $('fNear').classList.remove('active'); return renderBrowse(); }
   toast('جاري تحديد موقعك...');
   navigator.geolocation.getCurrentPosition(p => {
     userPos = { lat: p.coords.latitude, lng: p.coords.longitude };
-    nearMe = true; $('fNear').classList.add('active'); toast('مرتبة حسب الأقرب لك 📍'); renderBrowse();
+    nearMe = true; $('fNear').classList.add('active');
+    if (topRated) { topRated = false; $('fTopRated').classList.remove('active'); }
+    toast('مرتبة حسب الأقرب لك 📍'); renderBrowse();
   }, () => toast('فعّل الـ GPS عشان نحدد موقعك'), { enableHighAccuracy: true });
 };
 $('fMap').onclick = () => {
@@ -1048,11 +1182,23 @@ function filtered() {
       || (browseCat === 'محل / مطعم' && b.type === 'shop')
       || (browseCat === 'صيدليات' && (b.category === 'صيدلية' || normAr(b.name).includes('صيدلي')))
       || (browseCat === 'خدمة' && b.type === 'service');
+    const subOk = browseSub === 'الكل'
+      || (browseCat === 'دكاترة' && b.specialty === browseSub)
+      || ((browseCat === 'محل / مطعم' || browseCat === 'خدمة') && b.category === browseSub);
     const qOk = !q || matchesQuery(b, q);
-    return catOk && qOk && (!onlyOpen || isOpen(b.hours));
+    return catOk && subOk && qOk && (!onlyOpen || isOpen(b.hours));
   }).map(b => ({ ...b, km: userPos ? dist(userPos.lat, userPos.lng, b.lat, b.lng) : null }))
     .sort((a, b) => {
-      if (nearMe && a.km != null && b.km != null) return a.km - b.km;
+      if (topRated) {
+        const ra = ratingOf(a.id), rb = ratingOf(b.id);
+        if (rb.avg !== ra.avg) return rb.avg - ra.avg;
+        if (rb.n !== ra.n) return rb.n - ra.n;
+      }
+      if (nearMe) {
+        if (a.km != null && b.km != null) return a.km - b.km;
+        if (a.km != null) return -1;
+        if (b.km != null) return 1;
+      }
       return (b.featured ? 1 : 0) - (a.featured ? 1 : 0);
     });
 }
@@ -1089,11 +1235,11 @@ function renderBrowse() {
         ${b.km != null ? `<div class="dist">🚗 ${fmtDist(b.km)}</div>` : ''}
       </div>
       <div class="foot">
-        ${ph && !guest ? `<div class="acts">
+        ${ph ? `<div class="acts">
           <a class="btn sm g" target="_blank" href="https://wa.me/2${ph}" data-track-wa="${b.id}">💬 واتساب</a>
           <a class="btn sm s" href="tel:${ph}" data-track-call="${b.id}">📞 اتصال</a>
         </div>` : '<div></div>'}
-        ${rt.n && !guest ? `<span class="rt">⭐ ${rt.avg.toFixed(1)} (${rt.n})</span>` : ''}
+        ${rt.n ? `<span class="rt">⭐ ${rt.avg.toFixed(1)} (${rt.n})</span>` : ''}
       </div>
     </div>`;
   }).join('');
@@ -1104,18 +1250,60 @@ function renderBrowse() {
   $('browseList').innerHTML = cards + footer;
 }
 
+function drawUserOnMap() {
+  if (!bMap || !userPos) return;
+  const uIcon = L.divIcon({ className: '', html: '<div class="user-dot"></div>', iconSize: [16, 16], iconAnchor: [8, 8] });
+  if (userMapMarker) userMapMarker.setLatLng([userPos.lat, userPos.lng]);
+  else userMapMarker = L.marker([userPos.lat, userPos.lng], { icon: uIcon }).addTo(bMap).bindPopup('<div style="font-family:Cairo;font-weight:700">أنت هنا 📍</div>');
+}
+function locateOnMap() {
+  if (!navigator.geolocation) return toast('المتصفح لا يدعم تحديد الموقع');
+  toast('جاري تحديد موقعك...');
+  navigator.geolocation.getCurrentPosition(p => {
+    userPos = { lat: p.coords.latitude, lng: p.coords.longitude };
+    drawUserOnMap();
+    bMap.setView([userPos.lat, userPos.lng], 16);
+    if (userMapMarker) userMapMarker.openPopup();
+    renderBrowse();
+  }, () => toast('فعّل الـ GPS عشان نحدد موقعك'), { enableHighAccuracy: true });
+}
 function renderMap() {
   if (!bMap) {
     bMap = L.map('browseMapBox').setView(CENTER, 14);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(bMap);
+    const locCtrl = L.control({ position: 'bottomleft' });
+    locCtrl.onAdd = () => {
+      const btn = L.DomUtil.create('button', 'map-locate');
+      btn.type = 'button';
+      btn.innerHTML = '📍 موقعي';
+      L.DomEvent.disableClickPropagation(btn);
+      btn.onclick = locateOnMap;
+      return btn;
+    };
+    locCtrl.addTo(bMap);
   }
   bMarkers.forEach(m => bMap.removeLayer(m)); bMarkers = [];
   filtered().filter(b => b.lat && b.lng).forEach(b => {
-    const m = L.marker([b.lat, b.lng]).addTo(bMap);
-    m.bindPopup(`<div style="font-family:Cairo;text-align:right"><strong>${esc(b.name)}</strong><br>
-      <button style="margin-top:6px;background:#ffc400;border:0;padding:4px 10px;border-radius:6px;font-weight:700" onclick="window.openById('${b.id}')">التفاصيل</button></div>`);
+    const isPharm = b.category === 'صيدلية' || normAr(b.name).includes('صيدلي');
+    const pinIcon = isPharm ? '💊' : b.type === 'doctor' ? '🩺' : b.type === 'service' ? '🛠️' : '🛍️';
+    const pinCls = b.type === 'doctor' ? 'doc' : b.type === 'service' ? 'srv' : 'shop';
+    const icon = L.divIcon({
+      className: '',
+      html: `<div class="map-pin ${pinCls}">${pinIcon}</div>`,
+      iconSize: [34, 34],
+      iconAnchor: [17, 17],
+      popupAnchor: [0, -16]
+    });
+    const m = L.marker([b.lat, b.lng], { icon }).addTo(bMap);
+    const sub = b.type === 'doctor' ? b.specialty : b.category;
+    m.bindPopup(`<div style="font-family:Cairo;text-align:right;min-width:140px">
+      <strong>${esc(b.name)}</strong><br>
+      <small style="color:#555">${esc(sub || '')} · ${isOpen(b.hours) ? '🟢 مفتوح' : '⚪ مغلق'}</small><br>
+      <button style="margin-top:6px;background:#ffc400;border:0;padding:4px 10px;border-radius:6px;font-weight:700;cursor:pointer" onclick="window.openById('${b.id}')">التفاصيل</button>
+    </div>`);
     bMarkers.push(m);
   });
+  drawUserOnMap();
   setTimeout(() => bMap.invalidateSize(), 150);
 }
 window.openById = id => { const b = approved.find(x => x.id === id); if (b) openModal(b); };
@@ -1188,9 +1376,8 @@ $('mBookWa').onclick = () => {
 };
 
 function openModal(b) {
-  if (guest) return toast('سجّل دخولك عشان تشوف التفاصيل والتقييمات');
   curBiz = b; cart = {};
-  const isOwner = me && b.ownerId === me.uid;
+  const isOwner = !!(me?.uid && b.ownerId === me.uid);
   if (!isOwner) trackStat(b.id, 'views');
   const open = isOpen(b.hours), ph = b.phone || b.ownerPhone || '';
   const km = userPos ? dist(userPos.lat, userPos.lng, b.lat, b.lng) : null;
@@ -1230,7 +1417,16 @@ function openModal(b) {
     $('mBookDay').innerHTML = openDays.map(h => `<option>${esc(h.day)} (${esc(fmtPeriods(h))})</option>`).join('');
   }
 
-  $('mHours').innerHTML = (b.hours || []).map(h => `<div class="lr"><span>${h.day}</span><span style="text-align:left">${esc(fmtPeriods(h))}</span></div>`).join('');
+  const rem = nextOpenReminder(b.hours);
+  $('mHoursNext').textContent = rem;
+  $('mHoursNext').classList.toggle('hidden', !rem);
+  const todayIdx = (new Date().getDay() + 1) % 7;
+  $('mHours').innerHTML = (b.hours || []).map((h, i) => `
+    <div class="lr ${i === todayIdx ? 'today' : ''}">
+      <span>${esc(h.day)}${i === todayIdx ? ' <small style="color:var(--p)">(اليوم)</small>' : ''}</span>
+      <span style="text-align:left">${esc(fmtPeriods(h))}</span>
+    </div>`).join('');
+
   $('mActs').innerHTML = `
     ${ph ? `<a class="btn g" target="_blank" href="https://wa.me/2${ph}" data-track-wa="${b.id}">💬 واتساب</a><a class="btn" href="tel:${ph}" data-track-call="${b.id}">📞 اتصال</a>` : ''}
     ${b.lat ? `<a class="btn s" style="grid-column:span 2" target="_blank" href="https://www.google.com/maps?q=${b.lat},${b.lng}">📍 فتح في خرائط جوجل</a>` : ''}
@@ -1238,36 +1434,59 @@ function openModal(b) {
   renderRatings(b);
   $('bizModal').classList.remove('hidden');
 }
-$('mActs').addEventListener('click', e => {
+
+$('mActs').onclick = async e => {
   const wa = e.target.closest('[data-track-wa]'), ca = e.target.closest('[data-track-call]');
-  if (wa) trackStat(wa.dataset.trackWa, 'waClicks');
-  if (ca) trackStat(ca.dataset.trackCall, 'callClicks');
-});
+  if (wa) { trackStat(wa.dataset.trackWa, 'waClicks'); return; }
+  if (ca) { trackStat(ca.dataset.trackCall, 'callClicks'); return; }
+  if (!e.target.closest('[data-report]')) return;
+  if (guest || !me?.uid) return toast('سجّل دخولك عشان تبلّغ');
+  if (curBiz.ownerId === me.uid) return toast('مينفعش تبلّغ عن نشاطك');
+  const t = prompt('اكتب الخطأ (رقم غلط، عنوان غلط، نشاط مغلق...)');
+  if (!t || !t.trim()) return;
+  try {
+    await setDoc(doc(db, 'reports', curBiz.id + '_' + me.uid), {
+      bizId: curBiz.id, bizName: curBiz.name, reporterId: me.uid,
+      reporterName: profile.name, reporterPhone: profile.phone,
+      text: t.trim().slice(0, 500), createdAt: serverTimestamp()
+    });
+    toast('تم إرسال البلاغ للإدارة ✅');
+  } catch (err) { toast('إنت بلّغت عن النشاط ده قبل كده'); }
+};
 $('closeModal').onclick = () => $('bizModal').classList.add('hidden');
 $('bizModal').onclick = e => { if (e.target.id === 'bizModal') $('bizModal').classList.add('hidden'); };
 
 function renderRatings(b) {
   const list = reviews.filter(r => r.bizId === b.id);
   const rt = ratingOf(b.id);
-  const mine = list.find(r => r.reviewerId === me.uid);
+  const mine = me?.uid ? list.find(r => r.reviewerId === me.uid) : null;
   $('mRatings').dataset.bizId = b.id;
   $('mRatings').dataset.picked = mine ? mine.rating : 0;
+  let formHtml = '';
+  if (guest || !me?.uid) {
+    formHtml = `<button type="button" class="btn sm s" id="revLoginBtn" style="margin-top:10px">🔑 سجّل دخولك لإضافة تقييم</button>`;
+  } else if (b.ownerId === me.uid) {
+    formHtml = `<p class="muted" style="margin-top:8px">لا يمكنك تقييم نشاطك</p>`;
+  } else {
+    formHtml = `
+      <div class="star-pick" id="starPick" style="margin-top:10px">
+        ${[1,2,3,4,5].map(n => `<button type="button" data-star="${n}" class="${n <= (mine?.rating || 0) ? 'on' : ''}">★</button>`).join('')}
+      </div>
+      <input id="revText" placeholder="اكتب رأيك (اختياري)" value="${esc(mine?.text || '')}" style="margin-top:8px">
+      <button class="btn sm" id="revSave" data-edit="${mine ? 1 : ''}" style="margin-top:8px">${mine ? 'تعديل تقييمي' : 'إضافة تقييم'}</button>`;
+  }
   $('mRatings').innerHTML = `<div class="rt-bar">
     <div class="row"><strong>⭐ التقييمات</strong>
       <span class="muted">${rt.n ? rt.avg.toFixed(1) + ' من 5 (' + rt.n + ')' : 'لا توجد تقييمات بعد'}</span></div>
     ${list.slice(0, 5).map(r => `<div style="margin-top:8px">
       <span class="stars">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</span>
       ${r.text ? `<div class="muted">${esc(r.text)}</div>` : ''}</div>`).join('')}
-    ${b.ownerId === me.uid ? '<p class="muted" style="margin-top:8px">لا يمكنك تقييم نشاطك</p>' : `
-      <div class="star-pick" id="starPick" style="margin-top:10px">
-        ${[1,2,3,4,5].map(n => `<button type="button" data-star="${n}" class="${n <= (mine?.rating || 0) ? 'on' : ''}">★</button>`).join('')}
-      </div>
-      <input id="revText" placeholder="اكتب رأيك (اختياري)" value="${esc(mine?.text || '')}" style="margin-top:8px">
-      <button class="btn sm" id="revSave" data-edit="${mine ? 1 : ''}" style="margin-top:8px">${mine ? 'تعديل تقييمي' : 'إضافة تقييم'}</button>`}
+    ${formHtml}
   </div>`;
 }
 $('mRatings').onclick = async e => {
-  if (guest) return toast('سجّل دخولك عشان تقيّم');
+  if (e.target.closest('#revLoginBtn')) { goToAuth(); return; }
+  if (guest || !me?.uid) return toast('سجّل دخولك عشان تقيّم');
   const st = e.target.closest('[data-star]');
   if (st) {
     $('mRatings').dataset.picked = st.dataset.star;
@@ -1288,22 +1507,6 @@ $('mRatings').onclick = async e => {
       toast('تم حفظ تقييمك ⭐');
     } catch (err) { toast('تعذر حفظ التقييم'); }
   }
-};
-
-$('mActs').onclick = async e => {
-  if (!e.target.closest('[data-report]')) return;
-  if (guest) return toast('سجّل دخولك عشان تبلّغ');
-  if (curBiz.ownerId === me.uid) return toast('مينفعش تبلّغ عن نشاطك');
-  const t = prompt('اكتب الخطأ (رقم غلط، عنوان غلط، نشاط مغلق...)');
-  if (!t || !t.trim()) return;
-  try {
-    await setDoc(doc(db, 'reports', curBiz.id + '_' + me.uid), {
-      bizId: curBiz.id, bizName: curBiz.name, reporterId: me.uid,
-      reporterName: profile.name, reporterPhone: profile.phone,
-      text: t.trim().slice(0, 500), createdAt: serverTimestamp()
-    });
-    toast('تم إرسال البلاغ للإدارة ✅');
-  } catch (err) { toast('إنت بلّغت عن النشاط ده قبل كده'); }
 };
 
 /* ---------- الخريطة لتحديد الموقع ---------- */
@@ -1410,6 +1613,7 @@ $('bizForm').onsubmit = async e => {
   const regNo = $('bReg').value.trim();
   const img = $('bImg').value.trim();
   if (img && !/^https:\/\//i.test(img)) return toast('رابط الصورة لازم يبدأ بـ https://');
+  const nextStatus = (editId && adminEditing) ? (editOrigStatus || 'approved') : 'pending';
   const data = {
     phone, type, name: $('bName').value.trim(),
     specialty: d ? $('bSpec').value : null,
@@ -1418,7 +1622,7 @@ $('bizForm').onsubmit = async e => {
     imageUrl: img || null,
     desc: $('bDesc').value.trim(), address: $('bAddr').value.trim(), landmark: $('bLandmark').value.trim(),
     lat: Number($('bLat').value), lng: Number($('bLng').value),
-    hours, items, status: 'pending', updatedAt: serverTimestamp()
+    hours, items, status: nextStatus, updatedAt: serverTimestamp()
   };
   $('saveBtn').disabled = true;
   try {
@@ -1430,20 +1634,27 @@ $('bizForm').onsubmit = async e => {
       if (d) batch.set(doc(db, 'regs', editId), { regNo });
       else if (editOrigType === 'doctor') batch.delete(doc(db, 'regs', editId));
       await batch.commit();
-      toast(typeChanged ? 'تم الحفظ، والنشاط رجع للمراجعة، وشلنا التوثيق لأن النوع اتغير ✅' : 'تم حفظ التعديلات وإعادة النشاط للمراجعة ✅');
+      if (adminEditing) {
+        toast('تم حفظ التعديلات الإدارية بنجاح ✅');
+        loadApproved();
+      } else {
+        toast(typeChanged ? 'تم الحفظ، والنشاط رجع للمراجعة، وشلنا التوثيق لأن النوع اتغير ✅' : 'تم حفظ التعديلات وإعادة النشاط للمراجعة ✅');
+      }
     } else {
       const ref = doc(collection(db, 'businesses'));
       await setDoc(ref, { ...data, ownerId: me.uid, ownerName: profile.name, verified: false, featured: false, createdAt: serverTimestamp() });
       if (d) await setDoc(doc(db, 'regs', ref.id), { regNo });
       toast('تم إرسال نشاطك وسيظهر بعد المراجعة ✅');
     }
-    cancelEdit(); switchTab('mine');
+    const returnTab = adminEditing ? 'admin' : 'mine';
+    cancelEdit(); switchTab(returnTab);
   } catch (err) { toast('تعذر الحفظ: ' + (err.code || err.message)); }
   $('saveBtn').disabled = false;
 };
 
-async function startEdit(b) {
-  editId = b.id; editOrigType = b.type; type = b.type; buildTypeChips(); applyType();
+async function startEdit(b, isAdminEdit = false) {
+  editId = b.id; editOrigType = b.type; editOrigStatus = b.status; adminEditing = isAdminEdit;
+  type = b.type; buildTypeChips(); applyType();
   $('bName').value = b.name || ''; $('bPhone').value = b.phone || b.ownerPhone || '';
   $('bImg').value = b.imageUrl || '';
   if (b.type === 'doctor') {
@@ -1462,22 +1673,31 @@ async function startEdit(b) {
   });
   items = [...(b.items || [])]; renderItems();
   $('editNotice').classList.remove('hidden');
-  $('formTitle').textContent = 'تعديل نشاطك';
-  $('saveBtn').textContent = 'حفظ التعديلات (إرسال للمراجعة)';
-  $('navAddLbl').textContent = 'تعديل نشاط';
+  if (isAdminEdit) {
+    $('editNoticeTxt').textContent = '🛡️ تعديل إداري مباشر (يحافظ على حالة النشر الحالية)';
+    $('formTitle').textContent = 'تعديل النشاط (الإدارة)';
+    $('saveBtn').textContent = 'حفظ التعديلات مباشرة ✅';
+    $('navAddLbl').textContent = 'تعديل إداري';
+  } else {
+    $('editNoticeTxt').textContent = '⚠️ تعديل نشاط، عند الحفظ يعود للمراجعة';
+    $('formTitle').textContent = 'تعديل نشاطك';
+    $('saveBtn').textContent = 'حفظ التعديلات (إرسال للمراجعة)';
+    $('navAddLbl').textContent = 'تعديل نشاط';
+  }
   switchTab('add');
   if (b.lat && b.lng) showMap(b.lat, b.lng);
 }
 function cancelEdit() {
-  editId = null; editOrigType = null;
+  editId = null; editOrigType = null; editOrigStatus = null; adminEditing = false;
   $('bizForm').reset(); items = []; renderItems();
   type = null; buildTypeChips(); $('typeFields').classList.add('hidden'); buildHours();
   $('geoStatus').textContent = ''; $('pickMap').classList.add('hidden'); $('editNotice').classList.add('hidden');
+  $('editNoticeTxt').textContent = '⚠️ تعديل نشاط، عند الحفظ يعود للمراجعة';
   $('formTitle').textContent = 'اختار نوع النشاط';
   $('saveBtn').textContent = 'إرسال النشاط للمراجعة';
   $('navAddLbl').textContent = 'أضف نشاط';
 }
-$('cancelEdit').onclick = () => { cancelEdit(); switchTab('mine'); };
+$('cancelEdit').onclick = () => { const ret = adminEditing ? 'admin' : 'mine'; cancelEdit(); switchTab(ret); };
 
 /* ---------- أنشطتي ---------- */
 function renderMine() {
@@ -1515,7 +1735,7 @@ $('mineList').onclick = async e => {
     $('oBizId').value = b.id; $('oBizName').textContent = 'للنشاط: ' + b.name; $('oBizName').dataset.name = b.name;
     $('offerModal').classList.remove('hidden'); return;
   }
-  if (t.dataset.edit) { const b = myBiz.find(x => x.id === t.dataset.edit); if (b) startEdit(b); return; }
+  if (t.dataset.edit) { const b = myBiz.find(x => x.id === t.dataset.edit); if (b) startEdit(b, false); return; }
   if (t.dataset.del && confirm('حذف النشاط نهائياً؟')) {
     try {
       await deleteDoc(doc(db, 'businesses', t.dataset.del));
@@ -1570,6 +1790,18 @@ $('cleanBtn').onclick = async () => {
   } catch (err) { toast('حصل خطأ أثناء التنظيف: ' + (err.code || err.message)); }
 };
 
+$('adminSearch').oninput = e => {
+  adminQ = e.target.value.trim();
+  $('clearAdminSearch').classList.toggle('hidden', !e.target.value);
+  renderAdmin();
+};
+$('clearAdminSearch').onclick = () => {
+  $('adminSearch').value = ''; adminQ = '';
+  $('clearAdminSearch').classList.add('hidden');
+  $('adminSearch').focus();
+  renderAdmin();
+};
+
 function renderAdmin() {
   $('cP').textContent = allBiz.filter(b => b.status === 'pending').length;
   $('cA').textContent = allBiz.filter(b => b.status === 'approved').length;
@@ -1585,10 +1817,16 @@ function renderAdmin() {
           <a class="btn sm g" target="_blank" href="https://wa.me/2${esc(r.reporterPhone)}">💬 المُبلِّغ</a>
           <button class="btn sm" data-rdel="${r.id}">تم الحل ✓</button>
         </div></div>`).join('') : '';
-  const list = allBiz.filter(b =>
-    adminFilter === 'pending' ? b.status === 'pending'
-    : adminFilter === 'approved' ? b.status === 'approved'
-    : (b.status === 'hidden' || b.status === 'rejected'));
+  const aq = normAr(adminQ);
+  const list = allBiz.filter(b => {
+    const statusOk = adminFilter === 'pending' ? b.status === 'pending'
+      : adminFilter === 'approved' ? b.status === 'approved'
+      : (b.status === 'hidden' || b.status === 'rejected');
+    if (!statusOk) return false;
+    if (!aq) return true;
+    const hay = normAr([b.name, b.phone, b.ownerPhone, b.ownerName, b.address, b.category, b.specialty].join(' '));
+    return hay.includes(aq);
+  });
   const cards = list.map(b => `<div class="card ${b.featured ? 'fe' : ''}">
     <div class="row"><div><h3 class="ct">${esc(b.name)}</h3>
     <span class="muted">👤 ${esc(b.ownerName || '')} · 📞 ${esc(b.phone || b.ownerPhone || '')}</span></div>${badge(b.status)}</div>
@@ -1596,6 +1834,7 @@ function renderAdmin() {
     <p class="muted">📍 ${esc(b.address)}</p>
     <div class="acts-w">
       <a class="btn sm g" target="_blank" href="https://wa.me/2${esc(b.phone || b.ownerPhone)}">💬 واتساب</a>
+      <button class="btn sm s" data-aedit="${b.id}">تعديل ✏️</button>
       ${b.type === 'doctor' ? `<button class="btn sm s" data-showreg="${b.id}">رقم القيد</button>` : ''}
       ${b.status === 'approved' ? `<button class="btn sm s" data-verify="${b.id}">${b.verified ? 'إلغاء التوثيق' : 'توثيق ✓'}</button>` : ''}
       ${b.status === 'approved' ? `<button class="btn sm s" data-feature="${b.id}">${b.featured ? 'إلغاء التميز' : 'تمييز ⭐'}</button>` : ''}
@@ -1615,6 +1854,10 @@ $('adminList').onclick = async e => {
   const d = t.dataset;
   try {
     if (d.rdel) await deleteDoc(doc(db, 'reports', d.rdel));
+    else if (d.aedit) {
+      const b = allBiz.find(x => x.id === d.aedit);
+      if (b) startEdit(b, true);
+    }
     else if (d.showreg) {
       const s = await getDoc(doc(db, 'regs', d.showreg));
       alert(s.exists() ? 'رقم القيد: ' + s.data().regNo : 'لا يوجد رقم قيد لهذا النشاط');
@@ -1669,4 +1912,4 @@ function switchTab(n) {
 document.querySelector('.nav').onclick = e => { const b = e.target.closest('[data-tab]'); if (b) switchTab(b.dataset.tab); };
 </script>
 </body>
-                                                                      </html>
+</html>
