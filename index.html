@@ -196,6 +196,7 @@ header{position:sticky;top:0;z-index:25;display:flex;justify-content:space-betwe
 .field label{display:block;font-size:13.5px;font-weight:700;margin-bottom:6px;color:var(--txt2)}
 input,select,textarea{width:100%;background:var(--inp);border:1px solid var(--b2);border-radius:14px;padding:13px 16px;color:var(--txt);font-size:14.5px}
 input:focus,select:focus,textarea:focus{border-color:var(--p);box-shadow:0 0 0 3.5px var(--pglow)}
+input[type="checkbox"]{width:auto;padding:0}
 select option{background:var(--sheet);color:var(--txt)}
 textarea{min-height:85px;resize:vertical}
 .chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;margin-bottom:12px;scrollbar-width:none}
@@ -210,6 +211,12 @@ textarea{min-height:85px;resize:vertical}
 .badge.r{color:#f87171;background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.3)}
 .badge.v{color:var(--v);border-color:rgba(56,189,248,.35);background:rgba(56,189,248,.1)}
 .acts-w{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;margin-top:12px;padding-top:12px;border-top:1px dashed var(--dash)}
+
+/* صور النشاط */
+.photo-prev{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.photo-prev img{width:76px;height:76px;object-fit:cover;border-radius:12px;border:1px solid var(--b)}
+.gallery{display:flex;gap:8px;overflow-x:auto;margin-bottom:12px;padding-bottom:6px;scrollbar-width:none}
+.gallery img{height:150px;width:auto;max-width:260px;border-radius:14px;border:1px solid var(--b);flex:none;object-fit:cover}
 
 /* المواعيد */
 .day{padding:12px 0;border-bottom:1px solid var(--dash)}
@@ -394,7 +401,15 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
             <div class="field" id="catF"><label>التصنيف</label><select id="bCat"></select></div>
             <div class="field" id="regF"><label>رقم القيد في النقابة (للتوثيق، لا يظهر للعامة)</label><input id="bReg" inputmode="numeric"></div>
             <div class="field" id="priceF"><label>سعر الكشف (اختياري)</label><input id="bPrice" inputmode="numeric"></div>
-            <div class="field"><label>رابط صورة للمكان أو اللوجو (اختياري)</label><input id="bImg" type="url" placeholder="https://..."></div>
+            <div class="field">
+              <label>📸 صور النشاط (اختياري، حتى 3 صور)</label>
+              <input id="bPhotos" type="file" accept="image/*" multiple>
+              <div id="photoPrev" class="photo-prev"></div>
+              <p class="muted" id="curPhotos" style="margin-top:6px"></p>
+              <label id="rmWrap" class="hidden" style="display:flex;align-items:center;gap:8px;margin-top:6px;font-weight:700;color:#f87171;cursor:pointer">
+                <input type="checkbox" id="rmPhotos"> امسح الصور الحالية
+              </label>
+            </div>
             <div class="field"><label>نبذة (اختياري)</label><textarea id="bDesc" maxlength="160"></textarea></div>
           </div>
           <div class="card">
@@ -514,7 +529,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
       </div>
       <div style="display:flex;gap:6px"><button id="mShare" class="ib" title="مشاركة">📤</button><button id="closeModal" style="font-size:26px;color:var(--m);line-height:1">&times;</button></div>
     </div>
-    <img id="mCover" class="card-cover hidden" alt="">
+    <div id="mGallery" class="gallery hidden"></div>
     <h2 id="mTitle" class="ct" style="font-size:21px;margin-bottom:4px"></h2>
     <p id="mSub" style="color:var(--p);font-weight:700;margin-bottom:10px"></p>
     <p id="mDesc" class="muted" style="margin-bottom:14px"></p>
@@ -627,6 +642,7 @@ const PHONE_RE = /^01[0125]\d{8}$/;
 const emailOf = p => p + '@menouf.app';
 const ADMIN_PHONE = '01002480665';
 const APP_NAME = 'منوف 360';
+const MAX_PHOTOS = 3;
 const tsMs = x => x?.toMillis?.() ?? 0;
 const fd = ms => ms ? new Date(ms).toLocaleString('ar-EG') : '';
 
@@ -783,6 +799,52 @@ function nextOpenReminder(hours) {
   }
   return '⚪ لا توجد مواعيد عمل محددة حالياً';
 }
+
+/* ---------- الصور: ضغط في المتصفح ---------- */
+function loadImg(file) {
+  return new Promise((res, rej) => {
+    const u = URL.createObjectURL(file);
+    const i = new Image();
+    i.onload = () => { URL.revokeObjectURL(u); res(i); };
+    i.onerror = () => { URL.revokeObjectURL(u); rej(new Error('تعذر قراءة الصورة')); };
+    i.src = u;
+  });
+}
+async function compressImage(file, maxW, maxChars, q0) {
+  const img = await loadImg(file);
+  const s = Math.min(1, maxW / img.width);
+  const c = document.createElement('canvas');
+  c.width = Math.max(1, Math.round(img.width * s));
+  c.height = Math.max(1, Math.round(img.height * s));
+  c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+  let q = q0, out = c.toDataURL('image/jpeg', q);
+  while (out.length > maxChars && q > 0.25) {
+    q = Math.round((q - 0.1) * 10) / 10;
+    out = c.toDataURL('image/jpeg', q);
+  }
+  if (out.length > maxChars) throw new Error('الصورة كبيرة جداً، جرّب صورة تانية');
+  return out;
+}
+async function preparePhotos(files) {
+  const photos = [];
+  for (const f of files) photos.push(await compressImage(f, 700, 140000, 0.8));
+  const thumb = await compressImage(files[0], 160, 25000, 0.6);
+  return { photos, thumb };
+}
+
+let pendingFiles = [], removePhotos = false, photoCache = {}, editOwnerId = null;
+
+$('bPhotos').onchange = e => {
+  const all = [...e.target.files].filter(f => f.type.startsWith('image/'));
+  if (all.length > MAX_PHOTOS) toast(`الحد ${MAX_PHOTOS} صور، اتاخد أول ${MAX_PHOTOS}`);
+  pendingFiles = all.slice(0, MAX_PHOTOS);
+  $('photoPrev').innerHTML = pendingFiles.map(f => `<img src="${URL.createObjectURL(f)}" alt="">`).join('');
+  if (pendingFiles.length) { removePhotos = false; $('rmPhotos').checked = false; }
+};
+$('rmPhotos').onchange = e => {
+  removePhotos = e.target.checked;
+  if (removePhotos) { pendingFiles = []; $('bPhotos').value = ''; $('photoPrev').innerHTML = ''; }
+};
 
 /* ---------- الحالة العامة ---------- */
 let me = null, profile = null, unsubs = [], guest = false, mode = 'login';
@@ -1351,9 +1413,10 @@ function renderBrowse() {
   const cards = list.map(b => {
     const open = isOpen(b.hours), ph = b.phone || b.ownerPhone || '', fav = favs.includes(b.id);
     const rt = ratingOf(b.id), isDoc = b.type === 'doctor';
+    const cover = b.thumb || b.imageUrl || '';
     return `<div class="card ${b.featured ? 'fe' : ''}" data-open="${b.id}" style="cursor:pointer">
       <button class="fav" data-fav="${b.id}">${fav ? '❤️' : '🤍'}</button>
-      ${b.imageUrl ? `<img class="card-cover" src="${esc(b.imageUrl)}" loading="lazy" alt="" onerror="this.remove()">` : ''}
+      ${cover ? `<img class="card-cover" src="${cover}" loading="lazy" alt="" onerror="this.remove()">` : ''}
       <div class="row" style="padding-left:34px">
         <div>
           <div class="type">${esc(TYPES[b.type]?.label || b.category)}</div>
@@ -1512,6 +1575,24 @@ $('mBookWa').onclick = () => {
   window.open(`https://wa.me/2${ph}?text=${encodeURIComponent(msg)}`, '_blank');
 };
 
+/* معرض الصور: بيتحمّل من bizPhotos لما النشاط يتفتح */
+async function loadGallery(b) {
+  const box = $('mGallery');
+  box.innerHTML = ''; box.classList.add('hidden');
+  if (!b.photoCount) return;
+  let photos = photoCache[b.id];
+  if (!photos) {
+    try {
+      const s = await getDoc(doc(db, 'bizPhotos', b.id));
+      photos = s.exists() ? (s.data().photos || []) : [];
+      photoCache[b.id] = photos;
+    } catch (e) { photos = []; }
+  }
+  if (curBiz?.id !== b.id || !photos.length) return;
+  box.innerHTML = photos.map(p => `<img src="${p}" loading="lazy" alt="">`).join('');
+  box.classList.remove('hidden');
+}
+
 function openModal(b) {
   curBiz = b; cart = {};
   const isOwner = !!(me?.uid && b.ownerId === me.uid);
@@ -1522,8 +1603,6 @@ function openModal(b) {
   $('mBadge').innerHTML = open ? '<span class="dot"></span> مفتوح الآن' : '⚪ مغلق الآن';
   $('mVerified').classList.toggle('hidden', !b.verified);
   $('mFeatured').classList.toggle('hidden', !b.featured);
-  if (b.imageUrl) { $('mCover').src = b.imageUrl; $('mCover').classList.remove('hidden'); }
-  else $('mCover').classList.add('hidden');
   $('mTitle').textContent = b.name;
   $('mSub').textContent = b.type === 'doctor' ? 'طبيب متخصص في ' + b.specialty : b.category;
   $('mDesc').textContent = b.desc || '';
@@ -1570,6 +1649,7 @@ function openModal(b) {
     ${isOwner ? '' : '<button class="btn s" data-report style="grid-column:span 2">⚠️ إبلاغ عن خطأ في البيانات</button>'}`;
   renderRatings(b);
   $('bizModal').classList.remove('hidden');
+  loadGallery(b);
 }
 
 $('mActs').onclick = async e => {
@@ -1748,29 +1828,40 @@ $('bizForm').onsubmit = async e => {
   }
 
   const regNo = $('bReg').value.trim();
-  const img = $('bImg').value.trim();
-  if (img && !/^https:\/\//i.test(img)) return toast('رابط الصورة لازم يبدأ بـ https://');
   const nextStatus = (editId && adminEditing) ? (editOrigStatus || 'approved') : 'pending';
   const data = {
     phone, type, name: $('bName').value.trim(),
     specialty: d ? $('bSpec').value : null,
     category: d ? 'دكاترة' : $('bCat').value,
     price: d ? $('bPrice').value.trim() : null,
-    imageUrl: img || null,
     desc: $('bDesc').value.trim(), address: $('bAddr').value.trim(), landmark: $('bLandmark').value.trim(),
     lat: Number($('bLat').value), lng: Number($('bLng').value),
     hours, items, status: nextStatus, updatedAt: serverTimestamp()
   };
   $('saveBtn').disabled = true;
   try {
+    let pics = null;
+    if (pendingFiles.length) {
+      toast('جاري تجهيز الصور...');
+      pics = await preparePhotos(pendingFiles);
+    }
+
     if (editId) {
       const typeChanged = editOrigType !== type;
+      const upd = typeChanged ? { ...data, verified: false } : { ...data };
+      if (pics) { upd.thumb = pics.thumb; upd.photoCount = pics.photos.length; }
+      else if (removePhotos) { upd.thumb = deleteField(); upd.photoCount = 0; }
       const batch = writeBatch(db);
-      const upd = typeChanged ? { ...data, verified: false } : data;
       batch.update(doc(db, 'businesses', editId), { ...upd, regNo: deleteField() });
       if (d) batch.set(doc(db, 'regs', editId), { regNo });
       else if (editOrigType === 'doctor') batch.delete(doc(db, 'regs', editId));
       await batch.commit();
+      if (pics) {
+        await setDoc(doc(db, 'bizPhotos', editId), { ownerId: editOwnerId || me.uid, photos: pics.photos, updatedAt: serverTimestamp() });
+      } else if (removePhotos) {
+        await deleteDoc(doc(db, 'bizPhotos', editId)).catch(() => {});
+      }
+      delete photoCache[editId];
       if (adminEditing) {
         toast('تم حفظ التعديلات الإدارية بنجاح ✅');
         loadApproved();
@@ -1779,21 +1870,25 @@ $('bizForm').onsubmit = async e => {
       }
     } else {
       const ref = doc(collection(db, 'businesses'));
-      await setDoc(ref, { ...data, ownerId: me.uid, ownerName: profile.name, verified: false, featured: false, createdAt: serverTimestamp() });
+      const extra = pics ? { thumb: pics.thumb, photoCount: pics.photos.length } : {};
+      await setDoc(ref, { ...data, ...extra, ownerId: me.uid, ownerName: profile.name, verified: false, featured: false, createdAt: serverTimestamp() });
       if (d) await setDoc(doc(db, 'regs', ref.id), { regNo });
+      if (pics) await setDoc(doc(db, 'bizPhotos', ref.id), { ownerId: me.uid, photos: pics.photos, updatedAt: serverTimestamp() });
       toast('تم إرسال نشاطك وسيظهر بعد المراجعة ✅');
     }
     const returnTab = adminEditing ? 'admin' : 'mine';
     cancelEdit(); switchTab(returnTab);
-  } catch (err) { toast('تعذر الحفظ: ' + (err.code || err.message)); }
+  } catch (err) {
+    toast('تعذر الحفظ: ' + (err.message && !err.code ? err.message : (err.code || err.message)));
+  }
   $('saveBtn').disabled = false;
 };
 
 async function startEdit(b, isAdminEdit = false) {
   editId = b.id; editOrigType = b.type; editOrigStatus = b.status; adminEditing = isAdminEdit;
+  editOwnerId = b.ownerId || null;
   type = b.type; buildTypeChips(); applyType();
   $('bName').value = b.name || ''; $('bPhone').value = b.phone || b.ownerPhone || '';
-  $('bImg').value = b.imageUrl || '';
   if (b.type === 'doctor') {
     $('bSpec').value = b.specialty || ''; $('bPrice').value = b.price || '';
     $('bReg').value = b.regNo || '';
@@ -1809,6 +1904,14 @@ async function startEdit(b, isAdminEdit = false) {
     $('h' + i).value = h.to2 || '';
   });
   items = [...(b.items || [])]; renderItems();
+
+  pendingFiles = []; removePhotos = false;
+  $('bPhotos').value = ''; $('photoPrev').innerHTML = '';
+  $('rmPhotos').checked = false;
+  const pc = b.photoCount || 0;
+  $('curPhotos').textContent = pc ? `عندك ${pc} صورة حالياً. اختار صور جديدة عشان تستبدلها.` : 'مفيش صور حالياً.';
+  $('rmWrap').classList.toggle('hidden', !pc);
+
   $('editNotice').classList.remove('hidden');
   if (isAdminEdit) {
     $('editNoticeTxt').textContent = '🛡️ تعديل إداري مباشر (يحافظ على حالة النشر الحالية)';
@@ -1825,8 +1928,10 @@ async function startEdit(b, isAdminEdit = false) {
   if (b.lat && b.lng) showMap(b.lat, b.lng);
 }
 function cancelEdit() {
-  editId = null; editOrigType = null; editOrigStatus = null; adminEditing = false;
+  editId = null; editOrigType = null; editOrigStatus = null; adminEditing = false; editOwnerId = null;
+  pendingFiles = []; removePhotos = false;
   $('bizForm').reset(); items = []; renderItems();
+  $('photoPrev').innerHTML = ''; $('curPhotos').textContent = ''; $('rmWrap').classList.add('hidden');
   type = null; buildTypeChips(); $('typeFields').classList.add('hidden'); buildHours();
   $('geoStatus').textContent = ''; $('pickMap').classList.add('hidden'); $('editNotice').classList.add('hidden');
   $('editNoticeTxt').textContent = '⚠️ تعديل نشاط، عند الحفظ يعود للمراجعة';
@@ -1877,6 +1982,8 @@ $('mineList').onclick = async e => {
     try {
       await deleteDoc(doc(db, 'businesses', t.dataset.del));
       await deleteDoc(doc(db, 'regs', t.dataset.del)).catch(() => {});
+      await deleteDoc(doc(db, 'bizPhotos', t.dataset.del)).catch(() => {});
+      delete photoCache[t.dataset.del];
       toast('تم الحذف');
     } catch (err) { toast('تعذر الحذف'); }
   }
@@ -1974,13 +2081,14 @@ function renderAdmin() {
     <div class="row"><div><h3 class="ct">${esc(b.name)}</h3>
     <span class="muted">👤 ${esc(b.ownerName || '')} · 📞 ${esc(b.phone || b.ownerPhone || '')}</span></div>${badge(b.status)}</div>
     <p style="color:var(--p);font-weight:700;font-size:13px;margin-top:6px">${b.type === 'doctor' ? 'طبيب (' + esc(b.specialty) + ')' : esc(b.category)}</p>
-    <p class="muted">📍 ${esc(b.address)}</p>
+    <p class="muted">📍 ${esc(b.address)} · 📸 ${b.photoCount || 0} صور</p>
     <div class="acts-w">
       <a class="btn sm g" target="_blank" href="https://wa.me/2${esc(b.phone || b.ownerPhone)}">💬 واتساب</a>
       <button class="btn sm s" data-aedit="${b.id}">تعديل ✏️</button>
       ${b.type === 'doctor' ? `<button class="btn sm s" data-showreg="${b.id}">رقم القيد</button>` : ''}
       ${b.status === 'approved' ? `<button class="btn sm s" data-verify="${b.id}">${b.verified ? 'إلغاء التوثيق' : 'توثيق ✓'}</button>` : ''}
       ${b.status === 'approved' ? `<button class="btn sm s" data-feature="${b.id}">${b.featured ? 'إلغاء التميز' : 'تمييز ⭐'}</button>` : ''}
+      ${(b.photoCount || b.thumb) ? `<button class="btn sm s" data-pdel="${b.id}">حذف الصور 🖼️</button>` : ''}
       ${b.status !== 'approved' ? `<button class="btn sm" data-approve="${b.id}">اعتماد ✅</button><button class="btn sm d" data-reject="${b.id}">رفض ❌</button>` : `<button class="btn sm s" data-hide="${b.id}">إخفاء ⏸️</button>`}
       <button class="btn sm d" data-del="${b.id}">حذف 🗑️</button>
     </div></div>`).join('');
@@ -2004,6 +2112,12 @@ $('adminList').onclick = async e => {
     else if (d.showreg) {
       const s = await getDoc(doc(db, 'regs', d.showreg));
       alert(s.exists() ? 'رقم القيد: ' + s.data().regNo : 'لا يوجد رقم قيد لهذا النشاط');
+    }
+    else if (d.pdel && confirm('حذف صور هذا النشاط؟')) {
+      await updateDoc(doc(db, 'businesses', d.pdel), { thumb: deleteField(), photoCount: 0 });
+      await deleteDoc(doc(db, 'bizPhotos', d.pdel)).catch(() => {});
+      delete photoCache[d.pdel];
+      toast('تم حذف الصور 🖼️');
     }
     else if (d.verify) {
       const b = allBiz.find(x => x.id === d.verify);
@@ -2031,6 +2145,8 @@ $('adminList').onclick = async e => {
     else if (d.del && confirm('حذف نهائي لهذا النشاط؟')) {
       await deleteDoc(doc(db, 'businesses', d.del));
       await deleteDoc(doc(db, 'regs', d.del)).catch(() => {});
+      await deleteDoc(doc(db, 'bizPhotos', d.del)).catch(() => {});
+      delete photoCache[d.del];
       toast('تم الحذف 🗑️');
     }
   } catch (err) { toast('تعذر تنفيذ العملية'); }
