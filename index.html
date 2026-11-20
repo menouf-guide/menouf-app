@@ -19,7 +19,7 @@
     if (localStorage.getItem('menouf_theme') === 'light') {
       document.documentElement.setAttribute('data-theme', 'light');
       var tm = document.getElementById('themeMeta');
-      if (tm) tm.content = '#f4f5f7';
+      if (tm) tm.content = '#fbf8f1';
     }
   } catch (e) {}
 })();
@@ -66,37 +66,42 @@
 /* ===== الوضع الفاتح ===== */
 :root[data-theme="light"]{
   color-scheme:light;
-  --bg:#f4f5f7;
-  --bgGlow:rgba(245,196,0,.14);
+  --bg:#fbf8f1;
+  --bgGlow:rgba(245,196,0,.16);
   --card:#ffffff;
   --surf:#ffffff;
-  --inp:#ffffff;
+  --inp:#fffdf7;
   --chip:#ffffff;
-  --row:#fafafa;
-  --glass:rgba(255,255,255,.85);
+  --row:#fdfaf2;
+  --glass:rgba(255,255,255,.92);
   --sheet:#ffffff;
   --nav:#ffffff;
   --toast:#1f2937;
-  --overlay:rgba(15,23,42,.35);
-  --hdr:linear-gradient(180deg,#fff7d6,#ffffff);
-  --pulse:linear-gradient(135deg,#fff6cc,#e9fbef 70%,#ffffff);
-  --txt:#111827;
-  --txt2:#1f2937;
-  --txt3:#374151;
-  --m:#64748b;
-  --p:#a86f00;
-  --b:rgba(15,23,42,.10);
-  --b2:rgba(15,23,42,.14);
-  --bg2:rgba(200,150,0,.35);
-  --dash:rgba(15,23,42,.14);
-  --tg:#cfd4dc;
-  --deal-in:#ffffff;
-  --star0:#cbd5e1;
+  --overlay:rgba(40,30,10,.35);
+  --hdr:linear-gradient(180deg,#fff1b8,#fffdf6);
+  --pulse:linear-gradient(135deg,#fff3c2,#e8f8ee 70%,#ffffff);
+  --txt:#1c1917;
+  --txt2:#292524;
+  --txt3:#44403c;
+  --m:#6b6258;
+  --p:#b7791f;
+  --b:rgba(120,90,20,.13);
+  --b2:rgba(120,90,20,.18);
+  --bg2:rgba(200,150,20,.45);
+  --dash:rgba(120,90,20,.20);
+  --tg:#d6cfc2;
+  --deal-in:#fffdf6;
+  --star0:#d6cfc2;
   --okTxt:#065f46;
-  --ph:#94a3b8;
-  --pglow:rgba(245,196,0,.35);
+  --ph:#a8a095;
+  --pglow:rgba(245,196,0,.38);
 }
-:root[data-theme="light"] .ib{background:rgba(245,196,0,.14)}
+:root[data-theme="light"] .ib{background:#fff5d1;border-color:rgba(200,150,20,.45)}
+:root[data-theme="light"] .card{box-shadow:0 6px 22px rgba(120,90,20,.10)}
+:root[data-theme="light"] .card:hover{border-color:rgba(200,150,20,.35)}
+:root[data-theme="light"] .badge{background:#fbf6ea}
+:root[data-theme="light"] .tool{background:#ffffff;box-shadow:0 2px 8px rgba(120,90,20,.06)}
+:root[data-theme="light"] .tool.active{background:#fff3c7}
 
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:Cairo,system-ui,sans-serif;background:radial-gradient(circle at 50% 0%,var(--bgGlow),transparent 50%),var(--bg);color:var(--txt);min-height:100vh;font-size:15px;line-height:1.6;overflow-x:hidden;transition:background .25s,color .25s}
@@ -166,7 +171,7 @@ header{position:sticky;top:0;z-index:25;display:flex;justify-content:space-betwe
 .card{background:var(--card);border:1px solid var(--b);border-radius:20px;padding:16px;margin-bottom:14px;box-shadow:0 8px 28px rgba(0,0,0,.12);position:relative;transition:transform .2s}
 .card:active{transform:scale(.99)}
 .card.fe{border-color:var(--bg2)}
-.card-cover{width:100%;height:130px;object-fit:cover;border-radius:14px;margin-bottom:10px;border:1px solid var(--b);display:block}
+.card-cover{width:100%;height:150px;object-fit:cover;border-radius:14px;margin-bottom:10px;border:1px solid var(--b);display:block;background:var(--row)}
 .ct{font-size:17px;font-weight:800;color:var(--txt)}
 .muted{color:var(--m);font-size:13px}
 .row{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
@@ -214,9 +219,9 @@ textarea{min-height:85px;resize:vertical}
 
 /* صور النشاط */
 .photo-prev{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-.photo-prev img{width:76px;height:76px;object-fit:cover;border-radius:12px;border:1px solid var(--b)}
+.photo-prev img{width:110px;height:110px;object-fit:cover;border-radius:14px;border:1px solid var(--b)}
 .gallery{display:flex;gap:8px;overflow-x:auto;margin-bottom:12px;padding-bottom:6px;scrollbar-width:none}
-.gallery img{height:150px;width:auto;max-width:260px;border-radius:14px;border:1px solid var(--b);flex:none;object-fit:cover}
+.gallery img{height:200px;width:auto;max-width:100%;border-radius:14px;border:1px solid var(--b);flex:none;object-fit:contain;background:var(--row)}
 
 /* المواعيد */
 .day{padding:12px 0;border-bottom:1px solid var(--dash)}
@@ -402,12 +407,12 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
             <div class="field" id="regF"><label>رقم القيد في النقابة (للتوثيق، لا يظهر للعامة)</label><input id="bReg" inputmode="numeric"></div>
             <div class="field" id="priceF"><label>سعر الكشف (اختياري)</label><input id="bPrice" inputmode="numeric"></div>
             <div class="field">
-              <label>📸 صور النشاط (اختياري، حتى 3 صور)</label>
-              <input id="bPhotos" type="file" accept="image/*" multiple>
+              <label>📸 صورة للنشاط (اختياري، صورة واحدة)</label>
+              <input id="bPhotos" type="file" accept="image/*">
               <div id="photoPrev" class="photo-prev"></div>
               <p class="muted" id="curPhotos" style="margin-top:6px"></p>
               <label id="rmWrap" class="hidden" style="display:flex;align-items:center;gap:8px;margin-top:6px;font-weight:700;color:#f87171;cursor:pointer">
-                <input type="checkbox" id="rmPhotos"> امسح الصور الحالية
+                <input type="checkbox" id="rmPhotos"> امسح الصورة الحالية
               </label>
             </div>
             <div class="field"><label>نبذة (اختياري)</label><textarea id="bDesc" maxlength="160"></textarea></div>
@@ -642,7 +647,6 @@ const PHONE_RE = /^01[0125]\d{8}$/;
 const emailOf = p => p + '@menouf.app';
 const ADMIN_PHONE = '01002480665';
 const APP_NAME = 'منوف 360';
-const MAX_PHOTOS = 3;
 const tsMs = x => x?.toMillis?.() ?? 0;
 const fd = ms => ms ? new Date(ms).toLocaleString('ar-EG') : '';
 
@@ -657,7 +661,7 @@ $('themeBtn').onclick = () => {
   if (light) document.documentElement.removeAttribute('data-theme');
   else document.documentElement.setAttribute('data-theme', 'light');
   try { localStorage.setItem('menouf_theme', light ? 'dark' : 'light'); } catch (e) {}
-  $('themeMeta').content = light ? '#08090c' : '#f4f5f7';
+  $('themeMeta').content = light ? '#08090c' : '#fbf8f1';
   applyThemeBtn();
   if (bMap) setTimeout(() => bMap.invalidateSize(), 50);
 };
@@ -825,25 +829,24 @@ async function compressImage(file, maxW, maxChars, q0) {
   if (out.length > maxChars) throw new Error('الصورة كبيرة جداً، جرّب صورة تانية');
   return out;
 }
-async function preparePhotos(files) {
-  const photos = [];
-  for (const f of files) photos.push(await compressImage(f, 700, 140000, 0.8));
-  const thumb = await compressImage(files[0], 160, 25000, 0.6);
-  return { photos, thumb };
+async function preparePhotos(file) {
+  const photo = await compressImage(file, 1000, 500000, 0.85);
+  const thumb = await compressImage(file, 320, 40000, 0.75);
+  return { photos: [photo], thumb };
 }
 
-let pendingFiles = [], removePhotos = false, photoCache = {}, editOwnerId = null;
+let pendingFile = null, removePhotos = false, photoCache = {}, editOwnerId = null;
 
 $('bPhotos').onchange = e => {
-  const all = [...e.target.files].filter(f => f.type.startsWith('image/'));
-  if (all.length > MAX_PHOTOS) toast(`الحد ${MAX_PHOTOS} صور، اتاخد أول ${MAX_PHOTOS}`);
-  pendingFiles = all.slice(0, MAX_PHOTOS);
-  $('photoPrev').innerHTML = pendingFiles.map(f => `<img src="${URL.createObjectURL(f)}" alt="">`).join('');
-  if (pendingFiles.length) { removePhotos = false; $('rmPhotos').checked = false; }
+  const f = e.target.files && e.target.files[0];
+  if (!f || !f.type.startsWith('image/')) { pendingFile = null; $('photoPrev').innerHTML = ''; return; }
+  pendingFile = f;
+  $('photoPrev').innerHTML = `<img src="${URL.createObjectURL(f)}" alt="">`;
+  removePhotos = false; $('rmPhotos').checked = false;
 };
 $('rmPhotos').onchange = e => {
   removePhotos = e.target.checked;
-  if (removePhotos) { pendingFiles = []; $('bPhotos').value = ''; $('photoPrev').innerHTML = ''; }
+  if (removePhotos) { pendingFile = null; $('bPhotos').value = ''; $('photoPrev').innerHTML = ''; }
 };
 
 /* ---------- الحالة العامة ---------- */
@@ -1575,7 +1578,7 @@ $('mBookWa').onclick = () => {
   window.open(`https://wa.me/2${ph}?text=${encodeURIComponent(msg)}`, '_blank');
 };
 
-/* معرض الصور: بيتحمّل من bizPhotos لما النشاط يتفتح */
+/* صورة النشاط الكبيرة: بتتحمّل من bizPhotos لما النشاط يتفتح */
 async function loadGallery(b) {
   const box = $('mGallery');
   box.innerHTML = ''; box.classList.add('hidden');
@@ -1841,9 +1844,9 @@ $('bizForm').onsubmit = async e => {
   $('saveBtn').disabled = true;
   try {
     let pics = null;
-    if (pendingFiles.length) {
-      toast('جاري تجهيز الصور...');
-      pics = await preparePhotos(pendingFiles);
+    if (pendingFile) {
+      toast('جاري تجهيز الصورة...');
+      pics = await preparePhotos(pendingFile);
     }
 
     if (editId) {
@@ -1905,11 +1908,11 @@ async function startEdit(b, isAdminEdit = false) {
   });
   items = [...(b.items || [])]; renderItems();
 
-  pendingFiles = []; removePhotos = false;
+  pendingFile = null; removePhotos = false;
   $('bPhotos').value = ''; $('photoPrev').innerHTML = '';
   $('rmPhotos').checked = false;
   const pc = b.photoCount || 0;
-  $('curPhotos').textContent = pc ? `عندك ${pc} صورة حالياً. اختار صور جديدة عشان تستبدلها.` : 'مفيش صور حالياً.';
+  $('curPhotos').textContent = pc ? 'عندك صورة حالياً. اختار صورة جديدة عشان تستبدلها.' : 'مفيش صورة حالياً.';
   $('rmWrap').classList.toggle('hidden', !pc);
 
   $('editNotice').classList.remove('hidden');
@@ -1929,7 +1932,7 @@ async function startEdit(b, isAdminEdit = false) {
 }
 function cancelEdit() {
   editId = null; editOrigType = null; editOrigStatus = null; adminEditing = false; editOwnerId = null;
-  pendingFiles = []; removePhotos = false;
+  pendingFile = null; removePhotos = false;
   $('bizForm').reset(); items = []; renderItems();
   $('photoPrev').innerHTML = ''; $('curPhotos').textContent = ''; $('rmWrap').classList.add('hidden');
   type = null; buildTypeChips(); $('typeFields').classList.add('hidden'); buildHours();
@@ -2081,14 +2084,14 @@ function renderAdmin() {
     <div class="row"><div><h3 class="ct">${esc(b.name)}</h3>
     <span class="muted">👤 ${esc(b.ownerName || '')} · 📞 ${esc(b.phone || b.ownerPhone || '')}</span></div>${badge(b.status)}</div>
     <p style="color:var(--p);font-weight:700;font-size:13px;margin-top:6px">${b.type === 'doctor' ? 'طبيب (' + esc(b.specialty) + ')' : esc(b.category)}</p>
-    <p class="muted">📍 ${esc(b.address)} · 📸 ${b.photoCount || 0} صور</p>
+    <p class="muted">📍 ${esc(b.address)} · 📸 ${b.photoCount || 0} صورة</p>
     <div class="acts-w">
       <a class="btn sm g" target="_blank" href="https://wa.me/2${esc(b.phone || b.ownerPhone)}">💬 واتساب</a>
       <button class="btn sm s" data-aedit="${b.id}">تعديل ✏️</button>
       ${b.type === 'doctor' ? `<button class="btn sm s" data-showreg="${b.id}">رقم القيد</button>` : ''}
       ${b.status === 'approved' ? `<button class="btn sm s" data-verify="${b.id}">${b.verified ? 'إلغاء التوثيق' : 'توثيق ✓'}</button>` : ''}
       ${b.status === 'approved' ? `<button class="btn sm s" data-feature="${b.id}">${b.featured ? 'إلغاء التميز' : 'تمييز ⭐'}</button>` : ''}
-      ${(b.photoCount || b.thumb) ? `<button class="btn sm s" data-pdel="${b.id}">حذف الصور 🖼️</button>` : ''}
+      ${(b.photoCount || b.thumb) ? `<button class="btn sm s" data-pdel="${b.id}">حذف الصورة 🖼️</button>` : ''}
       ${b.status !== 'approved' ? `<button class="btn sm" data-approve="${b.id}">اعتماد ✅</button><button class="btn sm d" data-reject="${b.id}">رفض ❌</button>` : `<button class="btn sm s" data-hide="${b.id}">إخفاء ⏸️</button>`}
       <button class="btn sm d" data-del="${b.id}">حذف 🗑️</button>
     </div></div>`).join('');
@@ -2113,11 +2116,11 @@ $('adminList').onclick = async e => {
       const s = await getDoc(doc(db, 'regs', d.showreg));
       alert(s.exists() ? 'رقم القيد: ' + s.data().regNo : 'لا يوجد رقم قيد لهذا النشاط');
     }
-    else if (d.pdel && confirm('حذف صور هذا النشاط؟')) {
+    else if (d.pdel && confirm('حذف صورة هذا النشاط؟')) {
       await updateDoc(doc(db, 'businesses', d.pdel), { thumb: deleteField(), photoCount: 0 });
       await deleteDoc(doc(db, 'bizPhotos', d.pdel)).catch(() => {});
       delete photoCache[d.pdel];
-      toast('تم حذف الصور 🖼️');
+      toast('تم حذف الصورة 🖼️');
     }
     else if (d.verify) {
       const b = allBiz.find(x => x.id === d.verify);
