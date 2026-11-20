@@ -19,7 +19,7 @@
     if (localStorage.getItem('menouf_theme') === 'light') {
       document.documentElement.setAttribute('data-theme', 'light');
       var tm = document.getElementById('themeMeta');
-      if (tm) tm.content = '#fbf8f1';
+      if (tm) tm.content = '#fffdf7';
     }
   } catch (e) {}
 })();
@@ -63,45 +63,45 @@
   --eg:linear-gradient(135deg,#22c55e,#15803d);
   --ph:#64748b;
 }
-/* ===== الوضع الفاتح ===== */
+/* ===== الوضع الفاتح (مشرق) ===== */
 :root[data-theme="light"]{
   color-scheme:light;
-  --bg:#fbf8f1;
-  --bgGlow:rgba(245,196,0,.16);
+  --bg:#fffdf7;
+  --bgGlow:rgba(255,213,79,.28);
   --card:#ffffff;
   --surf:#ffffff;
-  --inp:#fffdf7;
+  --inp:#ffffff;
   --chip:#ffffff;
-  --row:#fdfaf2;
-  --glass:rgba(255,255,255,.92);
+  --row:#fff9e6;
+  --glass:rgba(255,255,255,.96);
   --sheet:#ffffff;
   --nav:#ffffff;
   --toast:#1f2937;
-  --overlay:rgba(40,30,10,.35);
-  --hdr:linear-gradient(180deg,#fff1b8,#fffdf6);
-  --pulse:linear-gradient(135deg,#fff3c2,#e8f8ee 70%,#ffffff);
-  --txt:#1c1917;
-  --txt2:#292524;
-  --txt3:#44403c;
-  --m:#6b6258;
-  --p:#b7791f;
-  --b:rgba(120,90,20,.13);
-  --b2:rgba(120,90,20,.18);
-  --bg2:rgba(200,150,20,.45);
-  --dash:rgba(120,90,20,.20);
-  --tg:#d6cfc2;
-  --deal-in:#fffdf6;
-  --star0:#d6cfc2;
+  --overlay:rgba(60,40,0,.30);
+  --hdr:linear-gradient(180deg,#ffe98a 0%,#fff6cc 60%,#fffdf7 100%);
+  --pulse:linear-gradient(135deg,#fff0a6,#dcfce7 70%,#ffffff);
+  --txt:#111827;
+  --txt2:#1f2937;
+  --txt3:#374151;
+  --m:#6b7280;
+  --p:#c98a00;
+  --b:rgba(150,110,0,.14);
+  --b2:rgba(150,110,0,.22);
+  --bg2:rgba(230,170,0,.55);
+  --dash:rgba(150,110,0,.22);
+  --tg:#d1d5db;
+  --deal-in:#fffbeb;
+  --star0:#d1d5db;
   --okTxt:#065f46;
-  --ph:#a8a095;
-  --pglow:rgba(245,196,0,.38);
+  --ph:#9ca3af;
+  --pglow:rgba(255,196,0,.45);
 }
-:root[data-theme="light"] .ib{background:#fff5d1;border-color:rgba(200,150,20,.45)}
-:root[data-theme="light"] .card{box-shadow:0 6px 22px rgba(120,90,20,.10)}
-:root[data-theme="light"] .card:hover{border-color:rgba(200,150,20,.35)}
-:root[data-theme="light"] .badge{background:#fbf6ea}
-:root[data-theme="light"] .tool{background:#ffffff;box-shadow:0 2px 8px rgba(120,90,20,.06)}
-:root[data-theme="light"] .tool.active{background:#fff3c7}
+:root[data-theme="light"] .ib{background:#fff3c4;border-color:rgba(230,170,0,.55)}
+:root[data-theme="light"] .card{box-shadow:0 6px 22px rgba(150,110,0,.12);border-color:rgba(230,170,0,.22)}
+:root[data-theme="light"] .tool{background:#ffffff;box-shadow:0 2px 10px rgba(150,110,0,.08)}
+:root[data-theme="light"] .tool.active{background:#fff1b8}
+:root[data-theme="light"] .badge{background:#fffaf0}
+:root[data-theme="light"] .pulse-card{box-shadow:0 8px 24px rgba(150,110,0,.12)}
 
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:Cairo,system-ui,sans-serif;background:radial-gradient(circle at 50% 0%,var(--bgGlow),transparent 50%),var(--bg);color:var(--txt);min-height:100vh;font-size:15px;line-height:1.6;overflow-x:hidden;transition:background .25s,color .25s}
@@ -319,6 +319,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
       </div>
       <div style="text-align:center;margin-top:14px"><button type="button" id="toggleAuth" style="color:var(--p);font-weight:700;font-size:13.5px">ليس لديك حساب؟ سجّل الآن</button></div>
       <button type="button" id="guestBtn" class="btn s" style="margin-top:12px">👀 تصفح كزائر</button>
+      <p style="text-align:center;margin-top:14px;font-size:12px"><a href="privacy.html" target="_blank" style="color:var(--m);font-weight:700">سياسة الخصوصية</a></p>
     </form>
   </div>
 </section>
@@ -447,7 +448,15 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
       </form>
     </div>
 
-    <div id="tab-mine" class="hidden"><div id="mineList"></div></div>
+    <div id="tab-mine" class="hidden">
+      <div id="mineList"></div>
+      <div class="card" style="margin-top:18px">
+        <div class="ct" style="margin-bottom:10px">⚙️ حسابي</div>
+        <p style="margin-bottom:10px"><a href="privacy.html" target="_blank" style="color:var(--p);font-weight:700">📄 سياسة الخصوصية</a></p>
+        <button class="btn sm d" id="delAccBtn" style="width:100%">🗑️ حذف حسابي نهائياً</button>
+        <p class="muted" style="margin-top:8px;font-size:12px">هيتحذف حسابك وكل أنشطتك وعروضك وتقييماتك، ومينفعش يترجع.</p>
+      </div>
+    </div>
 
     <div id="tab-admin" class="hidden">
       <div class="ct" style="margin-bottom:10px;color:var(--p)">لوحة الإدارة 🛡️</div>
@@ -635,7 +644,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, deleteUser } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, doc, getDoc, getDocs, setDoc, deleteDoc, collection, addDoc, query, where, orderBy, onSnapshot, updateDoc, serverTimestamp, deleteField, getAggregateFromServer, count, writeBatch, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const app = initializeApp(window.FIREBASE_CONFIG);
@@ -647,6 +656,7 @@ const PHONE_RE = /^01[0125]\d{8}$/;
 const emailOf = p => p + '@menouf.app';
 const ADMIN_PHONE = '01002480665';
 const APP_NAME = 'منوف 360';
+const MAX_PER_DAY = 3;
 const tsMs = x => x?.toMillis?.() ?? 0;
 const fd = ms => ms ? new Date(ms).toLocaleString('ar-EG') : '';
 
@@ -661,7 +671,7 @@ $('themeBtn').onclick = () => {
   if (light) document.documentElement.removeAttribute('data-theme');
   else document.documentElement.setAttribute('data-theme', 'light');
   try { localStorage.setItem('menouf_theme', light ? 'dark' : 'light'); } catch (e) {}
-  $('themeMeta').content = light ? '#08090c' : '#fbf8f1';
+  $('themeMeta').content = light ? '#08090c' : '#fffdf7';
   applyThemeBtn();
   if (bMap) setTimeout(() => bMap.invalidateSize(), 50);
 };
@@ -1287,6 +1297,28 @@ function listen() {
   }
 }
 
+/* ---------- حذف الحساب ---------- */
+$('delAccBtn').onclick = async () => {
+  if (!me || guest) return toast('سجّل دخولك الأول');
+  if (!confirm('هيتحذف حسابك وكل أنشطتك وعروضك وتقييماتك نهائياً. تكمل؟')) return;
+  try {
+    toast('جاري حذف حسابك...');
+    for (const b of myBiz) {
+      await deleteDoc(doc(db, 'regs', b.id)).catch(() => {});
+      await deleteDoc(doc(db, 'bizPhotos', b.id)).catch(() => {});
+      await deleteDoc(doc(db, 'businesses', b.id)).catch(() => {});
+    }
+    const rv = await getDocs(query(collection(db, 'reviews'), where('reviewerId', '==', me.uid)));
+    for (const r of rv.docs) await deleteDoc(r.ref).catch(() => {});
+    await deleteDoc(doc(db, 'users', me.uid)).catch(() => {});
+    await deleteUser(me);
+    toast('تم حذف حسابك ✅');
+  } catch (err) {
+    if (err.code === 'auth/requires-recent-login') toast('سجّل دخول تاني وبعدين احذف الحساب (عشان الأمان)');
+    else toast('تعذر حذف الحساب: ' + (err.code || err.message));
+  }
+};
+
 /* ---------- الإشعارات ---------- */
 function updateBell() {
   const n = notifs.filter(x => !x.read).length + announces.filter(a => tsMs(a.createdAt) > lastAnnSeen).length;
@@ -1821,6 +1853,12 @@ $('bizForm').onsubmit = async e => {
   if (!d && !$('bCat').value) return toast('اختار التصنيف');
   if (!$('bLat').value) return toast('حدد مكان النشاط على الخريطة');
 
+  if (!editId) {
+    const dayAgo = Date.now() - 86400000;
+    const todayCount = myBiz.filter(b => tsMs(b.createdAt) > dayAgo).length;
+    if (todayCount >= MAX_PER_DAY) return toast(`وصلت للحد اليومي (${MAX_PER_DAY} أنشطة في 24 ساعة)، جرّب بكرة`);
+  }
+
   const hours = collectHours();
   if (!hours.some(h => h.open)) return toast('فعّل يوم عمل واحد على الأقل');
   for (const h of hours) {
@@ -1882,7 +1920,7 @@ $('bizForm').onsubmit = async e => {
     const returnTab = adminEditing ? 'admin' : 'mine';
     cancelEdit(); switchTab(returnTab);
   } catch (err) {
-    toast('تعذر الحفظ: ' + (err.message && !err.code ? err.message : (err.code || err.message)));
+    toast('تعذر الحفظ: ' + (err.code || err.message));
   }
   $('saveBtn').disabled = false;
 };
