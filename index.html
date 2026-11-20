@@ -19,7 +19,7 @@
     if (localStorage.getItem('menouf_theme') === 'light') {
       document.documentElement.setAttribute('data-theme', 'light');
       var tm = document.getElementById('themeMeta');
-      if (tm) tm.content = '#fffdf7';
+      if (tm) tm.content = '#ffffff';
     }
   } catch (e) {}
 })();
@@ -63,45 +63,62 @@
   --eg:linear-gradient(135deg,#22c55e,#15803d);
   --ph:#64748b;
 }
-/* ===== الوضع الفاتح (مشرق) ===== */
+/* ===== الوضع الفاتح (العادي - نظيف ومتوازن) ===== */
 :root[data-theme="light"]{
   color-scheme:light;
-  --bg:#fffdf7;
-  --bgGlow:rgba(255,213,79,.28);
+  --bg:#f4f6f9;
+  --bgGlow:rgba(245,158,11,.08);
   --card:#ffffff;
   --surf:#ffffff;
-  --inp:#ffffff;
+  --inp:#f8fafc;
   --chip:#ffffff;
-  --row:#fff9e6;
-  --glass:rgba(255,255,255,.96);
+  --row:#f8fafc;
+  --glass:rgba(255,255,255,.92);
   --sheet:#ffffff;
-  --nav:#ffffff;
-  --toast:#1f2937;
-  --overlay:rgba(60,40,0,.30);
-  --hdr:linear-gradient(180deg,#ffe98a 0%,#fff6cc 60%,#fffdf7 100%);
-  --pulse:linear-gradient(135deg,#fff0a6,#dcfce7 70%,#ffffff);
-  --txt:#111827;
-  --txt2:#1f2937;
-  --txt3:#374151;
-  --m:#6b7280;
-  --p:#c98a00;
-  --b:rgba(150,110,0,.14);
-  --b2:rgba(150,110,0,.22);
-  --bg2:rgba(230,170,0,.55);
-  --dash:rgba(150,110,0,.22);
-  --tg:#d1d5db;
+  --nav:rgba(255,255,255,.96);
+  --toast:#0f172a;
+  --overlay:rgba(15,23,42,.45);
+  --hdr:rgba(255,255,255,.94);
+  --pulse:linear-gradient(135deg,#fffbeb 0%,#f0fdf4 65%,#ffffff 100%);
+  --txt:#0f172a;
+  --txt2:#1e293b;
+  --txt3:#475569;
+  --m:#64748b;
+  --p:#b45309;
+  --b:#e2e8f0;
+  --b2:#cbd5e1;
+  --bg2:rgba(245,158,11,.38);
+  --dash:#e2e8f0;
+  --tg:#cbd5e1;
   --deal-in:#fffbeb;
-  --star0:#d1d5db;
+  --star0:#cbd5e1;
   --okTxt:#065f46;
-  --ph:#9ca3af;
-  --pglow:rgba(255,196,0,.45);
+  --ph:#94a3b8;
+  --pg:linear-gradient(135deg,#fbbf24,#f59e0b);
+  --pglow:rgba(245,158,11,.25);
 }
-:root[data-theme="light"] .ib{background:#fff3c4;border-color:rgba(230,170,0,.55)}
-:root[data-theme="light"] .card{box-shadow:0 6px 22px rgba(150,110,0,.12);border-color:rgba(230,170,0,.22)}
-:root[data-theme="light"] .tool{background:#ffffff;box-shadow:0 2px 10px rgba(150,110,0,.08)}
-:root[data-theme="light"] .tool.active{background:#fff1b8}
-:root[data-theme="light"] .badge{background:#fffaf0}
-:root[data-theme="light"] .pulse-card{box-shadow:0 8px 24px rgba(150,110,0,.12)}
+:root[data-theme="light"] header{backdrop-filter:blur(12px);border-bottom:1px solid #e2e8f0}
+:root[data-theme="light"] .brand h1{color:#b45309}
+:root[data-theme="light"] .logo{border-color:#f59e0b}
+:root[data-theme="light"] .ib{background:#f8fafc;border-color:#e2e8f0;color:#1e293b}
+:root[data-theme="light"] .ib.alert{background:#fef2f2;border-color:#fecaca}
+:root[data-theme="light"] .card{box-shadow:0 2px 12px rgba(15,23,42,.05);border-color:#e2e8f0}
+:root[data-theme="light"] .card.fe{border-color:#f59e0b;box-shadow:0 4px 18px rgba(245,158,11,.14)}
+:root[data-theme="light"] .search{background:#ffffff;border-color:#cbd5e1;box-shadow:0 2px 8px rgba(15,23,42,.04)}
+:root[data-theme="light"] .tool{background:#ffffff;border-color:#e2e8f0;box-shadow:0 1px 4px rgba(15,23,42,.04)}
+:root[data-theme="light"] .tool.active{background:#fffbeb;border-color:#f59e0b;color:#b45309}
+:root[data-theme="light"] .ci{background:#ffffff;border-color:#e2e8f0;box-shadow:0 2px 8px rgba(15,23,42,.05)}
+:root[data-theme="light"] .badge{background:#f8fafc;border-color:#e2e8f0;color:#475569}
+:root[data-theme="light"] .badge.p{background:#fffbeb;border-color:#fde68a;color:#b45309}
+:root[data-theme="light"] .badge.r{background:#fef2f2;border-color:#fecaca;color:#dc2626}
+:root[data-theme="light"] .badge.v{background:#f0f9ff;border-color:#bae6fd;color:#0284c7}
+:root[data-theme="light"] .pulse-card{box-shadow:0 4px 16px rgba(15,23,42,.06);border-color:#fde68a}
+:root[data-theme="light"] .pulse-weather{background:#ffffff;border-color:#fde68a;color:#b45309}
+:root[data-theme="light"] .pulse-train{background:rgba(255,255,255,.88);border-color:#bbf7d0}
+:root[data-theme="light"] .btn.s{background:#fffbeb;color:#b45309;border-color:#fde68a}
+:root[data-theme="light"] .nav{box-shadow:0 8px 30px rgba(15,23,42,.10);border-color:#e2e8f0}
+:root[data-theme="light"] .fav{background:rgba(255,255,255,.92);border-color:#e2e8f0}
+:root[data-theme="light"] .map-pin{background:#ffffff;box-shadow:0 4px 12px rgba(15,23,42,.18)}
 
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:Cairo,system-ui,sans-serif;background:radial-gradient(circle at 50% 0%,var(--bgGlow),transparent 50%),var(--bg);color:var(--txt);min-height:100vh;font-size:15px;line-height:1.6;overflow-x:hidden;transition:background .25s,color .25s}
@@ -165,7 +182,7 @@ header{position:sticky;top:0;z-index:25;display:flex;justify-content:space-betwe
 .cat{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:64px;font-size:12px;font-weight:700;color:var(--m)}
 .ci{width:54px;height:54px;border-radius:50%;background:var(--surf);border:1px solid var(--b);display:flex;align-items:center;justify-content:center;font-size:22px}
 .cat.on{color:var(--p)}
-.cat.on .ci{background:var(--pg);box-shadow:0 6px 18px var(--pglow);border-color:transparent}
+.cat.on .ci{background:var(--pg);box-shadow:0 6px 18px var(--pglow);border-color:transparent;color:#0d0e12}
 
 /* الكروت */
 .card{background:var(--card);border:1px solid var(--b);border-radius:20px;padding:16px;margin-bottom:14px;box-shadow:0 8px 28px rgba(0,0,0,.12);position:relative;transition:transform .2s}
@@ -204,6 +221,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--p);box-shadow:0 0 0 3
 input[type="checkbox"]{width:auto;padding:0}
 select option{background:var(--sheet);color:var(--txt)}
 textarea{min-height:85px;resize:vertical}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;margin-bottom:12px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
 .chip{white-space:nowrap;padding:8px 15px;border-radius:999px;border:1px solid var(--b);background:var(--chip);font-size:13.5px;font-weight:700;color:var(--m)}
@@ -244,6 +262,7 @@ textarea{min-height:85px;resize:vertical}
 .map-pin.doc{border-color:#38bdf8}
 .map-pin.shop{border-color:#ffc400}
 .map-pin.srv{border-color:#22c55e}
+.map-pin.re{border-color:#a855f7}
 .map-locate{background:var(--sheet);color:var(--p);border:1px solid var(--bg2);border-radius:999px;padding:8px 14px;font-family:Cairo,system-ui,sans-serif;font-size:13px;font-weight:800;box-shadow:0 4px 14px rgba(0,0,0,.25);display:flex;align-items:center;gap:5px;cursor:pointer}
 .user-dot{width:16px;height:16px;border-radius:50%;background:#38bdf8;border:3px solid #fff;box-shadow:0 0 0 6px rgba(56,189,248,.35)}
 
@@ -306,7 +325,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
   <div class="wrap" style="max-width:400px;margin-top:35px">
     <div style="text-align:center;margin-bottom:28px">
       <img src="logo.jpg" alt="منوف 360" style="display:block;width:180px;max-width:70%;margin:0 auto 12px;border-radius:18px">
-      <p class="muted">دليلك الكامل للدكاترة والمحلات والخدمات ومواعيد القطارات في منوف</p>
+      <p class="muted">دليلك الكامل للدكاترة والمحلات والخدمات والعقارات ومواعيد القطارات في منوف</p>
     </div>
     <form id="authForm" class="card" style="padding:24px">
       <h3 id="authTitle" class="ct" style="text-align:center;margin-bottom:18px">تسجيل الدخول</h3>
@@ -407,6 +426,27 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
             <div class="field" id="catF"><label>التصنيف</label><select id="bCat"></select></div>
             <div class="field" id="regF"><label>رقم القيد في النقابة (للتوثيق، لا يظهر للعامة)</label><input id="bReg" inputmode="numeric"></div>
             <div class="field" id="priceF"><label>سعر الكشف (اختياري)</label><input id="bPrice" inputmode="numeric"></div>
+
+            <!-- حقول العقارات المخصصة -->
+            <div id="reFields" class="hidden">
+              <div class="grid2">
+                <div class="field"><label>نوع العرض</label>
+                  <select id="reOfferType">
+                    <option value="إيجار">إيجار</option>
+                    <option value="بيع">بيع</option>
+                  </select>
+                </div>
+                <div class="field"><label>السعر (جنيه)</label><input id="rePrice" type="number" inputmode="numeric" placeholder="مثال: 3500"></div>
+              </div>
+              <div class="grid2">
+                <div class="field"><label>المساحة (م²)</label><input id="reArea" type="number" inputmode="numeric" placeholder="مثال: 120"></div>
+                <div class="field"><label>عدد الغرف</label><input id="reRooms" type="number" inputmode="numeric" placeholder="مثال: 3"></div>
+              </div>
+              <p class="muted" style="background:rgba(255,196,0,.08);border:1px solid var(--bg2);border-radius:12px;padding:10px 12px;margin-bottom:14px;font-size:12.5px">
+                ⏳ مدة نشر الإعلان العقاري <strong>30 يوماً</strong> بعد مراجعة واعتماد الإدارة، وبعدها يختفي تلقائياً ويمكنك تجديده من "أنشطتي".
+              </p>
+            </div>
+
             <div class="field">
               <label>📸 صورة للنشاط (اختياري، صورة واحدة)</label>
               <input id="bPhotos" type="file" accept="image/*">
@@ -416,7 +456,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
                 <input type="checkbox" id="rmPhotos"> امسح الصورة الحالية
               </label>
             </div>
-            <div class="field"><label>نبذة (اختياري)</label><textarea id="bDesc" maxlength="160"></textarea></div>
+            <div class="field"><label>نبذة أو تفاصيل إضافية (اختياري)</label><textarea id="bDesc" maxlength="200"></textarea></div>
           </div>
           <div class="card">
             <div class="ct" style="margin-bottom:12px">الموقع</div>
@@ -428,12 +468,12 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
             <div class="field"><label>علامة مميزة (اختياري)</label><input id="bLandmark"></div>
             <input type="hidden" id="bLat"><input type="hidden" id="bLng">
           </div>
-          <div class="card">
+          <div class="card" id="hoursCard">
             <div class="ct" style="margin-bottom:6px">مواعيد العمل</div>
             <p class="muted" style="margin-bottom:6px">لكل يوم فترة أولى، وفترة تانية اختيارية. لو النشاط بيفتح لبعد نص الليل اكتب وقت القفل أقل من وقت الفتح (مثلاً 18:00 لـ 02:00).</p>
             <div id="hours"></div>
           </div>
-          <div class="card">
+          <div class="card" id="itemsCard">
             <div class="ct" style="margin-bottom:10px">الخدمات أو المنيو والأسعار (اختياري)</div>
             <p class="muted" style="margin-bottom:8px">العميل يقدر يختار منها ويبعت الطلب على واتساب.</p>
             <div id="itemsBox"></div>
@@ -551,6 +591,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
       <div>📍 <strong id="mAddr"></strong></div>
       <div id="mDist" class="muted" style="color:var(--p);font-weight:700;margin-top:4px"></div>
       <div id="mPriceBox" class="hidden" style="margin-top:4px">💰 الكشف: <strong id="mPrice" style="color:var(--p)"></strong> جنيه</div>
+      <div id="mReBox" class="hidden" style="margin-top:10px;padding-top:10px;border-top:1px dashed var(--dash);display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13.5px"></div>
     </div>
 
     <div id="mItemsBox" class="hidden" style="margin-bottom:14px">
@@ -569,9 +610,11 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
       <button type="button" id="mBookWa" class="btn g">💬 تأكيد الحجز على واتساب العيادة</button>
     </div>
 
-    <div style="color:var(--p);font-weight:700;margin-bottom:6px">مواعيد العمل</div>
-    <div id="mHoursNext" class="hours-next hidden"></div>
-    <div id="mHours" style="margin-bottom:6px"></div>
+    <div id="mHoursWrap">
+      <div style="color:var(--p);font-weight:700;margin-bottom:6px">مواعيد العمل</div>
+      <div id="mHoursNext" class="hours-next hidden"></div>
+      <div id="mHours" style="margin-bottom:6px"></div>
+    </div>
     <div id="mRatings"></div>
     <div id="mActs" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--dash)"></div>
   </div>
@@ -657,8 +700,11 @@ const emailOf = p => p + '@menouf.app';
 const ADMIN_PHONE = '01002480665';
 const APP_NAME = 'منوف 360';
 const MAX_PER_DAY = 3;
+const RE_DAYS = 30;
+const RE_MS = RE_DAYS * 86400000;
 const tsMs = x => x?.toMillis?.() ?? 0;
 const fd = ms => ms ? new Date(ms).toLocaleString('ar-EG') : '';
+const fmtNum = v => { const n = Number(v); return (!v || isNaN(n)) ? esc(v) : n.toLocaleString('en-US'); };
 
 /* ---------- الوضع الليلي / الفاتح ---------- */
 function applyThemeBtn() {
@@ -671,7 +717,7 @@ $('themeBtn').onclick = () => {
   if (light) document.documentElement.removeAttribute('data-theme');
   else document.documentElement.setAttribute('data-theme', 'light');
   try { localStorage.setItem('menouf_theme', light ? 'dark' : 'light'); } catch (e) {}
-  $('themeMeta').content = light ? '#08090c' : '#fffdf7';
+  $('themeMeta').content = light ? '#08090c' : '#ffffff';
   applyThemeBtn();
   if (bMap) setTimeout(() => bMap.invalidateSize(), 50);
 };
@@ -681,12 +727,14 @@ const DAYS = ['السبت','الأحد','الاثنين','الثلاثاء','ا�
 const TYPES = {
   doctor: { label: 'دكتور / عيادة', nameLbl: 'اسم الطبيب واللقب العلمي' },
   shop: { label: 'محل / مطعم', nameLbl: 'اسم المحل أو المطعم' },
-  service: { label: 'خدمة / ورشة', nameLbl: 'اسم الخدمة أو الفني' }
+  service: { label: 'خدمة / ورشة', nameLbl: 'اسم الخدمة أو الفني' },
+  realestate: { label: 'عقارات 🏠', nameLbl: 'عنوان الإعلان العقاري (مثال: شقة 3 غرف بشارع بورسعيد)' }
 };
 const SPECS = ['باطنة','أطفال','نساء وتوليد','جلدية وتجميل','أسنان','عظام','عيون','قلب وأوعية دموية','أنف وأذن وحنجرة','مخ وأعصاب','أخرى'];
 const CATS = {
   shop: ['مطعم وكافيه','سوبر ماركت وبقالة','صيدلية','ملابس وأحذية','إلكترونيات وموبايلات','أدوات منزلية','مواد بناء وتشطيبات','أخرى'],
-  service: ['سباكة وأعمال صحية','كهربائي وتأسيس','نجارة ودهانات','صيانة أجهزة منزلية','نقل ورفع أثاث','تصوير ومناسبات','أخرى']
+  service: ['سباكة وأعمال صحية','كهربائي وتأسيس','نجارة ودهانات','صيانة أجهزة منزلية','نقل ورفع أثاث','تصوير ومناسبات','أخرى'],
+  realestate: ['شقق للإيجار','شقق للبيع','أرض','محلات للإيجار','سكن طلبة']
 };
 const CAT_TABS = [
   { k: 'الكل', i: '🧭' },
@@ -694,7 +742,8 @@ const CAT_TABS = [
   { k: 'دكاترة', i: '🩺' },
   { k: 'محل / مطعم', i: '🛍️' },
   { k: 'صيدليات', i: '💊' },
-  { k: 'خدمة', i: '🛠️' }
+  { k: 'خدمة', i: '🛠️' },
+  { k: 'عقارات', i: '🏠' }
 ];
 const CENTER = [30.46, 30.93];
 
@@ -737,7 +786,8 @@ const SYN = [
   ['ملابس','هدوم','فستان','جزم','احذيه'],
   ['تصوير','مصور','مصورين'],
   ['نقل','عفش','ترحيل'],
-  ['موبايل','موبايلات','تليفون','تليفونات','الكترونيات']
+  ['موبايل','موبايلات','تليفون','تليفونات','الكترونيات'],
+  ['عقار','عقارات','شقه','شقق','سكن','ايجار','بيع','تمليك','ارض','اراضي','محل للايجار','سكن طلبه']
 ].map(g => g.map(normAr));
 
 function expandTerm(term) {
@@ -750,7 +800,7 @@ function expandTerm(term) {
   return [...out];
 }
 function matchesQuery(b, query) {
-  const hay = normAr([b.name, b.specialty, b.category, b.address, b.landmark, b.desc, TYPES[b.type]?.label].join(' '));
+  const hay = normAr([b.name, b.specialty, b.category, b.offerType, b.address, b.landmark, b.desc, TYPES[b.type]?.label].join(' '));
   return normAr(query).split(/\s+/).filter(Boolean).every(w => expandTerm(w).some(x => hay.includes(x)));
 }
 
@@ -865,7 +915,7 @@ let approved = [], myBiz = [], allBiz = [], reports = [], reviews = [], notifs =
 let myStats = {};
 let loadingPage = false, deepHandled = false;
 let userCount = null, type = null, items = [], browseCat = 'الكل', browseSub = 'الكل', q = '', adminQ = '';
-let editId = null, editOrigType = null, editOrigStatus = null, adminEditing = false, adminFilter = 'pending';
+let editId = null, editOrigType = null, editOrigStatus = null, editOrigExpiresAt = null, adminEditing = false, adminFilter = 'pending';
 let map = null, marker = null, bMap = null, bMarkers = [], userMapMarker = null, curBiz = null, cart = {};
 let userPos = null, onlyOpen = false, nearMe = false, topRated = false, mapView = false;
 let currentTab = 'browse', adminTimer = null;
@@ -896,6 +946,8 @@ function badge(s) {
   const [t, c] = m[s] || [s, ''];
   return `<span class="badge ${c}">${t}</span>`;
 }
+const isReExpired = b => b.type === 'realestate' && !!b.expiresAt && b.expiresAt <= Date.now();
+const reDaysLeft = b => b.expiresAt ? Math.ceil((b.expiresAt - Date.now()) / 86400000) : RE_DAYS;
 const ratingOf = id => {
   const list = reviews.filter(r => r.bizId === id);
   return { n: list.length, avg: list.length ? list.reduce((s, r) => s + r.rating, 0) / list.length : 0 };
@@ -1183,7 +1235,12 @@ $('emergencyModal').onclick = e => { if (e.target.id === 'emergencyModal') $('em
 $('mShare').onclick = async () => {
   const b = curBiz; if (!b) return;
   const url = `${location.origin}${location.pathname}?biz=${b.id}`;
-  const text = `📍 ${b.name}\n${b.type === 'doctor' ? '🩺 ' + b.specialty : '🏷️ ' + b.category}\n📌 ${b.address}\n🔗 التفاصيل على تطبيق ${APP_NAME}:\n${url}`;
+  const subTxt = b.type === 'doctor'
+    ? '🩺 ' + b.specialty
+    : b.type === 'realestate'
+      ? `🏠 ${b.category}${b.offerType ? ' (' + b.offerType + ')' : ''}${b.price ? ' · ' + fmtNum(b.price) + ' جنيه' : ''}`
+      : '🏷️ ' + b.category;
+  const text = `📍 ${b.name}\n${subTxt}\n📌 ${b.address}\n🔗 التفاصيل على تطبيق ${APP_NAME}:\n${url}`;
   if (navigator.share) { try { await navigator.share({ title: b.name, text, url }); } catch (e) {} }
   else window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
 };
@@ -1358,6 +1415,7 @@ function buildSubCats() {
   if (browseCat === 'دكاترة') subs = ['الكل', ...SPECS];
   else if (browseCat === 'محل / مطعم') subs = ['الكل', ...CATS.shop];
   else if (browseCat === 'خدمة') subs = ['الكل', ...CATS.service];
+  else if (browseCat === 'عقارات') subs = ['الكل', ...CATS.realestate];
   if (!subs) { $('subCatChips').classList.add('hidden'); $('subCatChips').innerHTML = ''; return; }
   $('subCatChips').classList.remove('hidden');
   $('subCatChips').innerHTML = subs.map(s => `<button type="button" class="chip ${s === browseSub ? 'on' : ''}" data-sub="${esc(s)}">${esc(s)}</button>`).join('');
@@ -1410,17 +1468,20 @@ $('fMap').onclick = () => {
 
 function filtered() {
   return approved.filter(b => {
+    if (isReExpired(b)) return false;
     const catOk = browseCat === 'الكل'
       || (browseCat === 'المفضلة' && favs.includes(b.id))
       || (browseCat === 'دكاترة' && b.type === 'doctor')
       || (browseCat === 'محل / مطعم' && b.type === 'shop')
       || (browseCat === 'صيدليات' && (b.category === 'صيدلية' || normAr(b.name).includes('صيدلي')))
-      || (browseCat === 'خدمة' && b.type === 'service');
+      || (browseCat === 'خدمة' && b.type === 'service')
+      || (browseCat === 'عقارات' && b.type === 'realestate');
     const subOk = browseSub === 'الكل'
       || (browseCat === 'دكاترة' && b.specialty === browseSub)
-      || ((browseCat === 'محل / مطعم' || browseCat === 'خدمة') && b.category === browseSub);
+      || ((browseCat === 'محل / مطعم' || browseCat === 'خدمة' || browseCat === 'عقارات') && b.category === browseSub);
     const qOk = !q || matchesQuery(b, q);
-    return catOk && subOk && qOk && (!onlyOpen || isOpen(b.hours));
+    const openOk = !onlyOpen || (b.type !== 'realestate' && isOpen(b.hours));
+    return catOk && subOk && qOk && openOk;
   }).map(b => ({ ...b, km: userPos ? dist(userPos.lat, userPos.lng, b.lat, b.lng) : null }))
     .sort((a, b) => {
       if (topRated) {
@@ -1446,9 +1507,14 @@ function renderBrowse() {
   $('countLabel').textContent = list.length ? `(${list.length})` : '';
   if (mapView) renderMap();
   const cards = list.map(b => {
-    const open = isOpen(b.hours), ph = b.phone || b.ownerPhone || '', fav = favs.includes(b.id);
-    const rt = ratingOf(b.id), isDoc = b.type === 'doctor';
+    const isDoc = b.type === 'doctor', isRe = b.type === 'realestate';
+    const open = !isRe && isOpen(b.hours), ph = b.phone || b.ownerPhone || '', fav = favs.includes(b.id);
+    const rt = ratingOf(b.id);
     const cover = b.thumb || b.imageUrl || '';
+    const statusBadge = isRe
+      ? `<span class="badge p">🏠 ${esc(b.offerType || 'عقار')}</span>`
+      : `<span class="badge ${open ? 'ok' : ''}">${open ? '<span class="dot"></span> مفتوح' : '⚪ مغلق'}</span>`;
+
     return `<div class="card ${b.featured ? 'fe' : ''}" data-open="${b.id}" style="cursor:pointer">
       <button class="fav" data-fav="${b.id}">${fav ? '❤️' : '🤍'}</button>
       ${cover ? `<img class="card-cover" src="${cover}" loading="lazy" alt="" onerror="this.remove()">` : ''}
@@ -1461,11 +1527,14 @@ function renderBrowse() {
         <div class="tags">
           ${b.featured ? '<span class="badge p">⭐ مميز</span>' : ''}
           ${b.verified ? '<span class="badge v">✓ موثق</span>' : ''}
-          <span class="badge ${open ? 'ok' : ''}">${open ? '<span class="dot"></span> مفتوح' : '⚪ مغلق'}</span>
+          ${statusBadge}
         </div>
       </div>
       <div class="info">
-        ${b.price && isDoc ? `<div>💰 الكشف: ${esc(b.price)} جنيه</div>` : ''}
+        ${isRe ? `
+          ${b.price ? `<div>💰 السعر: <strong style="color:var(--p)">${fmtNum(b.price)} جنيه</strong>${b.offerType === 'إيجار' ? ' / شهرياً' : ''}</div>` : ''}
+          <div>${b.area ? `📐 المساحة: ${esc(b.area)} م²` : ''}${b.area && b.rooms ? ' · ' : ''}${b.rooms ? `🛏️ ${esc(b.rooms)} غرف` : ''}</div>
+        ` : (b.price && isDoc ? `<div>💰 الكشف: ${esc(b.price)} جنيه</div>` : '')}
         <div>📍 ${esc(b.address)}${b.landmark ? ' (بجوار ' + esc(b.landmark) + ')' : ''}</div>
         ${b.km != null ? `<div class="dist">🚗 ${fmtDist(b.km)}</div>` : ''}
       </div>
@@ -1520,8 +1589,9 @@ function renderMap() {
   bMarkers.forEach(m => bMap.removeLayer(m)); bMarkers = [];
   filtered().filter(b => b.lat && b.lng).forEach(b => {
     const isPharm = b.category === 'صيدلية' || normAr(b.name).includes('صيدلي');
-    const pinIcon = isPharm ? '💊' : b.type === 'doctor' ? '🩺' : b.type === 'service' ? '🛠️' : '🛍️';
-    const pinCls = b.type === 'doctor' ? 'doc' : b.type === 'service' ? 'srv' : 'shop';
+    const isRe = b.type === 'realestate';
+    const pinIcon = isRe ? '🏠' : isPharm ? '💊' : b.type === 'doctor' ? '🩺' : b.type === 'service' ? '🛠️' : '🛍️';
+    const pinCls = isRe ? 're' : b.type === 'doctor' ? 'doc' : b.type === 'service' ? 'srv' : 'shop';
     const icon = L.divIcon({
       className: '',
       html: `<div class="map-pin ${pinCls}">${pinIcon}</div>`,
@@ -1531,9 +1601,12 @@ function renderMap() {
     });
     const m = L.marker([b.lat, b.lng], { icon }).addTo(bMap);
     const sub = b.type === 'doctor' ? b.specialty : b.category;
+    const statusTxt = isRe
+      ? `${esc(b.offerType || '')}${b.price ? ' · ' + fmtNum(b.price) + ' ج' : ''}`
+      : (isOpen(b.hours) ? '🟢 مفتوح' : '⚪ مغلق');
     m.bindPopup(`<div style="font-family:Cairo;text-align:right;min-width:140px">
       <strong>${esc(b.name)}</strong><br>
-      <small style="color:#555">${esc(sub || '')} · ${isOpen(b.hours) ? '🟢 مفتوح' : '⚪ مغلق'}</small><br>
+      <small style="color:#555">${esc(sub || '')} · ${statusTxt}</small><br>
       <button style="margin-top:6px;background:#ffc400;border:0;padding:4px 10px;border-radius:6px;font-weight:700;cursor:pointer" onclick="window.openById('${b.id}')">التفاصيل</button>
     </div>`);
     bMarkers.push(m);
@@ -1631,22 +1704,46 @@ async function loadGallery(b) {
 function openModal(b) {
   curBiz = b; cart = {};
   const isOwner = !!(me?.uid && b.ownerId === me.uid);
+  const isRe = b.type === 'realestate';
   if (!isOwner) trackStat(b.id, 'views');
-  const open = isOpen(b.hours), ph = b.phone || b.ownerPhone || '';
+  const open = !isRe && isOpen(b.hours), ph = b.phone || b.ownerPhone || '';
   const km = userPos ? dist(userPos.lat, userPos.lng, b.lat, b.lng) : null;
-  $('mBadge').className = 'badge ' + (open ? 'ok' : '');
-  $('mBadge').innerHTML = open ? '<span class="dot"></span> مفتوح الآن' : '⚪ مغلق الآن';
+
+  if (isRe) {
+    const exp = isReExpired(b);
+    $('mBadge').className = 'badge ' + (exp ? 'r' : 'p');
+    $('mBadge').textContent = exp ? '⌛ انتهت مدة الإعلان' : `🏠 ${b.offerType || 'عقار'}`;
+  } else {
+    $('mBadge').className = 'badge ' + (open ? 'ok' : '');
+    $('mBadge').innerHTML = open ? '<span class="dot"></span> مفتوح الآن' : '⚪ مغلق الآن';
+  }
   $('mVerified').classList.toggle('hidden', !b.verified);
   $('mFeatured').classList.toggle('hidden', !b.featured);
   $('mTitle').textContent = b.name;
-  $('mSub').textContent = b.type === 'doctor' ? 'طبيب متخصص في ' + b.specialty : b.category;
+  $('mSub').textContent = b.type === 'doctor'
+    ? 'طبيب متخصص في ' + b.specialty
+    : isRe
+      ? `${b.category}${b.offerType ? ' · ' + b.offerType : ''}`
+      : b.category;
   $('mDesc').textContent = b.desc || '';
   $('mAddr').textContent = b.address + (b.landmark ? ' (بجوار ' + b.landmark + ')' : '');
   $('mDist').textContent = km != null ? '🚗 ' + fmtDist(km) : '';
-  $('mPriceBox').classList.toggle('hidden', !b.price);
-  $('mPrice').textContent = b.price || '';
 
-  const hasItems = b.items && b.items.length > 0;
+  $('mPriceBox').classList.toggle('hidden', isRe || !b.price);
+  $('mPrice').textContent = (!isRe && b.price) ? b.price : '';
+
+  $('mReBox').classList.toggle('hidden', !isRe);
+  if (isRe) {
+    const dl = reDaysLeft(b);
+    $('mReBox').innerHTML = `
+      <div>🏷️ العرض: <strong style="color:var(--p)">${esc(b.offerType || '-')}</strong></div>
+      <div>💰 السعر: <strong style="color:var(--p)">${b.price ? fmtNum(b.price) + ' ج' : '-'}</strong></div>
+      <div>📐 المساحة: <strong>${b.area ? esc(b.area) + ' م²' : '-'}</strong></div>
+      <div>🛏️ الغرف: <strong>${b.rooms ? esc(b.rooms) : 'غير محدد'}</strong></div>
+      ${b.expiresAt ? `<div style="grid-column:1/-1;color:var(--m);font-size:12px">${dl > 0 ? `⏳ متبقي على انتهاء الإعلان: ${dl} يوم` : '⌛ انتهت مدة الإعلان (30 يوم)'}</div>` : ''}`;
+  }
+
+  const hasItems = !isRe && b.items && b.items.length > 0;
   $('mItemsBox').classList.toggle('hidden', !hasItems);
   $('mCartBar').classList.add('hidden');
   if (hasItems) {
@@ -1668,15 +1765,18 @@ function openModal(b) {
     $('mBookDay').innerHTML = openDays.map(h => `<option>${esc(h.day)} (${esc(fmtPeriods(h))})</option>`).join('');
   }
 
-  const rem = nextOpenReminder(b.hours);
-  $('mHoursNext').textContent = rem;
-  $('mHoursNext').classList.toggle('hidden', !rem);
-  const todayIdx = (new Date().getDay() + 1) % 7;
-  $('mHours').innerHTML = (b.hours || []).map((h, i) => `
-    <div class="lr ${i === todayIdx ? 'today' : ''}">
-      <span>${esc(h.day)}${i === todayIdx ? ' <small style="color:var(--p)">(اليوم)</small>' : ''}</span>
-      <span style="text-align:left">${esc(fmtPeriods(h))}</span>
-    </div>`).join('');
+  $('mHoursWrap').classList.toggle('hidden', isRe);
+  if (!isRe) {
+    const rem = nextOpenReminder(b.hours);
+    $('mHoursNext').textContent = rem;
+    $('mHoursNext').classList.toggle('hidden', !rem);
+    const todayIdx = (new Date().getDay() + 1) % 7;
+    $('mHours').innerHTML = (b.hours || []).map((h, i) => `
+      <div class="lr ${i === todayIdx ? 'today' : ''}">
+        <span>${esc(h.day)}${i === todayIdx ? ' <small style="color:var(--p)">(اليوم)</small>' : ''}</span>
+        <span style="text-align:left">${esc(fmtPeriods(h))}</span>
+      </div>`).join('');
+  }
 
   $('mActs').innerHTML = `
     ${ph ? `<a class="btn g" target="_blank" href="https://wa.me/2${ph}" data-track-wa="${b.id}">💬 واتساب</a><a class="btn" href="tel:${ph}" data-track-call="${b.id}">📞 اتصال</a>` : ''}
@@ -1694,7 +1794,7 @@ $('mActs').onclick = async e => {
   if (!e.target.closest('[data-report]')) return;
   if (guest || !me?.uid) return toast('سجّل دخولك عشان تبلّغ');
   if (curBiz.ownerId === me.uid) return toast('مينفعش تبلّغ عن نشاطك');
-  const t = prompt('اكتب الخطأ (رقم غلط، عنوان غلط، نشاط مغلق...)');
+  const t = prompt('اكتب الخطأ (رقم غلط، عنوان غلط، نشاط مغلق أو عقار غير متاح...)');
   if (!t || !t.trim()) return;
   try {
     await setDoc(doc(db, 'reports', curBiz.id + '_' + me.uid), {
@@ -1796,12 +1896,25 @@ $('typeChips').onclick = e => { const b = e.target.closest('[data-type]'); if (b
 function applyType() {
   $('typeFields').classList.remove('hidden');
   $('nameLbl').textContent = TYPES[type].nameLbl;
-  const d = type === 'doctor';
-  $('specF').classList.toggle('hidden', !d); $('regF').classList.toggle('hidden', !d);
-  $('priceF').classList.toggle('hidden', !d); $('catF').classList.toggle('hidden', d);
+  const d = type === 'doctor', r = type === 'realestate';
+  $('specF').classList.toggle('hidden', !d);
+  $('regF').classList.toggle('hidden', !d);
+  $('priceF').classList.toggle('hidden', !d);
+  $('catF').classList.toggle('hidden', d);
+  $('reFields').classList.toggle('hidden', !r);
+  $('hoursCard').classList.toggle('hidden', r);
+  $('itemsCard').classList.toggle('hidden', r);
+
   if (d) $('bSpec').innerHTML = '<option value="">اختار التخصص</option>' + SPECS.map(s => `<option>${s}</option>`).join('');
   else $('bCat').innerHTML = '<option value="">اختار التصنيف</option>' + CATS[type].map(s => `<option>${s}</option>`).join('');
 }
+
+$('bCat').onchange = () => {
+  if (type !== 'realestate') return;
+  const v = $('bCat').value;
+  if (v === 'شقق للبيع') $('reOfferType').value = 'بيع';
+  else if (v === 'شقق للإيجار' || v === 'محلات للإيجار' || v === 'سكن طلبة') $('reOfferType').value = 'إيجار';
+};
 
 function buildHours() {
   $('hours').innerHTML = DAYS.map((d, i) => `<div class="day">
@@ -1846,11 +1959,19 @@ $('addItem').onclick = () => {
 $('bizForm').onsubmit = async e => {
   e.preventDefault();
   if (!type) return toast('اختار نوع النشاط أولاً');
-  const d = type === 'doctor', phone = $('bPhone').value.replace(/\D/g, '');
+  const d = type === 'doctor', r = type === 'realestate', phone = $('bPhone').value.replace(/\D/g, '');
   if (!PHONE_RE.test(phone)) return toast('رقم تواصل مصري صحيح (11 رقم)');
   if (d && !$('bSpec').value) return toast('اختار التخصص');
   if (d && $('bReg').value.trim().length < 3) return toast('اكتب رقم القيد بالنقابة');
   if (!d && !$('bCat').value) return toast('اختار التصنيف');
+
+  if (r) {
+    if (!$('rePrice').value.trim()) return toast('اكتب السعر المطلوب');
+    if (!$('reArea').value.trim()) return toast('اكتب المساحة بالمتر المربع');
+    const needRooms = ['شقق للإيجار', 'شقق للبيع', 'سكن طلبة'].includes($('bCat').value);
+    if (needRooms && !$('reRooms').value.trim()) return toast('اكتب عدد الغرف');
+  }
+
   if (!$('bLat').value) return toast('حدد مكان النشاط على الخريطة');
 
   if (!editId) {
@@ -1859,13 +1980,16 @@ $('bizForm').onsubmit = async e => {
     if (todayCount >= MAX_PER_DAY) return toast(`وصلت للحد اليومي (${MAX_PER_DAY} أنشطة في 24 ساعة)، جرّب بكرة`);
   }
 
-  const hours = collectHours();
-  if (!hours.some(h => h.open)) return toast('فعّل يوم عمل واحد على الأقل');
-  for (const h of hours) {
-    if (!h.open) continue;
-    if (!h.from || !h.to) return toast(`اكتب مواعيد يوم ${h.day}`);
-    if ((h.from2 && !h.to2) || (!h.from2 && h.to2)) return toast(`أكمل الفترة التانية ليوم ${h.day}`);
-    if (h.from === h.to) return toast(`وقت الفتح والقفل ليوم ${h.day} متساويين`);
+  let hours = [];
+  if (!r) {
+    hours = collectHours();
+    if (!hours.some(h => h.open)) return toast('فعّل يوم عمل واحد على الأقل');
+    for (const h of hours) {
+      if (!h.open) continue;
+      if (!h.from || !h.to) return toast(`اكتب مواعيد يوم ${h.day}`);
+      if ((h.from2 && !h.to2) || (!h.from2 && h.to2)) return toast(`أكمل الفترة التانية ليوم ${h.day}`);
+      if (h.from === h.to) return toast(`وقت الفتح والقفل ليوم ${h.day} متساويين`);
+    }
   }
 
   const regNo = $('bReg').value.trim();
@@ -1874,11 +1998,18 @@ $('bizForm').onsubmit = async e => {
     phone, type, name: $('bName').value.trim(),
     specialty: d ? $('bSpec').value : null,
     category: d ? 'دكاترة' : $('bCat').value,
-    price: d ? $('bPrice').value.trim() : null,
+    price: d ? $('bPrice').value.trim() : (r ? $('rePrice').value.trim() : null),
+    offerType: r ? $('reOfferType').value : null,
+    area: r ? $('reArea').value.trim() : null,
+    rooms: r ? ($('reRooms').value.trim() || null) : null,
     desc: $('bDesc').value.trim(), address: $('bAddr').value.trim(), landmark: $('bLandmark').value.trim(),
     lat: Number($('bLat').value), lng: Number($('bLng').value),
-    hours, items, status: nextStatus, updatedAt: serverTimestamp()
+    hours, items: r ? [] : items, status: nextStatus, updatedAt: serverTimestamp()
   };
+  if (r && editId && adminEditing) {
+    data.expiresAt = editOrigExpiresAt || (Date.now() + RE_MS);
+  }
+
   $('saveBtn').disabled = true;
   try {
     let pics = null;
@@ -1890,6 +2021,12 @@ $('bizForm').onsubmit = async e => {
     if (editId) {
       const typeChanged = editOrigType !== type;
       const upd = typeChanged ? { ...data, verified: false } : { ...data };
+      if (!r) {
+        upd.offerType = deleteField();
+        upd.area = deleteField();
+        upd.rooms = deleteField();
+        upd.expiresAt = deleteField();
+      }
       if (pics) { upd.thumb = pics.thumb; upd.photoCount = pics.photos.length; }
       else if (removePhotos) { upd.thumb = deleteField(); upd.photoCount = 0; }
       const batch = writeBatch(db);
@@ -1915,7 +2052,7 @@ $('bizForm').onsubmit = async e => {
       await setDoc(ref, { ...data, ...extra, ownerId: me.uid, ownerName: profile.name, verified: false, featured: false, createdAt: serverTimestamp() });
       if (d) await setDoc(doc(db, 'regs', ref.id), { regNo });
       if (pics) await setDoc(doc(db, 'bizPhotos', ref.id), { ownerId: me.uid, photos: pics.photos, updatedAt: serverTimestamp() });
-      toast('تم إرسال نشاطك وسيظهر بعد المراجعة ✅');
+      toast(r ? 'تم إرسال إعلانك العقاري وسيُتاح لمدة 30 يوماً بعد المراجعة ✅' : 'تم إرسال نشاطك وسيظهر بعد المراجعة ✅');
     }
     const returnTab = adminEditing ? 'admin' : 'mine';
     cancelEdit(); switchTab(returnTab);
@@ -1926,7 +2063,7 @@ $('bizForm').onsubmit = async e => {
 };
 
 async function startEdit(b, isAdminEdit = false) {
-  editId = b.id; editOrigType = b.type; editOrigStatus = b.status; adminEditing = isAdminEdit;
+  editId = b.id; editOrigType = b.type; editOrigStatus = b.status; editOrigExpiresAt = b.expiresAt || null; adminEditing = isAdminEdit;
   editOwnerId = b.ownerId || null;
   type = b.type; buildTypeChips(); applyType();
   $('bName').value = b.name || ''; $('bPhone').value = b.phone || b.ownerPhone || '';
@@ -1934,7 +2071,15 @@ async function startEdit(b, isAdminEdit = false) {
     $('bSpec').value = b.specialty || ''; $('bPrice').value = b.price || '';
     $('bReg').value = b.regNo || '';
     getDoc(doc(db, 'regs', b.id)).then(s => { if (s.exists()) $('bReg').value = s.data().regNo; }).catch(() => {});
-  } else $('bCat').value = b.category || '';
+  } else {
+    $('bCat').value = b.category || '';
+  }
+  if (b.type === 'realestate') {
+    $('reOfferType').value = b.offerType || 'إيجار';
+    $('rePrice').value = b.price || '';
+    $('reArea').value = b.area || '';
+    $('reRooms').value = b.rooms || '';
+  }
   $('bDesc').value = b.desc || ''; $('bAddr').value = b.address || ''; $('bLandmark').value = b.landmark || '';
   $('bLat').value = b.lat || ''; $('bLng').value = b.lng || '';
   (b.hours || []).forEach((h, i) => {
@@ -1969,7 +2114,7 @@ async function startEdit(b, isAdminEdit = false) {
   if (b.lat && b.lng) showMap(b.lat, b.lng);
 }
 function cancelEdit() {
-  editId = null; editOrigType = null; editOrigStatus = null; adminEditing = false; editOwnerId = null;
+  editId = null; editOrigType = null; editOrigStatus = null; editOrigExpiresAt = null; adminEditing = false; editOwnerId = null;
   pendingFile = null; removePhotos = false;
   $('bizForm').reset(); items = []; renderItems();
   $('photoPrev').innerHTML = ''; $('curPhotos').textContent = ''; $('rmWrap').classList.add('hidden');
@@ -1987,7 +2132,7 @@ function renderMine() {
   if (!myBiz.length) {
     $('mineList').innerHTML = `<div class="empty">
       <p>لم تضف أي نشاط حتى الآن</p>
-      <small>أضف عيادتك، مطعمك أو محلك التجاري مجاناً ليراك أهالي منوف</small>
+      <small>أضف عيادتك، مطعمك، محلك التجاري أو إعلانك العقاري مجاناً ليراك أهالي منوف</small>
       <button class="btn sm" data-first>أضف نشاطك الأول ✨</button>
     </div>`;
     return;
@@ -1995,15 +2140,25 @@ function renderMine() {
   $('mineList').innerHTML = myBiz.map(b => {
     const st = myStats[b.id] || {};
     const contacts = (st.waClicks || 0) + (st.callClicks || 0);
+    const isRe = b.type === 'realestate';
+    const exp = isRe && b.status === 'approved' && isReExpired(b);
+    const dl = isRe && b.status === 'approved' ? reDaysLeft(b) : null;
+    const stBadge = exp ? '<span class="badge r">⌛ انتهت الـ 30 يوم (مخفي)</span>' : badge(b.status);
+
     return `<div class="card ${b.featured ? 'fe' : ''}">
-      <div class="row"><h3 class="ct">${esc(b.name)}</h3>${badge(b.status)}</div>
-      <p class="muted" style="margin:6px 0">📍 ${esc(b.address)}</p>
+      <div class="row"><h3 class="ct">${esc(b.name)}</h3>${stBadge}</div>
+      <p class="muted" style="margin:6px 0">📍 ${esc(b.address)}${isRe ? ` · 🏠 ${esc(b.category)} (${esc(b.offerType || '')})` : ''}</p>
+      ${isRe && b.status === 'approved' ? `
+        <p style="font-size:12.5px;font-weight:700;margin:4px 0;color:${exp ? '#ef4444' : 'var(--p)'}">
+          ${exp ? 'انتهت مدة الإعلان (30 يوم) وتم إخفاؤه تلقائياً، جدده ليظهر مجدداً.' : `⏳ متبقي ${dl} يوم على انتهاء الإعلان`}
+        </p>` : ''}
       ${b.status === 'approved' ? `<div style="display:flex;gap:12px;font-size:12.5px;color:var(--p);font-weight:700;margin:4px 0">
         <span>👁️ ${st.views || 0} مشاهدة</span><span>📞 ${contacts} تواصل</span>
       </div>` : ''}
       ${b.status === 'rejected' && b.rejectReason ? `<p style="color:#f87171;font-size:13px;margin-bottom:6px">سبب الرفض: ${esc(b.rejectReason)}</p>` : ''}
       <div class="acts-w">
-        ${b.status === 'approved' ? `<button class="btn sm" data-addoffer="${b.id}">🔥 أضف عرض</button>` : ''}
+        ${isRe && b.status === 'approved' ? `<button class="btn sm ${exp ? 'g' : ''}" data-renew="${b.id}">🔄 تجديد 30 يوم</button>` : ''}
+        ${b.status === 'approved' && !isRe ? `<button class="btn sm" data-addoffer="${b.id}">🔥 أضف عرض</button>` : ''}
         <button class="btn sm s" data-edit="${b.id}">تعديل ✏️</button>
         <button class="btn sm d" data-del="${b.id}">حذف 🗑️</button>
       </div>
@@ -2013,6 +2168,26 @@ function renderMine() {
 $('mineList').onclick = async e => {
   const t = e.target.closest('button'); if (!t) return;
   if (t.hasAttribute('data-first')) { cancelEdit(); switchTab('add'); return; }
+  if (t.dataset.renew) {
+    const id = t.dataset.renew;
+    const nextExp = Date.now() + RE_MS;
+    t.disabled = true;
+    try {
+      await updateDoc(doc(db, 'businesses', id), { expiresAt: nextExp, updatedAt: serverTimestamp() });
+      toast('تم تجديد الإعلان العقاري لمدة 30 يوماً بنجاح ✅');
+      loadApproved();
+    } catch (err) {
+      if (err.code === 'permission-denied') {
+        try {
+          await updateDoc(doc(db, 'businesses', id), { expiresAt: nextExp, status: 'pending', updatedAt: serverTimestamp() });
+          toast('تم إرسال طلب التجديد 30 يوم لمراجعة الإدارة ✅');
+        } catch (err2) { toast('تعذر تجديد الإعلان'); }
+      } else {
+        toast('تعذر تجديد الإعلان');
+      }
+    } finally { t.disabled = false; }
+    return;
+  }
   if (t.dataset.addoffer) {
     const b = myBiz.find(x => x.id === t.dataset.addoffer); if (!b) return;
     $('oBizId').value = b.id; $('oBizName').textContent = 'للنشاط: ' + b.name; $('oBizName').dataset.name = b.name;
@@ -2115,24 +2290,30 @@ function renderAdmin() {
       : (b.status === 'hidden' || b.status === 'rejected');
     if (!statusOk) return false;
     if (!aq) return true;
-    const hay = normAr([b.name, b.phone, b.ownerPhone, b.ownerName, b.address, b.category, b.specialty].join(' '));
+    const hay = normAr([b.name, b.phone, b.ownerPhone, b.ownerName, b.address, b.category, b.specialty, b.offerType].join(' '));
     return hay.includes(aq);
   });
-  const cards = list.map(b => `<div class="card ${b.featured ? 'fe' : ''}">
-    <div class="row"><div><h3 class="ct">${esc(b.name)}</h3>
-    <span class="muted">👤 ${esc(b.ownerName || '')} · 📞 ${esc(b.phone || b.ownerPhone || '')}</span></div>${badge(b.status)}</div>
-    <p style="color:var(--p);font-weight:700;font-size:13px;margin-top:6px">${b.type === 'doctor' ? 'طبيب (' + esc(b.specialty) + ')' : esc(b.category)}</p>
-    <p class="muted">📍 ${esc(b.address)} · 📸 ${b.photoCount || 0} صورة</p>
-    <div class="acts-w">
-      <a class="btn sm g" target="_blank" href="https://wa.me/2${esc(b.phone || b.ownerPhone)}">💬 واتساب</a>
-      <button class="btn sm s" data-aedit="${b.id}">تعديل ✏️</button>
-      ${b.type === 'doctor' ? `<button class="btn sm s" data-showreg="${b.id}">رقم القيد</button>` : ''}
-      ${b.status === 'approved' ? `<button class="btn sm s" data-verify="${b.id}">${b.verified ? 'إلغاء التوثيق' : 'توثيق ✓'}</button>` : ''}
-      ${b.status === 'approved' ? `<button class="btn sm s" data-feature="${b.id}">${b.featured ? 'إلغاء التميز' : 'تمييز ⭐'}</button>` : ''}
-      ${(b.photoCount || b.thumb) ? `<button class="btn sm s" data-pdel="${b.id}">حذف الصورة 🖼️</button>` : ''}
-      ${b.status !== 'approved' ? `<button class="btn sm" data-approve="${b.id}">اعتماد ✅</button><button class="btn sm d" data-reject="${b.id}">رفض ❌</button>` : `<button class="btn sm s" data-hide="${b.id}">إخفاء ⏸️</button>`}
-      <button class="btn sm d" data-del="${b.id}">حذف 🗑️</button>
-    </div></div>`).join('');
+  const cards = list.map(b => {
+    const isRe = b.type === 'realestate';
+    const exp = isRe && b.status === 'approved' && isReExpired(b);
+    return `<div class="card ${b.featured ? 'fe' : ''}">
+      <div class="row"><div><h3 class="ct">${esc(b.name)}</h3>
+      <span class="muted">👤 ${esc(b.ownerName || '')} · 📞 ${esc(b.phone || b.ownerPhone || '')}</span></div>
+      <div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end">${exp ? '<span class="badge r">⌛ منتهي</span>' : ''}${badge(b.status)}</div></div>
+      <p style="color:var(--p);font-weight:700;font-size:13px;margin-top:6px">${b.type === 'doctor' ? 'طبيب (' + esc(b.specialty) + ')' : isRe ? `🏠 عقار · ${esc(b.category)} (${esc(b.offerType || '')})` : esc(b.category)}</p>
+      ${isRe ? `<p class="muted" style="font-size:12.5px">💰 ${fmtNum(b.price)} جنيه · 📐 ${esc(b.area || '-')} م²${b.rooms ? ` · 🛏️ ${esc(b.rooms)} غرف` : ''}${b.expiresAt ? ` · ${exp ? 'انتهى' : 'متبقي ' + reDaysLeft(b) + ' يوم'}` : ''}</p>` : ''}
+      <p class="muted">📍 ${esc(b.address)} · 📸 ${b.photoCount || 0} صورة</p>
+      <div class="acts-w">
+        <a class="btn sm g" target="_blank" href="https://wa.me/2${esc(b.phone || b.ownerPhone)}">💬 واتساب</a>
+        <button class="btn sm s" data-aedit="${b.id}">تعديل ✏️</button>
+        ${b.type === 'doctor' ? `<button class="btn sm s" data-showreg="${b.id}">رقم القيد</button>` : ''}
+        ${b.status === 'approved' ? `<button class="btn sm s" data-verify="${b.id}">${b.verified ? 'إلغاء التوثيق' : 'توثيق ✓'}</button>` : ''}
+        ${b.status === 'approved' ? `<button class="btn sm s" data-feature="${b.id}">${b.featured ? 'إلغاء التميز' : 'تمييز ⭐'}</button>` : ''}
+        ${(b.photoCount || b.thumb) ? `<button class="btn sm s" data-pdel="${b.id}">حذف الصورة 🖼️</button>` : ''}
+        ${b.status !== 'approved' ? `<button class="btn sm" data-approve="${b.id}">اعتماد ✅</button><button class="btn sm d" data-reject="${b.id}">رفض ❌</button>` : `<button class="btn sm s" data-hide="${b.id}">إخفاء ⏸️</button>`}
+        <button class="btn sm d" data-del="${b.id}">حذف 🗑️</button>
+      </div></div>`;
+  }).join('');
   $('adminList').innerHTML = repHtml + (cards || '<div class="empty">لا توجد أنشطة هنا</div>');
 }
 $('adminChips').onclick = e => {
@@ -2171,8 +2352,12 @@ $('adminList').onclick = async e => {
       toast(b.featured ? 'تم إلغاء التميز' : 'تم تمييز النشاط ⭐');
     }
     else if (d.approve) {
-      await updateDoc(doc(db, 'businesses', d.approve), { status: 'approved' });
-      await notifyOwner(d.approve, '✅ تم اعتماد نشاطك', `أصبح ظاهراً للناس في ${APP_NAME}`);
+      const b = allBiz.find(x => x.id === d.approve);
+      const upd = { status: 'approved' };
+      if (b?.type === 'realestate') upd.expiresAt = Date.now() + RE_MS;
+      await updateDoc(doc(db, 'businesses', d.approve), upd);
+      await notifyOwner(d.approve, '✅ تم اعتماد نشاطك', b?.type === 'realestate' ? `أصبح إعلانك ظاهراً في ${APP_NAME} لمدة 30 يوماً` : `أصبح ظاهراً للناس في ${APP_NAME}`);
+      loadApproved();
       toast('تم النشر وإرسال إشعار لصاحبه ✅');
     }
     else if (d.reject) {
@@ -2182,12 +2367,13 @@ $('adminList').onclick = async e => {
       await notifyOwner(d.reject, '❌ تم رفض نشاطك', reason.trim() || 'راجع البيانات وأعد الإرسال');
       toast('تم الرفض وإرسال إشعار لصاحبه');
     }
-    else if (d.hide) { await updateDoc(doc(db, 'businesses', d.hide), { status: 'hidden' }); toast('تم الإخفاء ⏸️'); }
+    else if (d.hide) { await updateDoc(doc(db, 'businesses', d.hide), { status: 'hidden' }); loadApproved(); toast('تم الإخفاء ⏸️'); }
     else if (d.del && confirm('حذف نهائي لهذا النشاط؟')) {
       await deleteDoc(doc(db, 'businesses', d.del));
       await deleteDoc(doc(db, 'regs', d.del)).catch(() => {});
       await deleteDoc(doc(db, 'bizPhotos', d.del)).catch(() => {});
       delete photoCache[d.del];
+      loadApproved();
       toast('تم الحذف 🗑️');
     }
   } catch (err) { toast('تعذر تنفيذ العملية'); }
