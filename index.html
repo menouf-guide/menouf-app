@@ -429,7 +429,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
             </div>
             <div class="field"><label>نبذة (اختياري)</label><textarea id="bDesc" maxlength="160"></textarea></div>
           </div>
-          <div class="card">
+          <div class="card" id="locCard">
             <div class="ct" style="margin-bottom:12px">الموقع</div>
             <button type="button" class="btn s" id="geoBtn">📍 تحديد مكاني الجغرافي</button>
             <p class="muted" style="margin-top:8px">حرّك الدبوس لمكان النشاط بالظبط، أو اضغط على الخريطة.</p>
@@ -559,7 +559,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
     <p id="mSub" style="color:var(--p);font-weight:700;margin-bottom:10px"></p>
     <div id="mReFacts" class="re-facts hidden"></div>
     <p id="mDesc" class="muted" style="margin:10px 0 14px"></p>
-    <div style="border:1px solid var(--b);border-radius:14px;padding:12px;margin-bottom:14px">
+    <div id="mLocBox" style="border:1px solid var(--b);border-radius:14px;padding:12px;margin-bottom:14px">
       <div>📍 <strong id="mAddr"></strong></div>
       <div id="mDist" class="muted" style="color:var(--p);font-weight:700;margin-top:4px"></div>
       <div id="mPriceBox" class="hidden" style="margin-top:4px">💰 الكشف: <strong id="mPrice" style="color:var(--p)"></strong> جنيه</div>
@@ -698,15 +698,14 @@ const TYPES = {
   service: { label: 'خدمة / ورشة', nameLbl: 'اسم الخدمة أو الفني' },
   real_estate: { label: 'عقار', nameLbl: 'عنوان العقار أو اسم المالك' },
   pharmacy: { label: 'صيدلية', nameLbl: 'اسم الصيدلية' },
-  delivery: { label: 'دليفري', nameLbl: 'اسم المطعم أو المتجر' }
+  delivery: { label: 'دليفري', nameLbl: 'اسم الشخص (المندوب)' }
 };
 const SPECS = ['باطنة','أطفال','نساء وتوليد','جلدية وتجميل','أسنان','عظام','عيون','قلب وأوعية دموية','أنف وأذن وحنجرة','مخ وأعصاب','أخرى'];
 const CATS = {
   shop: ['مطعم وكافيه','سوبر ماركت وبقالة','ملابس وأحذية','إلكترونيات وموبايلات','أدوات منزلية','مواد بناء وتشطيبات','أخرى'],
   service: ['سباكة وأعمال صحية','كهربائي وتأسيس','نجارة ودهانات','صيانة أجهزة منزلية','نقل ورفع أثاث','تصوير ومناسبات','أخرى'],
   real_estate: ['شقق للإيجار','شقق للبيع','أرض للبيع','محلات للإيجار','سكن طلبة','أخرى'],
-  pharmacy: ['صيدلية عامة','صيدلية 24 ساعة','أخرى'],
-  delivery: ['مطاعم وكافيهات','سوبر ماركت وبقالة','حلويات ومخبوزات','خضار وفاكهة','أخرى']
+  pharmacy: ['صيدلية عامة','صيدلية 24 ساعة','أخرى']
 };
 const CAT_TABS = [
   { k: 'الكل', i: '🧭' },
@@ -1211,7 +1210,7 @@ $('emergencyModal').onclick = e => { if (e.target.id === 'emergencyModal') $('em
 $('mShare').onclick = async () => {
   const b = curBiz; if (!b) return;
   const url = `${location.origin}${location.pathname}?biz=${b.id}`;
-  const text = `📍 ${b.name}\n${isRE(b) ? '🏠 ' + b.category : b.type === 'doctor' ? '🩺 ' + b.specialty : '🏷️ ' + b.category}\n📌 ${b.address}\n🔗 التفاصيل على تطبيق ${APP_NAME}:\n${url}`;
+  const text = `📍 ${b.name}\n${isRE(b) ? '🏠 ' + b.category : b.type === 'doctor' ? '🩺 ' + b.specialty : '🏷️ ' + b.category}${b.address ? '\n📌 ' + b.address : ''}\n🔗 التفاصيل على تطبيق ${APP_NAME}:\n${url}`;
   if (navigator.share) { try { await navigator.share({ title: b.name, text, url }); } catch (e) {} }
   else window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
 };
@@ -1387,7 +1386,6 @@ function buildSubCats() {
   else if (browseCat === 'محل / مطعم') subs = ['الكل', ...CATS.shop];
   else if (browseCat === 'خدمة') subs = ['الكل', ...CATS.service];
   else if (browseCat === 'عقارات') subs = ['الكل', ...CATS.real_estate];
-  else if (browseCat === 'دليفري') subs = ['الكل', ...CATS.delivery];
   if (!subs) { $('subCatChips').classList.add('hidden'); $('subCatChips').innerHTML = ''; return; }
   $('subCatChips').classList.remove('hidden');
   $('subCatChips').innerHTML = subs.map(s => `<button type="button" class="chip ${s === browseSub ? 'on' : ''}" data-sub="${esc(s)}">${esc(s)}</button>`).join('');
@@ -1451,7 +1449,7 @@ function filtered() {
       || (browseCat === 'دليفري' && b.type === 'delivery');
     const subOk = browseSub === 'الكل'
       || (browseCat === 'دكاترة' && b.specialty === browseSub)
-      || ((browseCat === 'محل / مطعم' || browseCat === 'خدمة' || browseCat === 'عقارات' || browseCat === 'دليفري') && b.category === browseSub);
+      || ((browseCat === 'محل / مطعم' || browseCat === 'خدمة' || browseCat === 'عقارات') && b.category === browseSub);
     const qOk = !q || matchesQuery(b, q);
     return catOk && subOk && qOk && (!onlyOpen || (!isRE(b) && isOpen(b.hours)));
   }).map(b => ({ ...b, km: userPos ? dist(userPos.lat, userPos.lng, b.lat, b.lng) : null }))
@@ -1480,7 +1478,8 @@ function renderBrowse() {
   if (mapView) renderMap();
   const cards = list.map(b => {
     const re = isRE(b);
-    const open = !re && isOpen(b.hours), ph = b.phone || b.ownerPhone || '', fav = favs.includes(b.id);
+    const del = b.type === 'delivery';
+    const open = !re && !del && isOpen(b.hours), ph = b.phone || b.ownerPhone || '', fav = favs.includes(b.id);
     const rt = ratingOf(b.id), isDoc = b.type === 'doctor';
     const cover = b.thumb || b.imageUrl || '';
     const reFacts = re ? `<div class="re-facts">
@@ -1495,18 +1494,18 @@ function renderBrowse() {
         <div>
           <div class="type">${esc(TYPES[b.type]?.label || b.category)}</div>
           <div class="name">${esc(b.name)}</div>
-          <div class="spec">${re ? esc(b.category) : isDoc ? esc(b.specialty) : esc(b.category)}</div>
+          <div class="spec">${del ? esc(b.desc || '') : re ? esc(b.category) : isDoc ? esc(b.specialty) : esc(b.category)}</div>
         </div>
         <div class="tags">
           ${b.featured ? '<span class="badge p">⭐ مميز</span>' : ''}
           ${b.verified ? '<span class="badge v">✓ موثق</span>' : ''}
-          ${re ? '' : `<span class="badge ${open ? 'ok' : ''}">${open ? '<span class="dot"></span> مفتوح' : '⚪ مغلق'}</span>`}
+          ${re || del ? '' : `<span class="badge ${open ? 'ok' : ''}">${open ? '<span class="dot"></span> مفتوح' : '⚪ مغلق'}</span>`}
         </div>
       </div>
       ${reFacts}
       <div class="info">
         ${b.price && isDoc ? `<div>💰 الكشف: ${esc(b.price)} جنيه</div>` : ''}
-        <div>📍 ${esc(b.address)}${b.landmark ? ' (بجوار ' + esc(b.landmark) + ')' : ''}</div>
+        ${del ? '' : `<div>📍 ${esc(b.address)}${b.landmark ? ' (بجوار ' + esc(b.landmark) + ')' : ''}</div>`}
         ${b.km != null ? `<div class="dist">🚗 ${fmtDist(b.km)}</div>` : ''}
       </div>
       <div class="foot">
@@ -1671,9 +1670,10 @@ async function loadGallery(b) {
 function openModal(b) {
   curBiz = b; cart = {};
   const re = isRE(b);
+  const del = b.type === 'delivery';
   const isOwner = !!(me?.uid && b.ownerId === me.uid);
   if (!isOwner) trackStat(b.id, 'views');
-  const open = !re && isOpen(b.hours), ph = b.phone || b.ownerPhone || '';
+  const open = !re && !del && isOpen(b.hours), ph = b.phone || b.ownerPhone || '';
   const km = userPos ? dist(userPos.lat, userPos.lng, b.lat, b.lng) : null;
   $('mBadge').className = 'badge ' + (open ? 'ok' : '');
   $('mBadge').innerHTML = re ? `🏠 ${esc(b.category)}` : (open ? '<span class="dot"></span> مفتوح الآن' : '⚪ مغلق الآن');
@@ -1692,6 +1692,7 @@ function openModal(b) {
 
   $('mDesc').textContent = b.desc || '';
   $('mAddr').textContent = b.address + (b.landmark ? ' (بجوار ' + b.landmark + ')' : '');
+  $('mLocBox').classList.toggle('hidden', del);
   $('mDist').textContent = km != null ? '🚗 ' + fmtDist(km) : '';
   $('mPriceBox').classList.toggle('hidden', re || !b.price);
   $('mPrice').textContent = b.price || '';
@@ -1718,9 +1719,9 @@ function openModal(b) {
     $('mBookDay').innerHTML = openDays.map(h => `<option>${esc(h.day)} (${esc(fmtPeriods(h))})</option>`).join('');
   }
 
-  $('mHoursTitle').classList.toggle('hidden', re);
-  $('mHoursNext').classList.toggle('hidden', re);
-  $('mHours').classList.toggle('hidden', re);
+  $('mHoursTitle').classList.toggle('hidden', re || del);
+  $('mHoursNext').classList.toggle('hidden', re || del);
+  $('mHours').classList.toggle('hidden', re || del);
   if (!re) {
     const rem = nextOpenReminder(b.hours);
     $('mHoursNext').textContent = rem;
@@ -1853,15 +1854,17 @@ $('typeChips').onclick = e => { const b = e.target.closest('[data-type]'); if (b
 function applyType() {
   $('typeFields').classList.remove('hidden');
   $('nameLbl').textContent = TYPES[type].nameLbl;
-  const d = type === 'doctor', re = type === 'real_estate';
+  const d = type === 'doctor', re = type === 'real_estate', del = type === 'delivery';
   $('specF').classList.toggle('hidden', !d); $('regF').classList.toggle('hidden', !d);
   $('priceF').classList.toggle('hidden', !d);
-  $('catF').classList.toggle('hidden', d || re);
+  $('catF').classList.toggle('hidden', d || re || del);
   $('reFields').classList.toggle('hidden', !re);
-  $('hoursCard').classList.toggle('hidden', re);
-  $('itemsCard').classList.toggle('hidden', re);
+  $('hoursCard').classList.toggle('hidden', re || del);
+  $('itemsCard').classList.toggle('hidden', re || del);
+  $('locCard').classList.toggle('hidden', del);
+  $('bAddr').required = !del;
   if (d) $('bSpec').innerHTML = '<option value="">اختار التخصص</option>' + SPECS.map(s => `<option>${s}</option>`).join('');
-  else if (!re) $('bCat').innerHTML = '<option value="">اختار التصنيف</option>' + CATS[type].map(s => `<option>${s}</option>`).join('');
+  else if (!re && !del) $('bCat').innerHTML = '<option value="">اختار التصنيف</option>' + CATS[type].map(s => `<option>${s}</option>`).join('');
 }
 
 function buildHours() {
@@ -1907,14 +1910,14 @@ $('addItem').onclick = () => {
 $('bizForm').onsubmit = async e => {
   e.preventDefault();
   if (!type) return toast('اختار نوع النشاط أولاً');
-  const d = type === 'doctor', re = type === 'real_estate', phone = $('bPhone').value.replace(/\D/g, '');
+  const d = type === 'doctor', re = type === 'real_estate', del = type === 'delivery', phone = $('bPhone').value.replace(/\D/g, '');
   if (!PHONE_RE.test(phone)) return toast('رقم تواصل مصري صحيح (11 رقم)');
   if (d && !$('bSpec').value) return toast('اختار التخصص');
   if (d && $('bReg').value.trim().length < 3) return toast('اكتب رقم القيد بالنقابة');
-  if (!d && !re && !$('bCat').value) return toast('اختار التصنيف');
+  if (!d && !re && !del && !$('bCat').value) return toast('اختار التصنيف');
   if (re && !$('reCat').value) return toast('اختار نوع العقار');
   if (re && !$('rePrice').value.trim()) return toast('اكتب السعر');
-  if (!$('bLat').value) return toast('حدد مكان النشاط على الخريطة');
+  if (!del && !$('bLat').value) return toast('حدد مكان النشاط على الخريطة');
 
   if (!editId) {
     const dayAgo = Date.now() - DAY_MS;
@@ -1923,7 +1926,7 @@ $('bizForm').onsubmit = async e => {
   }
 
   let hours = [];
-  if (!re) {
+  if (!re && !del) {
     hours = collectHours();
     if (!hours.some(h => h.open)) return toast('فعّل يوم عمل واحد على الأقل');
     for (const h of hours) {
@@ -1939,12 +1942,12 @@ $('bizForm').onsubmit = async e => {
   const data = {
     phone, type, name: $('bName').value.trim(),
     specialty: d ? $('bSpec').value : null,
-    category: d ? 'دكاترة' : re ? $('reCat').value : $('bCat').value,
+    category: d ? 'دكاترة' : re ? $('reCat').value : del ? 'دليفري' : $('bCat').value,
     price: d ? $('bPrice').value.trim() : null,
-    desc: $('bDesc').value.trim(), address: $('bAddr').value.trim(), landmark: $('bLandmark').value.trim(),
-    lat: Number($('bLat').value), lng: Number($('bLng').value),
-    hours: re ? [] : hours,
-    items: re ? [] : items,
+    desc: $('bDesc').value.trim(), address: del ? '' : $('bAddr').value.trim(), landmark: del ? '' : $('bLandmark').value.trim(),
+    lat: del ? null : Number($('bLat').value), lng: del ? null : Number($('bLng').value),
+    hours: (re || del) ? [] : hours,
+    items: (re || del) ? [] : items,
     status: nextStatus, updatedAt: serverTimestamp()
   };
   if (re) {
@@ -2080,7 +2083,7 @@ function renderMine() {
     const daysLeft = re && b.expiresAt ? Math.ceil((b.expiresAt - Date.now()) / DAY_MS) : null;
     return `<div class="card ${b.featured ? 'fe' : ''}">
       <div class="row"><h3 class="ct">${esc(b.name)}</h3>${badge(b.status)}</div>
-      <p class="muted" style="margin:6px 0">📍 ${esc(b.address)}</p>
+      ${b.type === 'delivery' ? '' : `<p class="muted" style="margin:6px 0">📍 ${esc(b.address)}</p>`}
       ${re ? `<p class="muted" style="font-size:12.5px">${expired ? '⛔ الإعلان انتهى، جدّده عشان يظهر تاني' : `⏳ باقي ${daysLeft} يوم على انتهاء الإعلان`}</p>` : ''}
       ${b.status === 'approved' ? `<div style="display:flex;gap:12px;font-size:12.5px;color:var(--p);font-weight:700;margin:4px 0">
         <span>👁️ ${st.views || 0} مشاهدة</span><span>📞 ${contacts} تواصل</span>
@@ -2219,7 +2222,7 @@ function renderAdmin() {
     <span class="muted">👤 ${esc(b.ownerName || '')} · 📞 ${esc(b.phone || b.ownerPhone || '')}</span></div>${badge(b.status)}</div>
     <p style="color:var(--p);font-weight:700;font-size:13px;margin-top:6px">${b.type === 'doctor' ? 'طبيب (' + esc(b.specialty) + ')' : esc(b.category)}</p>
     ${reInfo}
-    <p class="muted">📍 ${esc(b.address)} · 📸 ${b.photoCount || 0} صورة</p>
+    <p class="muted">${b.address ? '📍 ' + esc(b.address) + ' · ' : ''}📸 ${b.photoCount || 0} صورة</p>
     <div class="acts-w">
       <a class="btn sm g" target="_blank" href="https://wa.me/2${esc(b.phone || b.ownerPhone)}">💬 واتساب</a>
       <button class="btn sm s" data-aedit="${b.id}">تعديل ✏️</button>
