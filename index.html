@@ -19,7 +19,7 @@
     if (localStorage.getItem('menouf_theme') === 'light') {
       document.documentElement.setAttribute('data-theme', 'light');
       var tm = document.getElementById('themeMeta');
-      if (tm) tm.content = '#ffffff';
+      if (tm) tm.content = '#fffdf7';
     }
   } catch (e) {}
 })();
@@ -63,62 +63,45 @@
   --eg:linear-gradient(135deg,#22c55e,#15803d);
   --ph:#64748b;
 }
-/* ===== الوضع الفاتح (العادي - نظيف ومتوازن) ===== */
+/* ===== الوضع الفاتح (مشرق) ===== */
 :root[data-theme="light"]{
   color-scheme:light;
-  --bg:#f4f6f9;
-  --bgGlow:rgba(245,158,11,.08);
+  --bg:#fffdf7;
+  --bgGlow:rgba(255,213,79,.28);
   --card:#ffffff;
   --surf:#ffffff;
-  --inp:#f8fafc;
+  --inp:#ffffff;
   --chip:#ffffff;
-  --row:#f8fafc;
-  --glass:rgba(255,255,255,.92);
+  --row:#fff9e6;
+  --glass:rgba(255,255,255,.96);
   --sheet:#ffffff;
-  --nav:rgba(255,255,255,.96);
-  --toast:#0f172a;
-  --overlay:rgba(15,23,42,.45);
-  --hdr:rgba(255,255,255,.94);
-  --pulse:linear-gradient(135deg,#fffbeb 0%,#f0fdf4 65%,#ffffff 100%);
-  --txt:#0f172a;
-  --txt2:#1e293b;
-  --txt3:#475569;
-  --m:#64748b;
-  --p:#b45309;
-  --b:#e2e8f0;
-  --b2:#cbd5e1;
-  --bg2:rgba(245,158,11,.38);
-  --dash:#e2e8f0;
-  --tg:#cbd5e1;
+  --nav:#ffffff;
+  --toast:#1f2937;
+  --overlay:rgba(60,40,0,.30);
+  --hdr:linear-gradient(180deg,#ffe98a 0%,#fff6cc 60%,#fffdf7 100%);
+  --pulse:linear-gradient(135deg,#fff0a6,#dcfce7 70%,#ffffff);
+  --txt:#111827;
+  --txt2:#1f2937;
+  --txt3:#374151;
+  --m:#6b7280;
+  --p:#c98a00;
+  --b:rgba(150,110,0,.14);
+  --b2:rgba(150,110,0,.22);
+  --bg2:rgba(230,170,0,.55);
+  --dash:rgba(150,110,0,.22);
+  --tg:#d1d5db;
   --deal-in:#fffbeb;
-  --star0:#cbd5e1;
+  --star0:#d1d5db;
   --okTxt:#065f46;
-  --ph:#94a3b8;
-  --pg:linear-gradient(135deg,#fbbf24,#f59e0b);
-  --pglow:rgba(245,158,11,.25);
+  --ph:#9ca3af;
+  --pglow:rgba(255,196,0,.45);
 }
-:root[data-theme="light"] header{backdrop-filter:blur(12px);border-bottom:1px solid #e2e8f0}
-:root[data-theme="light"] .brand h1{color:#b45309}
-:root[data-theme="light"] .logo{border-color:#f59e0b}
-:root[data-theme="light"] .ib{background:#f8fafc;border-color:#e2e8f0;color:#1e293b}
-:root[data-theme="light"] .ib.alert{background:#fef2f2;border-color:#fecaca}
-:root[data-theme="light"] .card{box-shadow:0 2px 12px rgba(15,23,42,.05);border-color:#e2e8f0}
-:root[data-theme="light"] .card.fe{border-color:#f59e0b;box-shadow:0 4px 18px rgba(245,158,11,.14)}
-:root[data-theme="light"] .search{background:#ffffff;border-color:#cbd5e1;box-shadow:0 2px 8px rgba(15,23,42,.04)}
-:root[data-theme="light"] .tool{background:#ffffff;border-color:#e2e8f0;box-shadow:0 1px 4px rgba(15,23,42,.04)}
-:root[data-theme="light"] .tool.active{background:#fffbeb;border-color:#f59e0b;color:#b45309}
-:root[data-theme="light"] .ci{background:#ffffff;border-color:#e2e8f0;box-shadow:0 2px 8px rgba(15,23,42,.05)}
-:root[data-theme="light"] .badge{background:#f8fafc;border-color:#e2e8f0;color:#475569}
-:root[data-theme="light"] .badge.p{background:#fffbeb;border-color:#fde68a;color:#b45309}
-:root[data-theme="light"] .badge.r{background:#fef2f2;border-color:#fecaca;color:#dc2626}
-:root[data-theme="light"] .badge.v{background:#f0f9ff;border-color:#bae6fd;color:#0284c7}
-:root[data-theme="light"] .pulse-card{box-shadow:0 4px 16px rgba(15,23,42,.06);border-color:#fde68a}
-:root[data-theme="light"] .pulse-weather{background:#ffffff;border-color:#fde68a;color:#b45309}
-:root[data-theme="light"] .pulse-train{background:rgba(255,255,255,.88);border-color:#bbf7d0}
-:root[data-theme="light"] .btn.s{background:#fffbeb;color:#b45309;border-color:#fde68a}
-:root[data-theme="light"] .nav{box-shadow:0 8px 30px rgba(15,23,42,.10);border-color:#e2e8f0}
-:root[data-theme="light"] .fav{background:rgba(255,255,255,.92);border-color:#e2e8f0}
-:root[data-theme="light"] .map-pin{background:#ffffff;box-shadow:0 4px 12px rgba(15,23,42,.18)}
+:root[data-theme="light"] .ib{background:#fff3c4;border-color:rgba(230,170,0,.55)}
+:root[data-theme="light"] .card{box-shadow:0 6px 22px rgba(150,110,0,.12);border-color:rgba(230,170,0,.22)}
+:root[data-theme="light"] .tool{background:#ffffff;box-shadow:0 2px 10px rgba(150,110,0,.08)}
+:root[data-theme="light"] .tool.active{background:#fff1b8}
+:root[data-theme="light"] .badge{background:#fffaf0}
+:root[data-theme="light"] .pulse-card{box-shadow:0 8px 24px rgba(150,110,0,.12)}
 
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:Cairo,system-ui,sans-serif;background:radial-gradient(circle at 50% 0%,var(--bgGlow),transparent 50%),var(--bg);color:var(--txt);min-height:100vh;font-size:15px;line-height:1.6;overflow-x:hidden;transition:background .25s,color .25s}
@@ -182,7 +165,7 @@ header{position:sticky;top:0;z-index:25;display:flex;justify-content:space-betwe
 .cat{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:64px;font-size:12px;font-weight:700;color:var(--m)}
 .ci{width:54px;height:54px;border-radius:50%;background:var(--surf);border:1px solid var(--b);display:flex;align-items:center;justify-content:center;font-size:22px}
 .cat.on{color:var(--p)}
-.cat.on .ci{background:var(--pg);box-shadow:0 6px 18px var(--pglow);border-color:transparent;color:#0d0e12}
+.cat.on .ci{background:var(--pg);box-shadow:0 6px 18px var(--pglow);border-color:transparent}
 
 /* الكروت */
 .card{background:var(--card);border:1px solid var(--b);border-radius:20px;padding:16px;margin-bottom:14px;box-shadow:0 8px 28px rgba(0,0,0,.12);position:relative;transition:transform .2s}
@@ -198,6 +181,9 @@ header{position:sticky;top:0;z-index:25;display:flex;justify-content:space-betwe
 .tags{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
 .info{margin-top:10px;font-size:13.5px;color:var(--txt3);line-height:1.9}
 .dist{color:var(--p);font-size:13px;font-weight:700}
+.re-facts{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.re-facts span{background:var(--row);border:1px solid var(--b);border-radius:999px;padding:3px 10px;font-size:12px;font-weight:700;color:var(--txt2)}
+.re-price{font-size:19px;font-weight:900;color:var(--p)}
 .foot{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--dash)}
 .acts{display:flex;gap:8px;flex:1}
 .acts .btn{flex:1}
@@ -221,7 +207,6 @@ input:focus,select:focus,textarea:focus{border-color:var(--p);box-shadow:0 0 0 3
 input[type="checkbox"]{width:auto;padding:0}
 select option{background:var(--sheet);color:var(--txt)}
 textarea{min-height:85px;resize:vertical}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;margin-bottom:12px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
 .chip{white-space:nowrap;padding:8px 15px;border-radius:999px;border:1px solid var(--b);background:var(--chip);font-size:13.5px;font-weight:700;color:var(--m)}
@@ -426,27 +411,13 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
             <div class="field" id="catF"><label>التصنيف</label><select id="bCat"></select></div>
             <div class="field" id="regF"><label>رقم القيد في النقابة (للتوثيق، لا يظهر للعامة)</label><input id="bReg" inputmode="numeric"></div>
             <div class="field" id="priceF"><label>سعر الكشف (اختياري)</label><input id="bPrice" inputmode="numeric"></div>
-
-            <!-- حقول العقارات المخصصة -->
             <div id="reFields" class="hidden">
-              <div class="grid2">
-                <div class="field"><label>نوع العرض</label>
-                  <select id="reOfferType">
-                    <option value="إيجار">إيجار</option>
-                    <option value="بيع">بيع</option>
-                  </select>
-                </div>
-                <div class="field"><label>السعر (جنيه)</label><input id="rePrice" type="number" inputmode="numeric" placeholder="مثال: 3500"></div>
-              </div>
-              <div class="grid2">
-                <div class="field"><label>المساحة (م²)</label><input id="reArea" type="number" inputmode="numeric" placeholder="مثال: 120"></div>
-                <div class="field"><label>عدد الغرف</label><input id="reRooms" type="number" inputmode="numeric" placeholder="مثال: 3"></div>
-              </div>
-              <p class="muted" style="background:rgba(255,196,0,.08);border:1px solid var(--bg2);border-radius:12px;padding:10px 12px;margin-bottom:14px;font-size:12.5px">
-                ⏳ مدة نشر الإعلان العقاري <strong>30 يوماً</strong> بعد مراجعة واعتماد الإدارة، وبعدها يختفي تلقائياً ويمكنك تجديده من "أنشطتي".
-              </p>
+              <div class="field"><label>نوع العقار</label><select id="reCat"></select></div>
+              <div class="field"><label>السعر بالجنيه (إيجار شهري أو سعر البيع)</label><input id="rePrice" inputmode="numeric"></div>
+              <div class="field"><label>المساحة (م²)</label><input id="reArea" inputmode="numeric"></div>
+              <div class="field"><label>عدد الغرف</label><input id="reRooms" inputmode="numeric"></div>
+              <p class="muted" style="font-size:12px">الإعلان بيفضل ظاهر 30 يوم، وبعدها بيتقفل، وتقدر تجدده من "أنشطتي".</p>
             </div>
-
             <div class="field">
               <label>📸 صورة للنشاط (اختياري، صورة واحدة)</label>
               <input id="bPhotos" type="file" accept="image/*">
@@ -456,7 +427,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
                 <input type="checkbox" id="rmPhotos"> امسح الصورة الحالية
               </label>
             </div>
-            <div class="field"><label>نبذة أو تفاصيل إضافية (اختياري)</label><textarea id="bDesc" maxlength="200"></textarea></div>
+            <div class="field"><label>نبذة (اختياري)</label><textarea id="bDesc" maxlength="160"></textarea></div>
           </div>
           <div class="card">
             <div class="ct" style="margin-bottom:12px">الموقع</div>
@@ -586,12 +557,12 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
     <div id="mGallery" class="gallery hidden"></div>
     <h2 id="mTitle" class="ct" style="font-size:21px;margin-bottom:4px"></h2>
     <p id="mSub" style="color:var(--p);font-weight:700;margin-bottom:10px"></p>
-    <p id="mDesc" class="muted" style="margin-bottom:14px"></p>
+    <div id="mReFacts" class="re-facts hidden"></div>
+    <p id="mDesc" class="muted" style="margin:10px 0 14px"></p>
     <div style="border:1px solid var(--b);border-radius:14px;padding:12px;margin-bottom:14px">
       <div>📍 <strong id="mAddr"></strong></div>
       <div id="mDist" class="muted" style="color:var(--p);font-weight:700;margin-top:4px"></div>
       <div id="mPriceBox" class="hidden" style="margin-top:4px">💰 الكشف: <strong id="mPrice" style="color:var(--p)"></strong> جنيه</div>
-      <div id="mReBox" class="hidden" style="margin-top:10px;padding-top:10px;border-top:1px dashed var(--dash);display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13.5px"></div>
     </div>
 
     <div id="mItemsBox" class="hidden" style="margin-bottom:14px">
@@ -610,11 +581,9 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
       <button type="button" id="mBookWa" class="btn g">💬 تأكيد الحجز على واتساب العيادة</button>
     </div>
 
-    <div id="mHoursWrap">
-      <div style="color:var(--p);font-weight:700;margin-bottom:6px">مواعيد العمل</div>
-      <div id="mHoursNext" class="hours-next hidden"></div>
-      <div id="mHours" style="margin-bottom:6px"></div>
-    </div>
+    <div id="mHoursTitle" style="color:var(--p);font-weight:700;margin-bottom:6px">مواعيد العمل</div>
+    <div id="mHoursNext" class="hours-next hidden"></div>
+    <div id="mHours" style="margin-bottom:6px"></div>
     <div id="mRatings"></div>
     <div id="mActs" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--dash)"></div>
   </div>
@@ -701,10 +670,9 @@ const ADMIN_PHONE = '01002480665';
 const APP_NAME = 'منوف 360';
 const MAX_PER_DAY = 3;
 const RE_DAYS = 30;
-const RE_MS = RE_DAYS * 86400000;
+const DAY_MS = 86400000;
 const tsMs = x => x?.toMillis?.() ?? 0;
 const fd = ms => ms ? new Date(ms).toLocaleString('ar-EG') : '';
-const fmtNum = v => { const n = Number(v); return (!v || isNaN(n)) ? esc(v) : n.toLocaleString('en-US'); };
 
 /* ---------- الوضع الليلي / الفاتح ---------- */
 function applyThemeBtn() {
@@ -717,7 +685,7 @@ $('themeBtn').onclick = () => {
   if (light) document.documentElement.removeAttribute('data-theme');
   else document.documentElement.setAttribute('data-theme', 'light');
   try { localStorage.setItem('menouf_theme', light ? 'dark' : 'light'); } catch (e) {}
-  $('themeMeta').content = light ? '#08090c' : '#ffffff';
+  $('themeMeta').content = light ? '#08090c' : '#fffdf7';
   applyThemeBtn();
   if (bMap) setTimeout(() => bMap.invalidateSize(), 50);
 };
@@ -728,13 +696,13 @@ const TYPES = {
   doctor: { label: 'دكتور / عيادة', nameLbl: 'اسم الطبيب واللقب العلمي' },
   shop: { label: 'محل / مطعم', nameLbl: 'اسم المحل أو المطعم' },
   service: { label: 'خدمة / ورشة', nameLbl: 'اسم الخدمة أو الفني' },
-  realestate: { label: 'عقارات 🏠', nameLbl: 'عنوان الإعلان العقاري (مثال: شقة 3 غرف بشارع بورسعيد)' }
+  real_estate: { label: 'عقار', nameLbl: 'عنوان العقار أو اسم المالك' }
 };
 const SPECS = ['باطنة','أطفال','نساء وتوليد','جلدية وتجميل','أسنان','عظام','عيون','قلب وأوعية دموية','أنف وأذن وحنجرة','مخ وأعصاب','أخرى'];
 const CATS = {
   shop: ['مطعم وكافيه','سوبر ماركت وبقالة','صيدلية','ملابس وأحذية','إلكترونيات وموبايلات','أدوات منزلية','مواد بناء وتشطيبات','أخرى'],
   service: ['سباكة وأعمال صحية','كهربائي وتأسيس','نجارة ودهانات','صيانة أجهزة منزلية','نقل ورفع أثاث','تصوير ومناسبات','أخرى'],
-  realestate: ['شقق للإيجار','شقق للبيع','أرض','محلات للإيجار','سكن طلبة']
+  real_estate: ['شقق للإيجار','شقق للبيع','أرض للبيع','محلات للإيجار','سكن طلبة','أخرى']
 };
 const CAT_TABS = [
   { k: 'الكل', i: '🧭' },
@@ -766,6 +734,7 @@ const TRAIN_TYPES = ['محسن', 'روسي', 'مكيف روسي', 'اكسبري�
 
 $('tDir').innerHTML = Object.entries(DIR_LABEL).map(([k, v]) => `<option value="${k}">${v}</option>`).join('');
 $('tType').innerHTML = TRAIN_TYPES.map(t => `<option>${t}</option>`).join('');
+$('reCat').innerHTML = CATS.real_estate.map(s => `<option>${s}</option>`).join('');
 const tDep = t => t.depart || t.time || '';
 
 let trains = [], trainDir = 'out_cairo', trainOn = false, editTrainId = null;
@@ -787,7 +756,7 @@ const SYN = [
   ['تصوير','مصور','مصورين'],
   ['نقل','عفش','ترحيل'],
   ['موبايل','موبايلات','تليفون','تليفونات','الكترونيات'],
-  ['عقار','عقارات','شقه','شقق','سكن','ايجار','بيع','تمليك','ارض','اراضي','محل للايجار','سكن طلبه']
+  ['شقه','شقق','شقة','عقار','عقارات','ايجار','للايجار','بيت','اوضه','اوض','ارض','اراضي','سكن']
 ].map(g => g.map(normAr));
 
 function expandTerm(term) {
@@ -800,7 +769,7 @@ function expandTerm(term) {
   return [...out];
 }
 function matchesQuery(b, query) {
-  const hay = normAr([b.name, b.specialty, b.category, b.offerType, b.address, b.landmark, b.desc, TYPES[b.type]?.label].join(' '));
+  const hay = normAr([b.name, b.specialty, b.category, b.address, b.landmark, b.desc, TYPES[b.type]?.label].join(' '));
   return normAr(query).split(/\s+/).filter(Boolean).every(w => expandTerm(w).some(x => hay.includes(x)));
 }
 
@@ -813,7 +782,7 @@ const periodsOf = t => {
   return p;
 };
 function isOpen(hours) {
-  if (!Array.isArray(hours)) return false;
+  if (!Array.isArray(hours) || !hours.length) return false;
   const now = new Date();
   const cur = now.getHours() * 60 + now.getMinutes();
   const today = (now.getDay() + 1) % 7;
@@ -915,7 +884,7 @@ let approved = [], myBiz = [], allBiz = [], reports = [], reviews = [], notifs =
 let myStats = {};
 let loadingPage = false, deepHandled = false;
 let userCount = null, type = null, items = [], browseCat = 'الكل', browseSub = 'الكل', q = '', adminQ = '';
-let editId = null, editOrigType = null, editOrigStatus = null, editOrigExpiresAt = null, adminEditing = false, adminFilter = 'pending';
+let editId = null, editOrigType = null, editOrigStatus = null, adminEditing = false, adminFilter = 'pending';
 let map = null, marker = null, bMap = null, bMarkers = [], userMapMarker = null, curBiz = null, cart = {};
 let userPos = null, onlyOpen = false, nearMe = false, topRated = false, mapView = false;
 let currentTab = 'browse', adminTimer = null;
@@ -946,12 +915,13 @@ function badge(s) {
   const [t, c] = m[s] || [s, ''];
   return `<span class="badge ${c}">${t}</span>`;
 }
-const isReExpired = b => b.type === 'realestate' && !!b.expiresAt && b.expiresAt <= Date.now();
-const reDaysLeft = b => b.expiresAt ? Math.ceil((b.expiresAt - Date.now()) / 86400000) : RE_DAYS;
 const ratingOf = id => {
   const list = reviews.filter(r => r.bizId === id);
   return { n: list.length, avg: list.length ? list.reduce((s, r) => s + r.rating, 0) / list.length : 0 };
 };
+const isRE = b => b && b.type === 'real_estate';
+const reExpired = b => isRE(b) && b.expiresAt && b.expiresAt < Date.now();
+const fmtPrice = n => n ? Number(n).toLocaleString('ar-EG') : '';
 
 /* ---------- نبض منوف ---------- */
 function initPulse() {
@@ -1095,7 +1065,7 @@ $('oSave').onclick = async () => {
     await addDoc(collection(db, 'offers'), {
       bizId, bizName: $('oBizName').dataset.name || '',
       title, discount, desc: $('oDesc').value.trim(),
-      expiresAt: Date.now() + days * 86400000,
+      expiresAt: Date.now() + days * DAY_MS,
       status: isAdm ? 'approved' : 'pending',
       createdAt: serverTimestamp()
     });
@@ -1235,12 +1205,7 @@ $('emergencyModal').onclick = e => { if (e.target.id === 'emergencyModal') $('em
 $('mShare').onclick = async () => {
   const b = curBiz; if (!b) return;
   const url = `${location.origin}${location.pathname}?biz=${b.id}`;
-  const subTxt = b.type === 'doctor'
-    ? '🩺 ' + b.specialty
-    : b.type === 'realestate'
-      ? `🏠 ${b.category}${b.offerType ? ' (' + b.offerType + ')' : ''}${b.price ? ' · ' + fmtNum(b.price) + ' جنيه' : ''}`
-      : '🏷️ ' + b.category;
-  const text = `📍 ${b.name}\n${subTxt}\n📌 ${b.address}\n🔗 التفاصيل على تطبيق ${APP_NAME}:\n${url}`;
+  const text = `📍 ${b.name}\n${isRE(b) ? '🏠 ' + b.category : b.type === 'doctor' ? '🩺 ' + b.specialty : '🏷️ ' + b.category}\n📌 ${b.address}\n🔗 التفاصيل على تطبيق ${APP_NAME}:\n${url}`;
   if (navigator.share) { try { await navigator.share({ title: b.name, text, url }); } catch (e) {} }
   else window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
 };
@@ -1415,7 +1380,7 @@ function buildSubCats() {
   if (browseCat === 'دكاترة') subs = ['الكل', ...SPECS];
   else if (browseCat === 'محل / مطعم') subs = ['الكل', ...CATS.shop];
   else if (browseCat === 'خدمة') subs = ['الكل', ...CATS.service];
-  else if (browseCat === 'عقارات') subs = ['الكل', ...CATS.realestate];
+  else if (browseCat === 'عقارات') subs = ['الكل', ...CATS.real_estate];
   if (!subs) { $('subCatChips').classList.add('hidden'); $('subCatChips').innerHTML = ''; return; }
   $('subCatChips').classList.remove('hidden');
   $('subCatChips').innerHTML = subs.map(s => `<button type="button" class="chip ${s === browseSub ? 'on' : ''}" data-sub="${esc(s)}">${esc(s)}</button>`).join('');
@@ -1468,20 +1433,19 @@ $('fMap').onclick = () => {
 
 function filtered() {
   return approved.filter(b => {
-    if (isReExpired(b)) return false;
+    if (reExpired(b)) return false;
     const catOk = browseCat === 'الكل'
       || (browseCat === 'المفضلة' && favs.includes(b.id))
       || (browseCat === 'دكاترة' && b.type === 'doctor')
       || (browseCat === 'محل / مطعم' && b.type === 'shop')
       || (browseCat === 'صيدليات' && (b.category === 'صيدلية' || normAr(b.name).includes('صيدلي')))
       || (browseCat === 'خدمة' && b.type === 'service')
-      || (browseCat === 'عقارات' && b.type === 'realestate');
+      || (browseCat === 'عقارات' && b.type === 'real_estate');
     const subOk = browseSub === 'الكل'
       || (browseCat === 'دكاترة' && b.specialty === browseSub)
       || ((browseCat === 'محل / مطعم' || browseCat === 'خدمة' || browseCat === 'عقارات') && b.category === browseSub);
     const qOk = !q || matchesQuery(b, q);
-    const openOk = !onlyOpen || (b.type !== 'realestate' && isOpen(b.hours));
-    return catOk && subOk && qOk && openOk;
+    return catOk && subOk && qOk && (!onlyOpen || (!isRE(b) && isOpen(b.hours)));
   }).map(b => ({ ...b, km: userPos ? dist(userPos.lat, userPos.lng, b.lat, b.lng) : null }))
     .sort((a, b) => {
       if (topRated) {
@@ -1507,14 +1471,15 @@ function renderBrowse() {
   $('countLabel').textContent = list.length ? `(${list.length})` : '';
   if (mapView) renderMap();
   const cards = list.map(b => {
-    const isDoc = b.type === 'doctor', isRe = b.type === 'realestate';
-    const open = !isRe && isOpen(b.hours), ph = b.phone || b.ownerPhone || '', fav = favs.includes(b.id);
-    const rt = ratingOf(b.id);
+    const re = isRE(b);
+    const open = !re && isOpen(b.hours), ph = b.phone || b.ownerPhone || '', fav = favs.includes(b.id);
+    const rt = ratingOf(b.id), isDoc = b.type === 'doctor';
     const cover = b.thumb || b.imageUrl || '';
-    const statusBadge = isRe
-      ? `<span class="badge p">🏠 ${esc(b.offerType || 'عقار')}</span>`
-      : `<span class="badge ${open ? 'ok' : ''}">${open ? '<span class="dot"></span> مفتوح' : '⚪ مغلق'}</span>`;
-
+    const reFacts = re ? `<div class="re-facts">
+        ${b.rePrice ? `<span>💰 ${fmtPrice(b.rePrice)} جنيه</span>` : ''}
+        ${b.reArea ? `<span>📐 ${esc(b.reArea)} م²</span>` : ''}
+        ${b.reRooms ? `<span>🛏️ ${esc(b.reRooms)} غرف</span>` : ''}
+      </div>` : '';
     return `<div class="card ${b.featured ? 'fe' : ''}" data-open="${b.id}" style="cursor:pointer">
       <button class="fav" data-fav="${b.id}">${fav ? '❤️' : '🤍'}</button>
       ${cover ? `<img class="card-cover" src="${cover}" loading="lazy" alt="" onerror="this.remove()">` : ''}
@@ -1522,19 +1487,17 @@ function renderBrowse() {
         <div>
           <div class="type">${esc(TYPES[b.type]?.label || b.category)}</div>
           <div class="name">${esc(b.name)}</div>
-          <div class="spec">${isDoc ? esc(b.specialty) : esc(b.category)}</div>
+          <div class="spec">${re ? esc(b.category) : isDoc ? esc(b.specialty) : esc(b.category)}</div>
         </div>
         <div class="tags">
           ${b.featured ? '<span class="badge p">⭐ مميز</span>' : ''}
           ${b.verified ? '<span class="badge v">✓ موثق</span>' : ''}
-          ${statusBadge}
+          ${re ? '' : `<span class="badge ${open ? 'ok' : ''}">${open ? '<span class="dot"></span> مفتوح' : '⚪ مغلق'}</span>`}
         </div>
       </div>
+      ${reFacts}
       <div class="info">
-        ${isRe ? `
-          ${b.price ? `<div>💰 السعر: <strong style="color:var(--p)">${fmtNum(b.price)} جنيه</strong>${b.offerType === 'إيجار' ? ' / شهرياً' : ''}</div>` : ''}
-          <div>${b.area ? `📐 المساحة: ${esc(b.area)} م²` : ''}${b.area && b.rooms ? ' · ' : ''}${b.rooms ? `🛏️ ${esc(b.rooms)} غرف` : ''}</div>
-        ` : (b.price && isDoc ? `<div>💰 الكشف: ${esc(b.price)} جنيه</div>` : '')}
+        ${b.price && isDoc ? `<div>💰 الكشف: ${esc(b.price)} جنيه</div>` : ''}
         <div>📍 ${esc(b.address)}${b.landmark ? ' (بجوار ' + esc(b.landmark) + ')' : ''}</div>
         ${b.km != null ? `<div class="dist">🚗 ${fmtDist(b.km)}</div>` : ''}
       </div>
@@ -1589,9 +1552,8 @@ function renderMap() {
   bMarkers.forEach(m => bMap.removeLayer(m)); bMarkers = [];
   filtered().filter(b => b.lat && b.lng).forEach(b => {
     const isPharm = b.category === 'صيدلية' || normAr(b.name).includes('صيدلي');
-    const isRe = b.type === 'realestate';
-    const pinIcon = isRe ? '🏠' : isPharm ? '💊' : b.type === 'doctor' ? '🩺' : b.type === 'service' ? '🛠️' : '🛍️';
-    const pinCls = isRe ? 're' : b.type === 'doctor' ? 'doc' : b.type === 'service' ? 'srv' : 'shop';
+    const pinIcon = isRE(b) ? '🏠' : isPharm ? '💊' : b.type === 'doctor' ? '🩺' : b.type === 'service' ? '🛠️' : '🛍️';
+    const pinCls = isRE(b) ? 're' : b.type === 'doctor' ? 'doc' : b.type === 'service' ? 'srv' : 'shop';
     const icon = L.divIcon({
       className: '',
       html: `<div class="map-pin ${pinCls}">${pinIcon}</div>`,
@@ -1601,12 +1563,9 @@ function renderMap() {
     });
     const m = L.marker([b.lat, b.lng], { icon }).addTo(bMap);
     const sub = b.type === 'doctor' ? b.specialty : b.category;
-    const statusTxt = isRe
-      ? `${esc(b.offerType || '')}${b.price ? ' · ' + fmtNum(b.price) + ' ج' : ''}`
-      : (isOpen(b.hours) ? '🟢 مفتوح' : '⚪ مغلق');
     m.bindPopup(`<div style="font-family:Cairo;text-align:right;min-width:140px">
       <strong>${esc(b.name)}</strong><br>
-      <small style="color:#555">${esc(sub || '')} · ${statusTxt}</small><br>
+      <small style="color:#555">${esc(sub || '')}${isRE(b) ? '' : ' · ' + (isOpen(b.hours) ? '🟢 مفتوح' : '⚪ مغلق')}</small><br>
       <button style="margin-top:6px;background:#ffc400;border:0;padding:4px 10px;border-radius:6px;font-weight:700;cursor:pointer" onclick="window.openById('${b.id}')">التفاصيل</button>
     </div>`);
     bMarkers.push(m);
@@ -1703,47 +1662,33 @@ async function loadGallery(b) {
 
 function openModal(b) {
   curBiz = b; cart = {};
+  const re = isRE(b);
   const isOwner = !!(me?.uid && b.ownerId === me.uid);
-  const isRe = b.type === 'realestate';
   if (!isOwner) trackStat(b.id, 'views');
-  const open = !isRe && isOpen(b.hours), ph = b.phone || b.ownerPhone || '';
+  const open = !re && isOpen(b.hours), ph = b.phone || b.ownerPhone || '';
   const km = userPos ? dist(userPos.lat, userPos.lng, b.lat, b.lng) : null;
-
-  if (isRe) {
-    const exp = isReExpired(b);
-    $('mBadge').className = 'badge ' + (exp ? 'r' : 'p');
-    $('mBadge').textContent = exp ? '⌛ انتهت مدة الإعلان' : `🏠 ${b.offerType || 'عقار'}`;
-  } else {
-    $('mBadge').className = 'badge ' + (open ? 'ok' : '');
-    $('mBadge').innerHTML = open ? '<span class="dot"></span> مفتوح الآن' : '⚪ مغلق الآن';
-  }
+  $('mBadge').className = 'badge ' + (open ? 'ok' : '');
+  $('mBadge').innerHTML = re ? `🏠 ${esc(b.category)}` : (open ? '<span class="dot"></span> مفتوح الآن' : '⚪ مغلق الآن');
   $('mVerified').classList.toggle('hidden', !b.verified);
   $('mFeatured').classList.toggle('hidden', !b.featured);
   $('mTitle').textContent = b.name;
-  $('mSub').textContent = b.type === 'doctor'
-    ? 'طبيب متخصص في ' + b.specialty
-    : isRe
-      ? `${b.category}${b.offerType ? ' · ' + b.offerType : ''}`
-      : b.category;
+  $('mSub').textContent = re ? (b.category || '') : b.type === 'doctor' ? 'طبيب متخصص في ' + b.specialty : b.category;
+
+  if (re) {
+    $('mReFacts').innerHTML = `
+      ${b.rePrice ? `<span>💰 ${fmtPrice(b.rePrice)} جنيه</span>` : ''}
+      ${b.reArea ? `<span>📐 ${esc(b.reArea)} م²</span>` : ''}
+      ${b.reRooms ? `<span>🛏️ ${esc(b.reRooms)} غرف</span>` : ''}`;
+    $('mReFacts').classList.remove('hidden');
+  } else $('mReFacts').classList.add('hidden');
+
   $('mDesc').textContent = b.desc || '';
   $('mAddr').textContent = b.address + (b.landmark ? ' (بجوار ' + b.landmark + ')' : '');
   $('mDist').textContent = km != null ? '🚗 ' + fmtDist(km) : '';
+  $('mPriceBox').classList.toggle('hidden', re || !b.price);
+  $('mPrice').textContent = b.price || '';
 
-  $('mPriceBox').classList.toggle('hidden', isRe || !b.price);
-  $('mPrice').textContent = (!isRe && b.price) ? b.price : '';
-
-  $('mReBox').classList.toggle('hidden', !isRe);
-  if (isRe) {
-    const dl = reDaysLeft(b);
-    $('mReBox').innerHTML = `
-      <div>🏷️ العرض: <strong style="color:var(--p)">${esc(b.offerType || '-')}</strong></div>
-      <div>💰 السعر: <strong style="color:var(--p)">${b.price ? fmtNum(b.price) + ' ج' : '-'}</strong></div>
-      <div>📐 المساحة: <strong>${b.area ? esc(b.area) + ' م²' : '-'}</strong></div>
-      <div>🛏️ الغرف: <strong>${b.rooms ? esc(b.rooms) : 'غير محدد'}</strong></div>
-      ${b.expiresAt ? `<div style="grid-column:1/-1;color:var(--m);font-size:12px">${dl > 0 ? `⏳ متبقي على انتهاء الإعلان: ${dl} يوم` : '⌛ انتهت مدة الإعلان (30 يوم)'}</div>` : ''}`;
-  }
-
-  const hasItems = !isRe && b.items && b.items.length > 0;
+  const hasItems = !re && b.items && b.items.length > 0;
   $('mItemsBox').classList.toggle('hidden', !hasItems);
   $('mCartBar').classList.add('hidden');
   if (hasItems) {
@@ -1758,15 +1703,17 @@ function openModal(b) {
   }
 
   const openDays = (b.hours || []).filter(h => h.open);
-  const canBookDoc = b.type === 'doctor' && ph && openDays.length > 0;
+  const canBookDoc = !re && b.type === 'doctor' && ph && openDays.length > 0;
   $('mDocBookBox').classList.toggle('hidden', !canBookDoc);
   if (canBookDoc) {
     $('mBookName').value = profile?.name || '';
     $('mBookDay').innerHTML = openDays.map(h => `<option>${esc(h.day)} (${esc(fmtPeriods(h))})</option>`).join('');
   }
 
-  $('mHoursWrap').classList.toggle('hidden', isRe);
-  if (!isRe) {
+  $('mHoursTitle').classList.toggle('hidden', re);
+  $('mHoursNext').classList.toggle('hidden', re);
+  $('mHours').classList.toggle('hidden', re);
+  if (!re) {
     const rem = nextOpenReminder(b.hours);
     $('mHoursNext').textContent = rem;
     $('mHoursNext').classList.toggle('hidden', !rem);
@@ -1776,6 +1723,8 @@ function openModal(b) {
         <span>${esc(h.day)}${i === todayIdx ? ' <small style="color:var(--p)">(اليوم)</small>' : ''}</span>
         <span style="text-align:left">${esc(fmtPeriods(h))}</span>
       </div>`).join('');
+  } else {
+    $('mHours').innerHTML = '';
   }
 
   $('mActs').innerHTML = `
@@ -1794,7 +1743,7 @@ $('mActs').onclick = async e => {
   if (!e.target.closest('[data-report]')) return;
   if (guest || !me?.uid) return toast('سجّل دخولك عشان تبلّغ');
   if (curBiz.ownerId === me.uid) return toast('مينفعش تبلّغ عن نشاطك');
-  const t = prompt('اكتب الخطأ (رقم غلط، عنوان غلط، نشاط مغلق أو عقار غير متاح...)');
+  const t = prompt('اكتب الخطأ (رقم غلط، عنوان غلط، نشاط مغلق...)');
   if (!t || !t.trim()) return;
   try {
     await setDoc(doc(db, 'reports', curBiz.id + '_' + me.uid), {
@@ -1896,25 +1845,16 @@ $('typeChips').onclick = e => { const b = e.target.closest('[data-type]'); if (b
 function applyType() {
   $('typeFields').classList.remove('hidden');
   $('nameLbl').textContent = TYPES[type].nameLbl;
-  const d = type === 'doctor', r = type === 'realestate';
-  $('specF').classList.toggle('hidden', !d);
-  $('regF').classList.toggle('hidden', !d);
+  const d = type === 'doctor', re = type === 'real_estate';
+  $('specF').classList.toggle('hidden', !d); $('regF').classList.toggle('hidden', !d);
   $('priceF').classList.toggle('hidden', !d);
-  $('catF').classList.toggle('hidden', d);
-  $('reFields').classList.toggle('hidden', !r);
-  $('hoursCard').classList.toggle('hidden', r);
-  $('itemsCard').classList.toggle('hidden', r);
-
+  $('catF').classList.toggle('hidden', d || re);
+  $('reFields').classList.toggle('hidden', !re);
+  $('hoursCard').classList.toggle('hidden', re);
+  $('itemsCard').classList.toggle('hidden', re);
   if (d) $('bSpec').innerHTML = '<option value="">اختار التخصص</option>' + SPECS.map(s => `<option>${s}</option>`).join('');
-  else $('bCat').innerHTML = '<option value="">اختار التصنيف</option>' + CATS[type].map(s => `<option>${s}</option>`).join('');
+  else if (!re) $('bCat').innerHTML = '<option value="">اختار التصنيف</option>' + CATS[type].map(s => `<option>${s}</option>`).join('');
 }
-
-$('bCat').onchange = () => {
-  if (type !== 'realestate') return;
-  const v = $('bCat').value;
-  if (v === 'شقق للبيع') $('reOfferType').value = 'بيع';
-  else if (v === 'شقق للإيجار' || v === 'محلات للإيجار' || v === 'سكن طلبة') $('reOfferType').value = 'إيجار';
-};
 
 function buildHours() {
   $('hours').innerHTML = DAYS.map((d, i) => `<div class="day">
@@ -1959,29 +1899,23 @@ $('addItem').onclick = () => {
 $('bizForm').onsubmit = async e => {
   e.preventDefault();
   if (!type) return toast('اختار نوع النشاط أولاً');
-  const d = type === 'doctor', r = type === 'realestate', phone = $('bPhone').value.replace(/\D/g, '');
+  const d = type === 'doctor', re = type === 'real_estate', phone = $('bPhone').value.replace(/\D/g, '');
   if (!PHONE_RE.test(phone)) return toast('رقم تواصل مصري صحيح (11 رقم)');
   if (d && !$('bSpec').value) return toast('اختار التخصص');
   if (d && $('bReg').value.trim().length < 3) return toast('اكتب رقم القيد بالنقابة');
-  if (!d && !$('bCat').value) return toast('اختار التصنيف');
-
-  if (r) {
-    if (!$('rePrice').value.trim()) return toast('اكتب السعر المطلوب');
-    if (!$('reArea').value.trim()) return toast('اكتب المساحة بالمتر المربع');
-    const needRooms = ['شقق للإيجار', 'شقق للبيع', 'سكن طلبة'].includes($('bCat').value);
-    if (needRooms && !$('reRooms').value.trim()) return toast('اكتب عدد الغرف');
-  }
-
+  if (!d && !re && !$('bCat').value) return toast('اختار التصنيف');
+  if (re && !$('reCat').value) return toast('اختار نوع العقار');
+  if (re && !$('rePrice').value.trim()) return toast('اكتب السعر');
   if (!$('bLat').value) return toast('حدد مكان النشاط على الخريطة');
 
   if (!editId) {
-    const dayAgo = Date.now() - 86400000;
+    const dayAgo = Date.now() - DAY_MS;
     const todayCount = myBiz.filter(b => tsMs(b.createdAt) > dayAgo).length;
     if (todayCount >= MAX_PER_DAY) return toast(`وصلت للحد اليومي (${MAX_PER_DAY} أنشطة في 24 ساعة)، جرّب بكرة`);
   }
 
   let hours = [];
-  if (!r) {
+  if (!re) {
     hours = collectHours();
     if (!hours.some(h => h.open)) return toast('فعّل يوم عمل واحد على الأقل');
     for (const h of hours) {
@@ -1997,19 +1931,20 @@ $('bizForm').onsubmit = async e => {
   const data = {
     phone, type, name: $('bName').value.trim(),
     specialty: d ? $('bSpec').value : null,
-    category: d ? 'دكاترة' : $('bCat').value,
-    price: d ? $('bPrice').value.trim() : (r ? $('rePrice').value.trim() : null),
-    offerType: r ? $('reOfferType').value : null,
-    area: r ? $('reArea').value.trim() : null,
-    rooms: r ? ($('reRooms').value.trim() || null) : null,
+    category: d ? 'دكاترة' : re ? $('reCat').value : $('bCat').value,
+    price: d ? $('bPrice').value.trim() : null,
     desc: $('bDesc').value.trim(), address: $('bAddr').value.trim(), landmark: $('bLandmark').value.trim(),
     lat: Number($('bLat').value), lng: Number($('bLng').value),
-    hours, items: r ? [] : items, status: nextStatus, updatedAt: serverTimestamp()
+    hours: re ? [] : hours,
+    items: re ? [] : items,
+    status: nextStatus, updatedAt: serverTimestamp()
   };
-  if (r && editId && adminEditing) {
-    data.expiresAt = editOrigExpiresAt || (Date.now() + RE_MS);
+  if (re) {
+    data.rePrice = Number($('rePrice').value.replace(/\D/g, '')) || null;
+    data.reArea = $('reArea').value.trim() || null;
+    data.reRooms = $('reRooms').value.trim() || null;
+    data.expiresAt = Date.now() + RE_DAYS * DAY_MS;
   }
-
   $('saveBtn').disabled = true;
   try {
     let pics = null;
@@ -2021,14 +1956,9 @@ $('bizForm').onsubmit = async e => {
     if (editId) {
       const typeChanged = editOrigType !== type;
       const upd = typeChanged ? { ...data, verified: false } : { ...data };
-      if (!r) {
-        upd.offerType = deleteField();
-        upd.area = deleteField();
-        upd.rooms = deleteField();
-        upd.expiresAt = deleteField();
-      }
       if (pics) { upd.thumb = pics.thumb; upd.photoCount = pics.photos.length; }
       else if (removePhotos) { upd.thumb = deleteField(); upd.photoCount = 0; }
+      if (!re) { upd.rePrice = deleteField(); upd.reArea = deleteField(); upd.reRooms = deleteField(); upd.expiresAt = deleteField(); }
       const batch = writeBatch(db);
       batch.update(doc(db, 'businesses', editId), { ...upd, regNo: deleteField() });
       if (d) batch.set(doc(db, 'regs', editId), { regNo });
@@ -2052,7 +1982,7 @@ $('bizForm').onsubmit = async e => {
       await setDoc(ref, { ...data, ...extra, ownerId: me.uid, ownerName: profile.name, verified: false, featured: false, createdAt: serverTimestamp() });
       if (d) await setDoc(doc(db, 'regs', ref.id), { regNo });
       if (pics) await setDoc(doc(db, 'bizPhotos', ref.id), { ownerId: me.uid, photos: pics.photos, updatedAt: serverTimestamp() });
-      toast(r ? 'تم إرسال إعلانك العقاري وسيُتاح لمدة 30 يوماً بعد المراجعة ✅' : 'تم إرسال نشاطك وسيظهر بعد المراجعة ✅');
+      toast('تم إرسال نشاطك وسيظهر بعد المراجعة ✅');
     }
     const returnTab = adminEditing ? 'admin' : 'mine';
     cancelEdit(); switchTab(returnTab);
@@ -2063,7 +1993,7 @@ $('bizForm').onsubmit = async e => {
 };
 
 async function startEdit(b, isAdminEdit = false) {
-  editId = b.id; editOrigType = b.type; editOrigStatus = b.status; editOrigExpiresAt = b.expiresAt || null; adminEditing = isAdminEdit;
+  editId = b.id; editOrigType = b.type; editOrigStatus = b.status; adminEditing = isAdminEdit;
   editOwnerId = b.ownerId || null;
   type = b.type; buildTypeChips(); applyType();
   $('bName').value = b.name || ''; $('bPhone').value = b.phone || b.ownerPhone || '';
@@ -2071,15 +2001,12 @@ async function startEdit(b, isAdminEdit = false) {
     $('bSpec').value = b.specialty || ''; $('bPrice').value = b.price || '';
     $('bReg').value = b.regNo || '';
     getDoc(doc(db, 'regs', b.id)).then(s => { if (s.exists()) $('bReg').value = s.data().regNo; }).catch(() => {});
-  } else {
-    $('bCat').value = b.category || '';
-  }
-  if (b.type === 'realestate') {
-    $('reOfferType').value = b.offerType || 'إيجار';
-    $('rePrice').value = b.price || '';
-    $('reArea').value = b.area || '';
-    $('reRooms').value = b.rooms || '';
-  }
+  } else if (b.type === 'real_estate') {
+    $('reCat').value = b.category || CATS.real_estate[0];
+    $('rePrice').value = b.rePrice || '';
+    $('reArea').value = b.reArea || '';
+    $('reRooms').value = b.reRooms || '';
+  } else $('bCat').value = b.category || '';
   $('bDesc').value = b.desc || ''; $('bAddr').value = b.address || ''; $('bLandmark').value = b.landmark || '';
   $('bLat').value = b.lat || ''; $('bLng').value = b.lng || '';
   (b.hours || []).forEach((h, i) => {
@@ -2114,7 +2041,7 @@ async function startEdit(b, isAdminEdit = false) {
   if (b.lat && b.lng) showMap(b.lat, b.lng);
 }
 function cancelEdit() {
-  editId = null; editOrigType = null; editOrigStatus = null; editOrigExpiresAt = null; adminEditing = false; editOwnerId = null;
+  editId = null; editOrigType = null; editOrigStatus = null; adminEditing = false; editOwnerId = null;
   pendingFile = null; removePhotos = false;
   $('bizForm').reset(); items = []; renderItems();
   $('photoPrev').innerHTML = ''; $('curPhotos').textContent = ''; $('rmWrap').classList.add('hidden');
@@ -2132,7 +2059,7 @@ function renderMine() {
   if (!myBiz.length) {
     $('mineList').innerHTML = `<div class="empty">
       <p>لم تضف أي نشاط حتى الآن</p>
-      <small>أضف عيادتك، مطعمك، محلك التجاري أو إعلانك العقاري مجاناً ليراك أهالي منوف</small>
+      <small>أضف عيادتك، مطعمك، محلك أو عقارك مجاناً ليراك أهالي منوف</small>
       <button class="btn sm" data-first>أضف نشاطك الأول ✨</button>
     </div>`;
     return;
@@ -2140,25 +2067,20 @@ function renderMine() {
   $('mineList').innerHTML = myBiz.map(b => {
     const st = myStats[b.id] || {};
     const contacts = (st.waClicks || 0) + (st.callClicks || 0);
-    const isRe = b.type === 'realestate';
-    const exp = isRe && b.status === 'approved' && isReExpired(b);
-    const dl = isRe && b.status === 'approved' ? reDaysLeft(b) : null;
-    const stBadge = exp ? '<span class="badge r">⌛ انتهت الـ 30 يوم (مخفي)</span>' : badge(b.status);
-
+    const re = isRE(b);
+    const expired = reExpired(b);
+    const daysLeft = re && b.expiresAt ? Math.ceil((b.expiresAt - Date.now()) / DAY_MS) : null;
     return `<div class="card ${b.featured ? 'fe' : ''}">
-      <div class="row"><h3 class="ct">${esc(b.name)}</h3>${stBadge}</div>
-      <p class="muted" style="margin:6px 0">📍 ${esc(b.address)}${isRe ? ` · 🏠 ${esc(b.category)} (${esc(b.offerType || '')})` : ''}</p>
-      ${isRe && b.status === 'approved' ? `
-        <p style="font-size:12.5px;font-weight:700;margin:4px 0;color:${exp ? '#ef4444' : 'var(--p)'}">
-          ${exp ? 'انتهت مدة الإعلان (30 يوم) وتم إخفاؤه تلقائياً، جدده ليظهر مجدداً.' : `⏳ متبقي ${dl} يوم على انتهاء الإعلان`}
-        </p>` : ''}
+      <div class="row"><h3 class="ct">${esc(b.name)}</h3>${badge(b.status)}</div>
+      <p class="muted" style="margin:6px 0">📍 ${esc(b.address)}</p>
+      ${re ? `<p class="muted" style="font-size:12.5px">${expired ? '⛔ الإعلان انتهى، جدّده عشان يظهر تاني' : `⏳ باقي ${daysLeft} يوم على انتهاء الإعلان`}</p>` : ''}
       ${b.status === 'approved' ? `<div style="display:flex;gap:12px;font-size:12.5px;color:var(--p);font-weight:700;margin:4px 0">
         <span>👁️ ${st.views || 0} مشاهدة</span><span>📞 ${contacts} تواصل</span>
       </div>` : ''}
       ${b.status === 'rejected' && b.rejectReason ? `<p style="color:#f87171;font-size:13px;margin-bottom:6px">سبب الرفض: ${esc(b.rejectReason)}</p>` : ''}
       <div class="acts-w">
-        ${isRe && b.status === 'approved' ? `<button class="btn sm ${exp ? 'g' : ''}" data-renew="${b.id}">🔄 تجديد 30 يوم</button>` : ''}
-        ${b.status === 'approved' && !isRe ? `<button class="btn sm" data-addoffer="${b.id}">🔥 أضف عرض</button>` : ''}
+        ${re ? `<button class="btn sm g" data-renew="${b.id}">🔄 جدد 30 يوم</button>` : ''}
+        ${b.status === 'approved' && !re ? `<button class="btn sm" data-addoffer="${b.id}">🔥 أضف عرض</button>` : ''}
         <button class="btn sm s" data-edit="${b.id}">تعديل ✏️</button>
         <button class="btn sm d" data-del="${b.id}">حذف 🗑️</button>
       </div>
@@ -2169,23 +2091,11 @@ $('mineList').onclick = async e => {
   const t = e.target.closest('button'); if (!t) return;
   if (t.hasAttribute('data-first')) { cancelEdit(); switchTab('add'); return; }
   if (t.dataset.renew) {
-    const id = t.dataset.renew;
-    const nextExp = Date.now() + RE_MS;
-    t.disabled = true;
+    if (!confirm('تجديد الإعلان 30 يوم؟ هيرجع للمراجعة تاني.')) return;
     try {
-      await updateDoc(doc(db, 'businesses', id), { expiresAt: nextExp, updatedAt: serverTimestamp() });
-      toast('تم تجديد الإعلان العقاري لمدة 30 يوماً بنجاح ✅');
-      loadApproved();
-    } catch (err) {
-      if (err.code === 'permission-denied') {
-        try {
-          await updateDoc(doc(db, 'businesses', id), { expiresAt: nextExp, status: 'pending', updatedAt: serverTimestamp() });
-          toast('تم إرسال طلب التجديد 30 يوم لمراجعة الإدارة ✅');
-        } catch (err2) { toast('تعذر تجديد الإعلان'); }
-      } else {
-        toast('تعذر تجديد الإعلان');
-      }
-    } finally { t.disabled = false; }
+      await updateDoc(doc(db, 'businesses', t.dataset.renew), { expiresAt: Date.now() + RE_DAYS * DAY_MS, status: 'pending', updatedAt: serverTimestamp() });
+      toast('تم تجديد الإعلان، وهيظهر بعد المراجعة ✅');
+    } catch (err) { toast('تعذر التجديد'); }
     return;
   }
   if (t.dataset.addoffer) {
@@ -2290,29 +2200,28 @@ function renderAdmin() {
       : (b.status === 'hidden' || b.status === 'rejected');
     if (!statusOk) return false;
     if (!aq) return true;
-    const hay = normAr([b.name, b.phone, b.ownerPhone, b.ownerName, b.address, b.category, b.specialty, b.offerType].join(' '));
+    const hay = normAr([b.name, b.phone, b.ownerPhone, b.ownerName, b.address, b.category, b.specialty].join(' '));
     return hay.includes(aq);
   });
   const cards = list.map(b => {
-    const isRe = b.type === 'realestate';
-    const exp = isRe && b.status === 'approved' && isReExpired(b);
+    const re = isRE(b);
+    const reInfo = re ? `<p class="muted" style="font-size:12.5px">💰 ${fmtPrice(b.rePrice) || '—'} جنيه · 📐 ${esc(b.reArea || '—')} م² · 🛏️ ${esc(b.reRooms || '—')} غرف · ${reExpired(b) ? '⛔ منتهي' : '⏳ ينتهي ' + fd(b.expiresAt)}</p>` : '';
     return `<div class="card ${b.featured ? 'fe' : ''}">
-      <div class="row"><div><h3 class="ct">${esc(b.name)}</h3>
-      <span class="muted">👤 ${esc(b.ownerName || '')} · 📞 ${esc(b.phone || b.ownerPhone || '')}</span></div>
-      <div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end">${exp ? '<span class="badge r">⌛ منتهي</span>' : ''}${badge(b.status)}</div></div>
-      <p style="color:var(--p);font-weight:700;font-size:13px;margin-top:6px">${b.type === 'doctor' ? 'طبيب (' + esc(b.specialty) + ')' : isRe ? `🏠 عقار · ${esc(b.category)} (${esc(b.offerType || '')})` : esc(b.category)}</p>
-      ${isRe ? `<p class="muted" style="font-size:12.5px">💰 ${fmtNum(b.price)} جنيه · 📐 ${esc(b.area || '-')} م²${b.rooms ? ` · 🛏️ ${esc(b.rooms)} غرف` : ''}${b.expiresAt ? ` · ${exp ? 'انتهى' : 'متبقي ' + reDaysLeft(b) + ' يوم'}` : ''}</p>` : ''}
-      <p class="muted">📍 ${esc(b.address)} · 📸 ${b.photoCount || 0} صورة</p>
-      <div class="acts-w">
-        <a class="btn sm g" target="_blank" href="https://wa.me/2${esc(b.phone || b.ownerPhone)}">💬 واتساب</a>
-        <button class="btn sm s" data-aedit="${b.id}">تعديل ✏️</button>
-        ${b.type === 'doctor' ? `<button class="btn sm s" data-showreg="${b.id}">رقم القيد</button>` : ''}
-        ${b.status === 'approved' ? `<button class="btn sm s" data-verify="${b.id}">${b.verified ? 'إلغاء التوثيق' : 'توثيق ✓'}</button>` : ''}
-        ${b.status === 'approved' ? `<button class="btn sm s" data-feature="${b.id}">${b.featured ? 'إلغاء التميز' : 'تمييز ⭐'}</button>` : ''}
-        ${(b.photoCount || b.thumb) ? `<button class="btn sm s" data-pdel="${b.id}">حذف الصورة 🖼️</button>` : ''}
-        ${b.status !== 'approved' ? `<button class="btn sm" data-approve="${b.id}">اعتماد ✅</button><button class="btn sm d" data-reject="${b.id}">رفض ❌</button>` : `<button class="btn sm s" data-hide="${b.id}">إخفاء ⏸️</button>`}
-        <button class="btn sm d" data-del="${b.id}">حذف 🗑️</button>
-      </div></div>`;
+    <div class="row"><div><h3 class="ct">${esc(b.name)}</h3>
+    <span class="muted">👤 ${esc(b.ownerName || '')} · 📞 ${esc(b.phone || b.ownerPhone || '')}</span></div>${badge(b.status)}</div>
+    <p style="color:var(--p);font-weight:700;font-size:13px;margin-top:6px">${b.type === 'doctor' ? 'طبيب (' + esc(b.specialty) + ')' : esc(b.category)}</p>
+    ${reInfo}
+    <p class="muted">📍 ${esc(b.address)} · 📸 ${b.photoCount || 0} صورة</p>
+    <div class="acts-w">
+      <a class="btn sm g" target="_blank" href="https://wa.me/2${esc(b.phone || b.ownerPhone)}">💬 واتساب</a>
+      <button class="btn sm s" data-aedit="${b.id}">تعديل ✏️</button>
+      ${b.type === 'doctor' ? `<button class="btn sm s" data-showreg="${b.id}">رقم القيد</button>` : ''}
+      ${b.status === 'approved' ? `<button class="btn sm s" data-verify="${b.id}">${b.verified ? 'إلغاء التوثيق' : 'توثيق ✓'}</button>` : ''}
+      ${b.status === 'approved' ? `<button class="btn sm s" data-feature="${b.id}">${b.featured ? 'إلغاء التميز' : 'تمييز ⭐'}</button>` : ''}
+      ${(b.photoCount || b.thumb) ? `<button class="btn sm s" data-pdel="${b.id}">حذف الصورة 🖼️</button>` : ''}
+      ${b.status !== 'approved' ? `<button class="btn sm" data-approve="${b.id}">اعتماد ✅</button><button class="btn sm d" data-reject="${b.id}">رفض ❌</button>` : `<button class="btn sm s" data-hide="${b.id}">إخفاء ⏸️</button>`}
+      <button class="btn sm d" data-del="${b.id}">حذف 🗑️</button>
+    </div></div>`;
   }).join('');
   $('adminList').innerHTML = repHtml + (cards || '<div class="empty">لا توجد أنشطة هنا</div>');
 }
@@ -2352,12 +2261,8 @@ $('adminList').onclick = async e => {
       toast(b.featured ? 'تم إلغاء التميز' : 'تم تمييز النشاط ⭐');
     }
     else if (d.approve) {
-      const b = allBiz.find(x => x.id === d.approve);
-      const upd = { status: 'approved' };
-      if (b?.type === 'realestate') upd.expiresAt = Date.now() + RE_MS;
-      await updateDoc(doc(db, 'businesses', d.approve), upd);
-      await notifyOwner(d.approve, '✅ تم اعتماد نشاطك', b?.type === 'realestate' ? `أصبح إعلانك ظاهراً في ${APP_NAME} لمدة 30 يوماً` : `أصبح ظاهراً للناس في ${APP_NAME}`);
-      loadApproved();
+      await updateDoc(doc(db, 'businesses', d.approve), { status: 'approved' });
+      await notifyOwner(d.approve, '✅ تم اعتماد نشاطك', `أصبح ظاهراً للناس في ${APP_NAME}`);
       toast('تم النشر وإرسال إشعار لصاحبه ✅');
     }
     else if (d.reject) {
@@ -2367,13 +2272,12 @@ $('adminList').onclick = async e => {
       await notifyOwner(d.reject, '❌ تم رفض نشاطك', reason.trim() || 'راجع البيانات وأعد الإرسال');
       toast('تم الرفض وإرسال إشعار لصاحبه');
     }
-    else if (d.hide) { await updateDoc(doc(db, 'businesses', d.hide), { status: 'hidden' }); loadApproved(); toast('تم الإخفاء ⏸️'); }
+    else if (d.hide) { await updateDoc(doc(db, 'businesses', d.hide), { status: 'hidden' }); toast('تم الإخفاء ⏸️'); }
     else if (d.del && confirm('حذف نهائي لهذا النشاط؟')) {
       await deleteDoc(doc(db, 'businesses', d.del));
       await deleteDoc(doc(db, 'regs', d.del)).catch(() => {});
       await deleteDoc(doc(db, 'bizPhotos', d.del)).catch(() => {});
       delete photoCache[d.del];
-      loadApproved();
       toast('تم الحذف 🗑️');
     }
   } catch (err) { toast('تعذر تنفيذ العملية'); }
