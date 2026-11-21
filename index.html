@@ -7,8 +7,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#08090c" id="themeMeta">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<link rel="icon" href="logo.png">
-<link rel="apple-touch-icon" href="logo.png">
+<link rel="icon" href="logo.jpg">
+<link rel="apple-touch-icon" href="logo.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -696,22 +696,27 @@ const TYPES = {
   doctor: { label: 'دكتور / عيادة', nameLbl: 'اسم الطبيب واللقب العلمي' },
   shop: { label: 'محل / مطعم', nameLbl: 'اسم المحل أو المطعم' },
   service: { label: 'خدمة / ورشة', nameLbl: 'اسم الخدمة أو الفني' },
-  real_estate: { label: 'عقار', nameLbl: 'عنوان العقار أو اسم المالك' }
+  real_estate: { label: 'عقار', nameLbl: 'عنوان العقار أو اسم المالك' },
+  pharmacy: { label: 'صيدلية', nameLbl: 'اسم الصيدلية' },
+  delivery: { label: 'دليفري', nameLbl: 'اسم المطعم أو المتجر' }
 };
 const SPECS = ['باطنة','أطفال','نساء وتوليد','جلدية وتجميل','أسنان','عظام','عيون','قلب وأوعية دموية','أنف وأذن وحنجرة','مخ وأعصاب','أخرى'];
 const CATS = {
-  shop: ['مطعم وكافيه','سوبر ماركت وبقالة','صيدلية','ملابس وأحذية','إلكترونيات وموبايلات','أدوات منزلية','مواد بناء وتشطيبات','أخرى'],
+  shop: ['مطعم وكافيه','سوبر ماركت وبقالة','ملابس وأحذية','إلكترونيات وموبايلات','أدوات منزلية','مواد بناء وتشطيبات','أخرى'],
   service: ['سباكة وأعمال صحية','كهربائي وتأسيس','نجارة ودهانات','صيانة أجهزة منزلية','نقل ورفع أثاث','تصوير ومناسبات','أخرى'],
-  real_estate: ['شقق للإيجار','شقق للبيع','أرض للبيع','محلات للإيجار','سكن طلبة','أخرى']
+  real_estate: ['شقق للإيجار','شقق للبيع','أرض للبيع','محلات للإيجار','سكن طلبة','أخرى'],
+  pharmacy: ['صيدلية عامة','صيدلية 24 ساعة','أخرى'],
+  delivery: ['مطاعم وكافيهات','سوبر ماركت وبقالة','حلويات ومخبوزات','خضار وفاكهة','أخرى']
 };
 const CAT_TABS = [
   { k: 'الكل', i: '🧭' },
   { k: 'المفضلة', i: '❤️' },
   { k: 'دكاترة', i: '🩺' },
-  { k: 'محل / مطعم', i: '🛍️' },
   { k: 'صيدليات', i: '💊' },
+  { k: 'محل / مطعم', i: '🛍️' },
   { k: 'خدمة', i: '🛠️' },
-  { k: 'عقارات', i: '🏠' }
+  { k: 'عقارات', i: '🏠' },
+  { k: 'دليفري', i: '🛵' }
 ];
 const CENTER = [30.46, 30.93];
 
@@ -756,7 +761,8 @@ const SYN = [
   ['تصوير','مصور','مصورين'],
   ['نقل','عفش','ترحيل'],
   ['موبايل','موبايلات','تليفون','تليفونات','الكترونيات'],
-  ['شقه','شقق','شقة','عقار','عقارات','ايجار','للايجار','بيت','اوضه','اوض','ارض','اراضي','سكن']
+  ['شقه','شقق','شقة','عقار','عقارات','ايجار','للايجار','بيت','اوضه','اوض','ارض','اراضي','سكن'],
+  ['دليفري','ديليفري','ديلفري','توصيل','اوردر','طلب للبيت']
 ].map(g => g.map(normAr));
 
 function expandTerm(term) {
@@ -1381,6 +1387,7 @@ function buildSubCats() {
   else if (browseCat === 'محل / مطعم') subs = ['الكل', ...CATS.shop];
   else if (browseCat === 'خدمة') subs = ['الكل', ...CATS.service];
   else if (browseCat === 'عقارات') subs = ['الكل', ...CATS.real_estate];
+  else if (browseCat === 'دليفري') subs = ['الكل', ...CATS.delivery];
   if (!subs) { $('subCatChips').classList.add('hidden'); $('subCatChips').innerHTML = ''; return; }
   $('subCatChips').classList.remove('hidden');
   $('subCatChips').innerHTML = subs.map(s => `<button type="button" class="chip ${s === browseSub ? 'on' : ''}" data-sub="${esc(s)}">${esc(s)}</button>`).join('');
@@ -1437,13 +1444,14 @@ function filtered() {
     const catOk = browseCat === 'الكل'
       || (browseCat === 'المفضلة' && favs.includes(b.id))
       || (browseCat === 'دكاترة' && b.type === 'doctor')
-      || (browseCat === 'محل / مطعم' && b.type === 'shop')
-      || (browseCat === 'صيدليات' && (b.category === 'صيدلية' || normAr(b.name).includes('صيدلي')))
+      || (browseCat === 'محل / مطعم' && b.type === 'shop' && b.category !== 'صيدلية')
+      || (browseCat === 'صيدليات' && (b.type === 'pharmacy' || b.category === 'صيدلية' || normAr(b.name).includes('صيدلي')))
       || (browseCat === 'خدمة' && b.type === 'service')
-      || (browseCat === 'عقارات' && b.type === 'real_estate');
+      || (browseCat === 'عقارات' && b.type === 'real_estate')
+      || (browseCat === 'دليفري' && b.type === 'delivery');
     const subOk = browseSub === 'الكل'
       || (browseCat === 'دكاترة' && b.specialty === browseSub)
-      || ((browseCat === 'محل / مطعم' || browseCat === 'خدمة' || browseCat === 'عقارات') && b.category === browseSub);
+      || ((browseCat === 'محل / مطعم' || browseCat === 'خدمة' || browseCat === 'عقارات' || browseCat === 'دليفري') && b.category === browseSub);
     const qOk = !q || matchesQuery(b, q);
     return catOk && subOk && qOk && (!onlyOpen || (!isRE(b) && isOpen(b.hours)));
   }).map(b => ({ ...b, km: userPos ? dist(userPos.lat, userPos.lng, b.lat, b.lng) : null }))
@@ -1552,7 +1560,7 @@ function renderMap() {
   bMarkers.forEach(m => bMap.removeLayer(m)); bMarkers = [];
   filtered().filter(b => b.lat && b.lng).forEach(b => {
     const isPharm = b.category === 'صيدلية' || normAr(b.name).includes('صيدلي');
-    const pinIcon = isRE(b) ? '🏠' : isPharm ? '💊' : b.type === 'doctor' ? '🩺' : b.type === 'service' ? '🛠️' : '🛍️';
+    const pinIcon = isRE(b) ? '🏠' : b.type === 'delivery' ? '🛵' : isPharm ? '💊' : b.type === 'doctor' ? '🩺' : b.type === 'service' ? '🛠️' : '🛍️';
     const pinCls = isRE(b) ? 're' : b.type === 'doctor' ? 'doc' : b.type === 'service' ? 'srv' : 'shop';
     const icon = L.divIcon({
       className: '',
