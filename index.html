@@ -1025,10 +1025,28 @@ async function loadApproved() {
   }
 }
 
+let reviewsLoadedAll = false;
+const revLoaded = new Set();
+
+/* تقييمات نشاط واحد بس لما يتفتح */
+async function loadReviewsFor(bizId) {
+  if (guest || !me?.uid || revLoaded.has(bizId)) return;
+  revLoaded.add(bizId);
+  try {
+    const s = await getDocs(query(collection(db, 'reviews'), where('bizId', '==', bizId)));
+    reviews = reviews.filter(r => r.bizId !== bizId).concat(s.docs.map(d => ({ id: d.id, ...d.data() })));
+    if (curBiz?.id === bizId) renderRatings(curBiz);
+    renderBrowse();
+  } catch (e) { revLoaded.delete(bizId); }
+}
+
+/* كل التقييمات: للفلترة بالأعلى تقييماً ولوحة الإدارة بس */
 async function loadReviewsOnce() {
+  if (reviewsLoadedAll || guest || !me?.uid) return;
   try {
     const s = await getDocs(collection(db, 'reviews'));
     reviews = s.docs.map(d => ({ id: d.id, ...d.data() }));
+    reviewsLoadedAll = true;
     renderBrowse(); renderAdminStats();
   } catch (e) {}
 }
@@ -1301,7 +1319,7 @@ async function enterGuest() {
   unsubs.push(listenTrains(), listenOffers());
   buildCats(); buildSubCats(); buildTypeChips(); buildHours();
   currentTab = 'browse'; switchTab('browse');
-  await Promise.all([loadApproved(), loadReviewsOnce()]);
+  await loadApproved();
 }
 
 $('guestBtn').onclick = enterGuest;
@@ -1324,7 +1342,7 @@ onAuthStateChanged(auth, async user => {
   $('adminTab').classList.toggle('hidden', profile.role !== 'admin');
   initPulse(); listen(); buildCats(); buildSubCats(); buildTypeChips(); buildHours();
   currentTab = 'browse'; switchTab('browse');
-  await Promise.all([loadApproved(), loadReviewsOnce()]);
+  await loadApproved();
 });
 
 function listen() {
@@ -1448,7 +1466,7 @@ $('fTopRated').onclick = () => {
   topRated = !topRated;
   $('fTopRated').classList.toggle('active', topRated);
   if (topRated && nearMe) { nearMe = false; $('fNear').classList.remove('active'); }
-  if (topRated) toast('مرتبة حسب الأعلى تقييماً ⭐');
+  if (topRated) { toast('مرتبة حسب الأعلى تقييماً ⭐'); loadReviewsOnce(); }
   renderBrowse();
 };
 $('fNear').onclick = () => {
@@ -1501,9 +1519,23 @@ function filtered() {
     });
 }
 
+const pendingStats = {};
 function trackStat(bizId, field) {
-  setDoc(doc(db, 'bizStats', bizId), { [field]: increment(1) }, { merge: true }).catch(() => {});
+  pendingStats[bizId] = pendingStats[bizId] || {};
+  pendingStats[bizId][field] = (pendingStats[bizId][field] || 0) + 1;
 }
+function flushStats() {
+  for (const id of Object.keys(pendingStats)) {
+    const data = pendingStats[id];
+    delete pendingStats[id];
+    const upd = {};
+    for (const k of Object.keys(data)) upd[k] = increment(data[k]);
+    setDoc(doc(db, 'bizStats', id), upd, { merge: true }).catch(() => {});
+  }
+}
+setInterval(flushStats, 60000);
+window.addEventListener('pagehide', flushStats);
+document.addEventListener('visibilitychange', () => { if (document.hidden) flushStats(); });
 
 function renderBrowse() {
   const list = filtered();
@@ -1774,6 +1806,7 @@ function openModal(b) {
     ${b.lat ? `<a class="btn s" style="grid-column:span 2" target="_blank" href="https://www.google.com/maps?q=${b.lat},${b.lng}">📍 فتح في خرائط جوجل</a>` : ''}
     ${isOwner ? '' : '<button class="btn s" data-report style="grid-column:span 2">⚠️ إبلاغ عن خطأ في البيانات</button>'}`;
   renderRatings(b);
+  loadReviewsFor(b.id);
   $('bizModal').classList.remove('hidden');
   loadGallery(b);
 }
@@ -2338,6 +2371,7 @@ $('contactBtn').onclick = () => {
 /* ---------- التنقل ---------- */
 function switchTab(n) {
   if (n !== 'add' && editId) cancelEdit();
+  if (n === 'admin') loadReviewsOnce();
   currentTab = n;
   ['browse', 'add', 'mine', 'admin'].forEach(t => $('tab-' + t).classList.toggle('hidden', t !== n));
   document.querySelectorAll('.nav [data-tab]').forEach(b => b.classList.toggle('on', b.dataset.tab === n));
