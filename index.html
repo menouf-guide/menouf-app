@@ -596,6 +596,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
       <span class="badge p">🔥 عرض اليوم</span>
       <button id="closeDeal" style="font-size:26px;color:var(--m);line-height:1">&times;</button>
     </div>
+    <img id="dImg" class="hidden" alt="" style="width:100%;height:220px;object-fit:cover;border-radius:16px;margin-bottom:12px;border:1px solid var(--b)">
     <h3 id="dTitle" class="ct" style="font-size:20px;margin-bottom:4px"></h3>
     <p id="dBizName" style="color:#059669;font-weight:800;margin-bottom:8px"></p>
     <div id="dDiscount" style="display:inline-block;background:var(--d);color:#fff;padding:4px 12px;border-radius:999px;font-weight:900;font-size:13px;margin-bottom:10px"></div>
@@ -617,6 +618,10 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
     <div class="field"><label>عنوان العرض</label><input id="oTitle" placeholder="مثال: وجبة شاورما سوبر" maxlength="50"></div>
     <div class="field"><label>الخصم أو الميزة (يظهر داخل الدائرة)</label><input id="oDiscount" placeholder="خصم 25%" maxlength="16"></div>
     <div class="field"><label>تفاصيل العرض</label><textarea id="oDesc" placeholder="اشرح العرض والشروط..." maxlength="200"></textarea></div>
+    <div class="field"><label>📸 صورة المنتج (اختياري)</label>
+      <input id="oPhoto" type="file" accept="image/*">
+      <div id="oPrev" class="photo-prev"></div>
+    </div>
     <div class="field"><label>مدة العرض</label>
       <select id="oDays"><option value="1">24 ساعة</option><option value="2">48 ساعة</option><option value="3">3 أيام</option><option value="7">أسبوع</option></select>
     </div>
@@ -880,6 +885,7 @@ async function preparePhotos(file) {
 }
 
 let pendingFile = null, removePhotos = false, photoCache = {}, editOwnerId = null;
+let offerPhoto = null;
 
 $('bPhotos').onchange = e => {
   const f = e.target.files && e.target.files[0];
@@ -1059,6 +1065,8 @@ $('dealsList').onclick = e => {
   $('dDiscount').textContent = o.discount || 'عرض خاص';
   $('dDesc').textContent = o.desc || '';
   $('dExp').textContent = o.expiresAt ? '⏳ ساري حتى: ' + fd(o.expiresAt) : '';
+  if (o.image) { $('dImg').src = o.image; $('dImg').classList.remove('hidden'); }
+  else { $('dImg').src = ''; $('dImg').classList.add('hidden'); }
   $('dGoBiz').onclick = () => {
     $('dealModal').classList.add('hidden');
     const b = approved.find(x => x.id === o.bizId);
@@ -1069,6 +1077,12 @@ $('dealsList').onclick = e => {
 $('closeDeal').onclick = () => $('dealModal').classList.add('hidden');
 $('dealModal').onclick = e => { if (e.target.id === 'dealModal') $('dealModal').classList.add('hidden'); };
 
+$('oPhoto').onchange = e => {
+  const f = e.target.files && e.target.files[0];
+  if (!f || !f.type.startsWith('image/')) { offerPhoto = null; $('oPrev').innerHTML = ''; return; }
+  offerPhoto = f;
+  $('oPrev').innerHTML = `<img src="${URL.createObjectURL(f)}" alt="" style="width:110px;height:110px;object-fit:cover;border-radius:14px">`;
+};
 $('closeOffer').onclick = () => $('offerModal').classList.add('hidden');
 $('offerModal').onclick = e => { if (e.target.id === 'offerModal') $('offerModal').classList.add('hidden'); };
 $('oSave').onclick = async () => {
@@ -1077,7 +1091,10 @@ $('oSave').onclick = async () => {
   const days = Number($('oDays').value || 1);
   const isAdm = profile?.role === 'admin';
   try {
+    let image = null;
+    if (offerPhoto) { toast('جاري تجهيز الصورة...'); image = await compressImage(offerPhoto, 600, 80000, 0.8); }
     await addDoc(collection(db, 'offers'), {
+      ...(image ? { image } : {}),
       bizId, bizName: $('oBizName').dataset.name || '',
       title, discount, desc: $('oDesc').value.trim(),
       expiresAt: Date.now() + days * DAY_MS,
@@ -1086,6 +1103,7 @@ $('oSave').onclick = async () => {
     });
     $('offerModal').classList.add('hidden');
     $('oTitle').value = ''; $('oDiscount').value = ''; $('oDesc').value = '';
+    offerPhoto = null; $('oPhoto').value = ''; $('oPrev').innerHTML = '';
     toast(isAdm ? 'تم نشر العرض ✅' : 'تم إرسال العرض وهيظهر بعد موافقة الإدارة 🔥');
   } catch (e) { toast('تعذر إرسال العرض'); }
 };
@@ -1097,6 +1115,7 @@ function renderAdminOffers() {
   box.innerHTML = offers.map(o => {
     const expired = !!(o.expiresAt && o.expiresAt <= now);
     return `<div class="lr" style="flex-direction:column;align-items:stretch;gap:6px">
+      ${o.image ? `<img src="${o.image}" alt="" style="width:100%;height:120px;object-fit:cover;border-radius:12px">` : ''}
       <div class="row">
         <strong>${esc(o.title)} (${esc(o.discount)})</strong>
         <div style="display:flex;gap:4px;flex-wrap:wrap">${expired ? '<span class="badge r">منتهي</span>' : ''}${badge(o.status || 'pending')}</div>
