@@ -698,14 +698,18 @@ const TYPES = {
   service: { label: 'خدمة / ورشة', nameLbl: 'اسم الخدمة أو الفني' },
   real_estate: { label: 'عقار', nameLbl: 'عنوان العقار أو اسم المالك' },
   pharmacy: { label: 'صيدلية', nameLbl: 'اسم الصيدلية' },
+  lab: { label: 'معامل وتحاليل وأشعة', nameLbl: 'اسم المعمل أو المركز' },
+  gym: { label: 'جيم ونادي رياضي', nameLbl: 'اسم الجيم أو النادي' },
   delivery: { label: 'دليفري', nameLbl: 'اسم الشخص (المندوب)' }
 };
-const SPECS = ['باطنة','أطفال','نساء وتوليد','جلدية وتجميل','أسنان','عظام','عيون','قلب وأوعية دموية','أنف وأذن وحنجرة','مخ وأعصاب','أخرى'];
+const SPECS = ['باطنة','أطفال','نساء وتوليد','جلدية وتجميل','أسنان','عظام','عيون','قلب وأوعية دموية','أنف وأذن وحنجرة','مخ وأعصاب','علاج السمنة والتغذية','العلاج الطبيعي والتأهيل','أخرى'];
 const CATS = {
   shop: ['مطعم وكافيه','سوبر ماركت وبقالة','ملابس وأحذية','إلكترونيات وموبايلات','أدوات منزلية','مواد بناء وتشطيبات','أخرى'],
   service: ['سباكة وأعمال صحية','كهربائي وتأسيس','نجارة ودهانات','صيانة أجهزة منزلية','نقل ورفع أثاث','تصوير ومناسبات','أخرى'],
   real_estate: ['شقق للإيجار','شقق للبيع','أرض للبيع','محلات للإيجار','سكن طلبة','أخرى'],
-  pharmacy: ['صيدلية عامة','صيدلية 24 ساعة','أخرى']
+  pharmacy: ['صيدلية عامة','صيدلية 24 ساعة','أخرى'],
+  lab: ['تحاليل طبية','أشعة','تحاليل وأشعة معاً','أخرى'],
+  gym: ['جيم','نادي رياضي','كابتن خاص','أخرى']
 };
 const CAT_TABS = [
   { k: 'الكل', i: '🧭' },
@@ -715,6 +719,8 @@ const CAT_TABS = [
   { k: 'محل / مطعم', i: '🛍️' },
   { k: 'خدمة', i: '🛠️' },
   { k: 'عقارات', i: '🏠' },
+  { k: 'معامل وأشعة', i: '🧪' },
+  { k: 'جيم ونادي', i: '🏋️' },
   { k: 'دليفري', i: '🛵' }
 ];
 const CENTER = [30.46, 30.93];
@@ -761,7 +767,11 @@ const SYN = [
   ['نقل','عفش','ترحيل'],
   ['موبايل','موبايلات','تليفون','تليفونات','الكترونيات'],
   ['شقه','شقق','شقة','عقار','عقارات','ايجار','للايجار','بيت','اوضه','اوض','ارض','اراضي','سكن'],
-  ['دليفري','ديليفري','ديلفري','توصيل','اوردر','طلب للبيت']
+  ['دليفري','ديليفري','ديلفري','توصيل','اوردر','طلب للبيت'],
+  ['تحليل','تحاليل','معمل','معامل','مختبر','اشعه','اشعة','اشعات','مركز اشعه'],
+  ['جيم','جيمات','نادي','نادي رياضي','لياقه','كمال اجسام','كابتن','رياضه'],
+  ['سمنه','نحافه','تخسيس','ريجيم','تغذيه','تخسيس الوزن'],
+  ['علاج طبيعي','فيزيو','فيزيوثيرابي','تأهيل','تاهيل']
 ].map(g => g.map(normAr));
 
 function expandTerm(term) {
@@ -1386,6 +1396,8 @@ function buildSubCats() {
   else if (browseCat === 'محل / مطعم') subs = ['الكل', ...CATS.shop];
   else if (browseCat === 'خدمة') subs = ['الكل', ...CATS.service];
   else if (browseCat === 'عقارات') subs = ['الكل', ...CATS.real_estate];
+  else if (browseCat === 'معامل وأشعة') subs = ['الكل', ...CATS.lab];
+  else if (browseCat === 'جيم ونادي') subs = ['الكل', ...CATS.gym];
   if (!subs) { $('subCatChips').classList.add('hidden'); $('subCatChips').innerHTML = ''; return; }
   $('subCatChips').classList.remove('hidden');
   $('subCatChips').innerHTML = subs.map(s => `<button type="button" class="chip ${s === browseSub ? 'on' : ''}" data-sub="${esc(s)}">${esc(s)}</button>`).join('');
@@ -1446,10 +1458,12 @@ function filtered() {
       || (browseCat === 'صيدليات' && (b.type === 'pharmacy' || b.category === 'صيدلية' || normAr(b.name).includes('صيدلي')))
       || (browseCat === 'خدمة' && b.type === 'service')
       || (browseCat === 'عقارات' && b.type === 'real_estate')
-      || (browseCat === 'دليفري' && b.type === 'delivery');
+      || (browseCat === 'دليفري' && b.type === 'delivery')
+      || (browseCat === 'معامل وأشعة' && b.type === 'lab')
+      || (browseCat === 'جيم ونادي' && b.type === 'gym');
     const subOk = browseSub === 'الكل'
       || (browseCat === 'دكاترة' && b.specialty === browseSub)
-      || ((browseCat === 'محل / مطعم' || browseCat === 'خدمة' || browseCat === 'عقارات') && b.category === browseSub);
+      || ((browseCat === 'محل / مطعم' || browseCat === 'خدمة' || browseCat === 'عقارات' || browseCat === 'معامل وأشعة' || browseCat === 'جيم ونادي') && b.category === browseSub);
     const qOk = !q || matchesQuery(b, q);
     return catOk && subOk && qOk && (!onlyOpen || (!isRE(b) && isOpen(b.hours)));
   }).map(b => ({ ...b, km: userPos ? dist(userPos.lat, userPos.lng, b.lat, b.lng) : null }))
@@ -1559,7 +1573,7 @@ function renderMap() {
   bMarkers.forEach(m => bMap.removeLayer(m)); bMarkers = [];
   filtered().filter(b => b.lat && b.lng).forEach(b => {
     const isPharm = b.category === 'صيدلية' || normAr(b.name).includes('صيدلي');
-    const pinIcon = isRE(b) ? '🏠' : b.type === 'delivery' ? '🛵' : isPharm ? '💊' : b.type === 'doctor' ? '🩺' : b.type === 'service' ? '🛠️' : '🛍️';
+    const pinIcon = isRE(b) ? '🏠' : b.type === 'delivery' ? '🛵' : b.type === 'lab' ? '🧪' : b.type === 'gym' ? '🏋️' : isPharm ? '💊' : b.type === 'doctor' ? '🩺' : b.type === 'service' ? '🛠️' : '🛍️';
     const pinCls = isRE(b) ? 're' : b.type === 'doctor' ? 'doc' : b.type === 'service' ? 'srv' : 'shop';
     const icon = L.divIcon({
       className: '',
