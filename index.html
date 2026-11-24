@@ -288,7 +288,8 @@ textarea{min-height:85px;resize:vertical}
 .empty{text-align:center;color:var(--m);padding:38px 16px;font-weight:700}
 .empty p{font-size:15px;color:var(--txt2);margin-bottom:6px}
 .empty small{display:block;color:var(--m);font-size:13px;font-weight:600;line-height:1.7;margin-bottom:14px}
-.edit{background:var(--gold-soft);border:1px solid var(--bg2);color:#92400e;padding:12px 14px;border-radius:14px;font-size:13.5px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;font-weight:700}
+.edit{background:var(--gold-soft);border:1px solid var(--bg2);color:#92400e;padding:12px 14px;border-radius:14px;font-size:13.5px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:700}
+:root[data-theme="dark"] .edit{color:#fde68a}
 
 .qty-box{display:flex;align-items:center;gap:6px;flex:none}
 .qty-btn{width:28px;height:28px;border-radius:50%;background:rgba(12,93,63,.12);color:var(--p);border:1px solid var(--b2);font-weight:900;display:flex;align-items:center;justify-content:center}
@@ -516,6 +517,11 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
     <div id="tab-admin" class="hidden">
       <div class="ct" style="margin-bottom:10px;color:var(--p)">لوحة الإدارة 🛡️</div>
 
+      <div id="pubVerBar" class="edit hidden">
+        <span>📢 توجد تعديلات لم تُنشر بعد للمستخدمين</span>
+        <button type="button" id="pubVerBtn" class="btn sm">نشر التحديث للجميع 🔄</button>
+      </div>
+
       <div class="chips" id="adminTabs">
         <button type="button" class="chip on" data-asec="sStats">📊 نظرة عامة</button>
         <button type="button" class="chip" data-asec="sBiz">🏪 الأنشطة</button>
@@ -524,6 +530,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
       </div>
 
       <div class="asec on" id="sStats">
+        <button class="btn" id="pubVerNowBtn" style="margin-bottom:10px">🔄 تحديث الدليل عند المستخدمين الآن</button>
         <button class="btn s" id="cleanBtn" style="margin-bottom:12px">🧹 تنظيف بيانات الأنشطة القديمة</button>
         <div id="adminStats"></div>
       </div>
@@ -544,7 +551,10 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
 
       <div class="asec" id="sOffers">
         <div class="card">
-          <div class="ct" style="margin-bottom:10px">🔥 عروض أصحاب الأنشطة</div>
+          <div class="row" style="margin-bottom:10px;align-items:center">
+            <div class="ct">🔥 عروض أصحاب الأنشطة</div>
+            <button type="button" class="btn sm d" id="delExpiredOffersBtn">🧹 مسح المنتهية</button>
+          </div>
           <div id="adminOffersBox"><div class="empty" style="padding:12px">لا توجد عروض</div></div>
         </div>
       </div>
@@ -709,7 +719,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, deleteUser } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, getFirestore, doc, getDoc, getDocFromServer, getDocs, getDocsFromCache, getDocsFromServer, setDoc, deleteDoc, collection, addDoc, query, where, orderBy, onSnapshot, updateDoc, serverTimestamp, deleteField, getAggregateFromServer, count, writeBatch, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, getFirestore, doc, getDoc, getDocFromServer, getDocs, getDocsFromCache, getDocsFromServer, setDoc, deleteDoc, collection, addDoc, query, where, orderBy, limit, onSnapshot, updateDoc, serverTimestamp, deleteField, getAggregateFromServer, count, writeBatch, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const app = initializeApp(window.FIREBASE_CONFIG);
 const auth = getAuth(app);
@@ -1102,13 +1112,13 @@ $('rmPhotos').onchange = e => {
 /* ---------- الحالة العامة ---------- */
 let me = null, profile = null, unsubs = [], guest = false, mode = 'login';
 let approved = [], myBiz = [], allBiz = [], reports = [], reviews = [], notifs = [], announces = [], offers = [];
-let myStats = {};
-let loadingPage = false, deepHandled = false;
+let myStats = {}, statsLoaded = false;
+let loadingPage = false, deepHandled = false, dirtyBizVer = false;
 let userCount = null, type = null, items = [], browseCat = 'الكل', browseSub = 'الكل', q = '', adminQ = '';
 let editId = null, editOrigType = null, editOrigStatus = null, adminEditing = false, adminFilter = 'pending';
 let map = null, marker = null, bMap = null, bMarkers = [], userMapMarker = null, curBiz = null, cart = {};
 let userPos = null, onlyOpen = false, nearMe = false, topRated = false, mapView = false;
-let currentTab = 'browse', adminTimer = null;
+let currentTab = 'browse';
 let favs = JSON.parse(localStorage.getItem('menouf_favs') || '[]');
 let lastAnnSeen = Number(localStorage.getItem('menouf_ann_seen') || 0);
 const deepBizId = new URLSearchParams(location.search).get('biz');
@@ -1234,7 +1244,14 @@ async function bumpBizVersion() {
     await setDoc(doc(db, 'appMeta', 'public'), { bizVer: v }, { merge: true });
     localStorage.setItem(BIZ_VER_KEY, String(v));
     localStorage.setItem(BIZ_TS_KEY, String(v));
+    dirtyBizVer = false;
+    $('pubVerBar')?.classList.add('hidden');
   } catch (e) {}
+}
+
+function markBizDirty() {
+  dirtyBizVer = true;
+  $('pubVerBar')?.classList.remove('hidden');
 }
 
 async function loadApproved(forceServer = false) {
@@ -1244,6 +1261,7 @@ async function loadApproved(forceServer = false) {
   try {
     const qy = query(collection(db, 'businesses'), where('status', '==', 'approved'), orderBy('createdAt', 'desc'));
     let s = null;
+    let fetchedServerVer = null;
 
     if (!forceServer) {
       let localVer = null, lastTs = 0;
@@ -1256,8 +1274,8 @@ async function loadApproved(forceServer = false) {
       if (cacheFresh) {
         try {
           const meta = await getDocFromServer(doc(db, 'appMeta', 'public'));
-          const serverVer = meta.exists() ? String(meta.data().bizVer || 'v0') : 'v0';
-          if (serverVer === localVer) {
+          fetchedServerVer = meta.exists() ? String(meta.data().bizVer || 'v0') : 'v0';
+          if (fetchedServerVer === localVer) {
             const cached = await getDocsFromCache(qy);
             if (!cached.empty) s = cached;
           }
@@ -1272,11 +1290,14 @@ async function loadApproved(forceServer = false) {
     }
 
     if (!s) {
-      let serverVer = 'v0';
-      try {
-        const meta = await getDocFromServer(doc(db, 'appMeta', 'public'));
-        if (meta.exists() && meta.data().bizVer) serverVer = String(meta.data().bizVer);
-      } catch (e) {}
+      let serverVer = fetchedServerVer;
+      if (!serverVer) {
+        serverVer = 'v0';
+        try {
+          const meta = await getDocFromServer(doc(db, 'appMeta', 'public'));
+          if (meta.exists() && meta.data().bizVer) serverVer = String(meta.data().bizVer);
+        } catch (e) {}
+      }
       s = await getDocsFromServer(qy);
       try {
         localStorage.setItem(BIZ_VER_KEY, serverVer);
@@ -1309,7 +1330,7 @@ async function loadReviewsFor(bizId) {
   if (guest || !me?.uid || revLoaded.has(bizId)) return;
   revLoaded.add(bizId);
   try {
-    const s = await getDocs(query(collection(db, 'reviews'), where('bizId', '==', bizId)));
+    const s = await getDocs(query(collection(db, 'reviews'), where('bizId', '==', bizId), limit(30)));
     reviews = reviews.filter(r => r.bizId !== bizId).concat(s.docs.map(d => ({ id: d.id, ...d.data() })));
     if (curBiz?.id === bizId) renderRatings(curBiz);
     renderBrowse();
@@ -1319,7 +1340,7 @@ async function loadReviewsFor(bizId) {
 async function loadReviewsOnce() {
   if (reviewsLoadedAll || guest || !me?.uid) return;
   try {
-    const s = await getDocs(collection(db, 'reviews'));
+    const s = await getDocs(query(collection(db, 'reviews'), orderBy('createdAt', 'desc'), limit(200)));
     reviews = s.docs.map(d => ({ id: d.id, ...d.data() }));
     reviewsLoadedAll = true;
     renderBrowse(); renderAdminStats();
@@ -1328,7 +1349,7 @@ async function loadReviewsOnce() {
 
 function listenOffers() {
   const isAdm = profile?.role === 'admin';
-  const qy = isAdm ? collection(db, 'offers') : query(collection(db, 'offers'), where('status', '==', 'approved'));
+  const qy = isAdm ? collection(db, 'offers') : query(collection(db, 'offers'), where('status', '==', 'approved'), limit(25));
   return onSnapshot(qy, s => {
     offers = s.docs.map(d => ({ id: d.id, ...d.data() }));
     renderDeals(); renderAdminOffers(); renderAdminStats();
@@ -1470,6 +1491,18 @@ $('adminOffersBox').onclick = async e => {
     if (delB && confirm('حذف العرض؟')) { await deleteDoc(doc(db, 'offers', delB.dataset.odel)); toast('تم الحذف'); }
   } catch (err) { toast('تعذر التنفيذ'); }
 };
+$('delExpiredOffersBtn').onclick = async () => {
+  const now = Date.now();
+  const expired = offers.filter(o => o.expiresAt && o.expiresAt <= now);
+  if (!expired.length) return toast('لا توجد عروض منتهية');
+  if (!confirm(`حذف ${expired.length} عرض منتهي؟`)) return;
+  try {
+    const batch = writeBatch(db);
+    expired.forEach(o => batch.delete(doc(db, 'offers', o.id)));
+    await batch.commit();
+    toast(`تم حذف ${expired.length} عرض منتهي 🧹`);
+  } catch (err) { toast('تعذر حذف العروض المنتهية'); }
+};
 
 /* ---------- القطارات: عرض ---------- */
 function renderTrains() {
@@ -1567,6 +1600,7 @@ function goToAuth() {
 
 async function enterGuest() {
   guest = true; me = null; profile = null;
+  myStats = {}; statsLoaded = false;
   $('authView').classList.add('hidden'); $('appView').classList.remove('hidden');
   $('navAdd').classList.add('hidden'); $('navMine').classList.add('hidden'); $('adminTab').classList.add('hidden'); $('bellBtn').classList.add('hidden');
   $('logoutBtn').title = 'دخول'; $('logoutBtn').textContent = '🔑';
@@ -1585,7 +1619,7 @@ $('logoutBtn').onclick = () => signOut(auth);
 
 onAuthStateChanged(auth, async user => {
   unsubs.forEach(u => u()); unsubs = [];
-  if (adminTimer) { clearInterval(adminTimer); adminTimer = null; }
+  myStats = {}; statsLoaded = false; userCount = null;
   if (!user) {
     if (guest) return;
     if (deepBizId && !deepHandled) { enterGuest(); return; }
@@ -1603,20 +1637,29 @@ onAuthStateChanged(auth, async user => {
   await loadApproved();
 });
 
+async function loadMyStatsOnce() {
+  if (statsLoaded || !myBiz.length) return;
+  statsLoaded = true;
+  await Promise.all(myBiz.map(b =>
+    getDoc(doc(db, 'bizStats', b.id))
+      .then(st => { if (st.exists()) myStats[b.id] = st.data(); })
+      .catch(() => {})
+  ));
+  renderMine();
+}
+
 function listen() {
   unsubs.push(listenOffers());
   unsubs.push(onSnapshot(query(collection(db, 'businesses'), where('ownerId', '==', me.uid)), s => {
     myBiz = s.docs.map(d => ({ id: d.id, ...d.data() }));
     renderMine();
-    myBiz.forEach(b => {
-      getDoc(doc(db, 'bizStats', b.id)).then(st => { if (st.exists()) { myStats[b.id] = st.data(); renderMine(); } }).catch(() => {});
-    });
+    if (currentTab === 'mine') { statsLoaded = false; loadMyStatsOnce(); }
   }));
-  unsubs.push(onSnapshot(query(collection(db, 'notifications'), where('userId', '==', me.uid)), s => {
+  unsubs.push(onSnapshot(query(collection(db, 'notifications'), where('userId', '==', me.uid), limit(25)), s => {
     notifs = s.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => tsMs(b.createdAt) - tsMs(a.createdAt));
     updateBell();
   }));
-  unsubs.push(onSnapshot(collection(db, 'announcements'), s => {
+  unsubs.push(onSnapshot(query(collection(db, 'announcements'), orderBy('createdAt', 'desc'), limit(10)), s => {
     const list = s.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => tsMs(b.createdAt) - tsMs(a.createdAt));
     if (announces.length && list.length && tsMs(list[0].createdAt) > tsMs(announces[0].createdAt)) toast('📢 ' + list[0].title);
     announces = list; updateBell();
@@ -1624,8 +1667,6 @@ function listen() {
   if (profile.role === 'admin') {
     unsubs.push(onSnapshot(collection(db, 'businesses'), s => { allBiz = s.docs.map(d => ({ id: d.id, ...d.data() })); renderAdmin(); }));
     unsubs.push(onSnapshot(collection(db, 'reports'), s => { reports = s.docs.map(d => ({ id: d.id, ...d.data() })); renderAdmin(); }));
-    loadUserCount();
-    adminTimer = setInterval(loadUserCount, 120000);
   }
 }
 
@@ -2315,8 +2356,8 @@ $('bizForm').onsubmit = async e => {
       }
       delete photoCache[editId];
       if (adminEditing) {
-        await bumpBizVersion();
-        toast('تم حفظ التعديلات الإدارية بنجاح ✅');
+        markBizDirty();
+        toast('تم حفظ التعديلات الإدارية بنجاح ✅ (اضغط نشر التحديث للجميع عند الانتهاء)');
         loadApproved(true);
       } else {
         if (editOrigStatus === 'approved') await bumpBizVersion();
@@ -2492,6 +2533,14 @@ $('adminTabs').onclick = e => {
   document.querySelectorAll('#tab-admin .asec').forEach(s => s.classList.toggle('on', s.id === b.dataset.asec));
 };
 
+async function publishUpdatesAll() {
+  await bumpBizVersion();
+  await loadApproved(true);
+  toast('تم تحديث الدليل عند جميع المستخدمين 🔄✅');
+}
+$('pubVerBtn').onclick = publishUpdatesAll;
+$('pubVerNowBtn').onclick = publishUpdatesAll;
+
 function renderAdminStats() {
   const c = s => allBiz.filter(b => b.status === s).length;
   const avg = reviews.length ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1) : '—';
@@ -2532,7 +2581,7 @@ $('cleanBtn').onclick = async () => {
       if (b.ownerPhone) upd.ownerPhone = deleteField();
       if (Object.keys(upd).length) { await updateDoc(doc(db, 'businesses', b.id), upd); n++; }
     }
-    await bumpBizVersion();
+    if (n > 0) markBizDirty();
     toast(`تم تنظيف ${n} نشاط ✅`);
   } catch (err) { toast('حصل خطأ أثناء التنظيف: ' + (err.code || err.message)); }
 };
@@ -2619,30 +2668,30 @@ $('adminList').onclick = async e => {
       await updateDoc(doc(db, 'businesses', d.pdel), { thumb: deleteField(), photoCount: 0 });
       await deleteDoc(doc(db, 'bizPhotos', d.pdel)).catch(() => {});
       delete photoCache[d.pdel];
-      await bumpBizVersion();
+      markBizDirty();
       loadApproved(true);
       toast('تم حذف الصورة 🖼️');
     }
     else if (d.verify) {
       const b = allBiz.find(x => x.id === d.verify);
       await updateDoc(doc(db, 'businesses', d.verify), { verified: !b.verified });
-      await bumpBizVersion();
+      markBizDirty();
       loadApproved(true);
       toast(b.verified ? 'تم إلغاء التوثيق' : 'تم توثيق النشاط ✓');
     }
     else if (d.feature) {
       const b = allBiz.find(x => x.id === d.feature);
       await updateDoc(doc(db, 'businesses', d.feature), { featured: !b.featured });
-      await bumpBizVersion();
+      markBizDirty();
       loadApproved(true);
       toast(b.featured ? 'تم إلغاء التميز' : 'تم تمييز النشاط ⭐');
     }
     else if (d.approve) {
       await updateDoc(doc(db, 'businesses', d.approve), { status: 'approved' });
-      await bumpBizVersion();
+      markBizDirty();
       await notifyOwner(d.approve, '✅ تم اعتماد نشاطك', `أصبح ظاهراً للناس في ${APP_NAME}`);
       loadApproved(true);
-      toast('تم النشر وإرسال إشعار لصاحبه ✅');
+      toast('تم الاعتماد ✅ (اضغط نشر التحديث للجميع بعد الانتهاء)');
     }
     else if (d.reject) {
       const reason = prompt('سبب الرفض (هيوصل لصاحب النشاط):');
@@ -2653,7 +2702,7 @@ $('adminList').onclick = async e => {
     }
     else if (d.hide) {
       await updateDoc(doc(db, 'businesses', d.hide), { status: 'hidden' });
-      await bumpBizVersion();
+      markBizDirty();
       loadApproved(true);
       toast('تم الإخفاء ⏸️');
     }
@@ -2663,7 +2712,7 @@ $('adminList').onclick = async e => {
       await deleteDoc(doc(db, 'bizPhotos', d.del)).catch(() => {});
       await deleteDoc(doc(db, 'offers', d.del)).catch(() => {});
       delete photoCache[d.del];
-      await bumpBizVersion();
+      markBizDirty();
       loadApproved(true);
       toast('تم الحذف 🗑️');
     }
@@ -2681,8 +2730,12 @@ $('contactBtn').onclick = () => {
 /* ---------- التنقل ---------- */
 function switchTab(n) {
   if (n !== 'add' && editId) cancelEdit();
-  if (n === 'admin') loadReviewsOnce();
   currentTab = n;
+  if (n === 'mine') loadMyStatsOnce();
+  if (n === 'admin') {
+    loadReviewsOnce();
+    if (userCount === null) loadUserCount();
+  }
   ['browse', 'add', 'mine', 'admin'].forEach(t => $('tab-' + t).classList.toggle('hidden', t !== n));
   document.querySelectorAll('.nav [data-tab]').forEach(b => b.classList.toggle('on', b.dataset.tab === n));
   window.scrollTo({ top: 0, behavior: 'smooth' });
