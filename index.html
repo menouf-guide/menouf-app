@@ -417,7 +417,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
       <div id="dealsBar" class="deals-wrap hidden">
         <div class="sec" style="margin-top:4px">
           <span class="sec-title gold-line">📢 عروض اليوم</span>
-          <span class="sec-more">المزيد ‹</span>
+          <button type="button" id="moreDealsBtn" class="sec-more">المزيد ‹</button>
         </div>
         <div class="deals" id="dealsList"></div>
       </div>
@@ -628,6 +628,17 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
     <p id="dDesc" style="color:var(--txt2);margin-bottom:12px;line-height:1.8"></p>
     <p id="dExp" class="muted" style="margin-bottom:14px"></p>
     <button type="button" id="dGoBiz" class="btn">📍 فتح صفحة النشاط</button>
+  </div>
+</div>
+
+<!-- كل عروض اليوم -->
+<div id="allDealsModal" class="modal hidden">
+  <div class="sheet">
+    <div class="row" style="margin-bottom:12px">
+      <h3 class="ct">📢 كل عروض اليوم</h3>
+      <button id="closeAllDeals" style="font-size:26px;color:var(--m)">&times;</button>
+    </div>
+    <div id="allDealsList"></div>
   </div>
 </div>
 
@@ -1313,7 +1324,7 @@ function listenOffers() {
   }, () => {});
 }
 
-/* ---------- عروض اليوم (استايل الكروت بالصورة) ---------- */
+/* ---------- عروض اليوم (استايل الكروت + قائمة المزيد) ---------- */
 function activeOffers() {
   const now = Date.now();
   return offers.filter(o => o.status === 'approved' && (!o.expiresAt || o.expiresAt > now))
@@ -1337,9 +1348,8 @@ function renderDeals() {
       </div>
     </div>`).join('');
 }
-$('dealsList').onclick = e => {
-  const el = e.target.closest('[data-deal]'); if (!el) return;
-  const o = offers.find(x => x.id === el.dataset.deal); if (!o) return;
+function openDealById(id) {
+  const o = offers.find(x => x.id === id); if (!o) return;
   $('dTitle').textContent = o.title;
   $('dBizName').textContent = '🏪 ' + (o.bizName || '');
   $('dDiscount').textContent = o.discount || 'عرض خاص';
@@ -1353,7 +1363,35 @@ $('dealsList').onclick = e => {
     if (b) openModal(b); else toast('النشاط غير متاح حالياً');
   };
   $('dealModal').classList.remove('hidden');
+}
+$('dealsList').onclick = e => {
+  const el = e.target.closest('[data-deal]'); if (el) openDealById(el.dataset.deal);
 };
+$('moreDealsBtn').onclick = () => {
+  const list = activeOffers();
+  $('allDealsList').innerHTML = list.map(o => `
+    <div class="card" data-deal="${o.id}" style="cursor:pointer;padding:12px">
+      <div class="row" style="align-items:center">
+        <div style="display:flex;gap:10px;align-items:center;min-width:0;flex:1">
+          ${o.image ? `<img src="${o.image}" style="width:58px;height:58px;border-radius:12px;object-fit:cover;flex:none" alt="">` : `<div class="biz-ico" style="width:48px;height:48px">🎁</div>`}
+          <div style="min-width:0">
+            <div class="name" style="font-size:15px">${esc(o.bizName || o.title)}</div>
+            <div class="spec">${esc(o.title || '')}</div>
+            <div class="muted" style="font-size:11.5px">${o.expiresAt ? '⏳ حتى ' + fd(o.expiresAt) : ''}</div>
+          </div>
+        </div>
+        <span style="background:#fde047;color:#111827;font-size:11.5px;font-weight:900;padding:4px 10px;border-radius:10px;flex:none">${esc(o.discount || 'عرض')}</span>
+      </div>
+    </div>`).join('') || '<div class="empty">لا توجد عروض حالياً</div>';
+  $('allDealsModal').classList.remove('hidden');
+};
+$('allDealsList').onclick = e => {
+  const el = e.target.closest('[data-deal]'); if (!el) return;
+  $('allDealsModal').classList.add('hidden');
+  openDealById(el.dataset.deal);
+};
+$('closeAllDeals').onclick = () => $('allDealsModal').classList.add('hidden');
+$('allDealsModal').onclick = e => { if (e.target.id === 'allDealsModal') $('allDealsModal').classList.add('hidden'); };
 $('closeDeal').onclick = () => $('dealModal').classList.add('hidden');
 $('dealModal').onclick = e => { if (e.target.id === 'dealModal') $('dealModal').classList.add('hidden'); };
 
@@ -1370,10 +1408,11 @@ $('oSave').onclick = async () => {
   if (!title || !discount) return toast('اكتب عنوان العرض والخصم');
   const days = Number($('oDays').value || 1);
   const isAdm = profile?.role === 'admin';
+  $('oSave').disabled = true;
   try {
     let image = null;
     if (offerPhoto) { toast('جاري تجهيز الصورة...'); image = await compressImage(offerPhoto, 600, 80000, 0.8); }
-    await addDoc(collection(db, 'offers'), {
+    await setDoc(doc(db, 'offers', bizId), {
       ...(image ? { image } : {}),
       bizId, bizName: $('oBizName').dataset.name || '',
       title, discount, desc: $('oDesc').value.trim(),
@@ -1385,7 +1424,11 @@ $('oSave').onclick = async () => {
     $('oTitle').value = ''; $('oDiscount').value = ''; $('oDesc').value = '';
     offerPhoto = null; $('oPhoto').value = ''; $('oPrev').innerHTML = '';
     toast(isAdm ? 'تم نشر العرض ✅' : 'تم إرسال العرض وهيظهر بعد موافقة الإدارة 🔥');
-  } catch (e) { toast('تعذر إرسال العرض'); }
+  } catch (e) {
+    toast('تعذر إرسال العرض، تأكد إنه مفيش عرض شغّال حالياً');
+  } finally {
+    $('oSave').disabled = false;
+  }
 };
 
 function renderAdminOffers() {
@@ -1505,6 +1548,7 @@ function goToAuth() {
   unsubs.forEach(u => u()); unsubs = [];
   $('bizModal').classList.add('hidden');
   $('dealModal').classList.add('hidden');
+  $('allDealsModal').classList.add('hidden');
   $('appView').classList.add('hidden');
   $('authView').classList.remove('hidden');
   setMode('login');
@@ -1583,6 +1627,7 @@ $('delAccBtn').onclick = async () => {
     for (const b of myBiz) {
       await deleteDoc(doc(db, 'regs', b.id)).catch(() => {});
       await deleteDoc(doc(db, 'bizPhotos', b.id)).catch(() => {});
+      await deleteDoc(doc(db, 'offers', b.id)).catch(() => {});
       await deleteDoc(doc(db, 'businesses', b.id)).catch(() => {});
     }
     const rv = await getDocs(query(collection(db, 'reviews'), where('reviewerId', '==', me.uid)));
@@ -2386,15 +2431,28 @@ $('mineList').onclick = async e => {
   }
   if (t.dataset.addoffer) {
     const b = myBiz.find(x => x.id === t.dataset.addoffer); if (!b) return;
+    if (profile?.role !== 'admin') {
+      try {
+        const snap = await getDoc(doc(db, 'offers', b.id));
+        if (snap.exists()) {
+          const o = snap.data();
+          if (o.status === 'pending') return toast('عندك عرض قيد المراجعة حالياً لهذا النشاط ⏳');
+          if (!o.expiresAt || o.expiresAt > Date.now()) {
+            return toast('عندك عرض شغّال حالياً حتى ' + fd(o.expiresAt));
+          }
+        }
+      } catch (err) {}
+    }
     $('oBizId').value = b.id; $('oBizName').textContent = 'للنشاط: ' + b.name; $('oBizName').dataset.name = b.name;
     $('offerModal').classList.remove('hidden'); return;
   }
   if (t.dataset.edit) { const b = myBiz.find(x => x.id === t.dataset.edit); if (b) startEdit(b, false); return; }
   if (t.dataset.del && confirm('حذف النشاط نهائياً؟')) {
     try {
-      await deleteDoc(doc(db, 'businesses', t.dataset.del));
       await deleteDoc(doc(db, 'regs', t.dataset.del)).catch(() => {});
       await deleteDoc(doc(db, 'bizPhotos', t.dataset.del)).catch(() => {});
+      await deleteDoc(doc(db, 'offers', t.dataset.del)).catch(() => {});
+      await deleteDoc(doc(db, 'businesses', t.dataset.del));
       delete photoCache[t.dataset.del];
       try { localStorage.removeItem(BIZ_VER_KEY); } catch (ex) {}
       loadApproved(true);
@@ -2579,6 +2637,7 @@ $('adminList').onclick = async e => {
       await deleteDoc(doc(db, 'businesses', d.del));
       await deleteDoc(doc(db, 'regs', d.del)).catch(() => {});
       await deleteDoc(doc(db, 'bizPhotos', d.del)).catch(() => {});
+      await deleteDoc(doc(db, 'offers', d.del)).catch(() => {});
       delete photoCache[d.del];
       await bumpBizVersion();
       loadApproved(true);
