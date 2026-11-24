@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>منوف 360 — دليلك في منوف</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#08090c" id="themeMeta">
+<meta name="theme-color" content="#fbf7ea" id="themeMeta">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="icon" type="image/png" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-512.png">
@@ -16,217 +16,245 @@
 <script>
 (function(){
   try {
-    if (localStorage.getItem('menouf_theme') !== 'dark') {
-      document.documentElement.setAttribute('data-theme', 'light');
+    if (localStorage.getItem('menouf_theme') === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
       var tm = document.getElementById('themeMeta');
-      if (tm) tm.content = '#fffdf7';
+      if (tm) tm.content = '#08090c';
     }
   } catch (e) {}
 })();
 </script>
 <style>
-/* ===== الوضع الليلي (الافتراضي) ===== */
+/* ===== الاستايل الافتراضي: منوف 360 (كريمي × أخضر زمردي × ذهبي) ===== */
 :root{
-  color-scheme:dark;
-  --bg:#08090c;
-  --bgGlow:rgba(245,196,0,.10);
-  --card:rgba(22,24,31,.9);
-  --surf:rgba(18,20,26,.95);
-  --inp:rgba(15,17,23,.85);
-  --chip:rgba(20,23,31,.75);
-  --row:rgba(255,255,255,.03);
-  --glass:rgba(0,0,0,.45);
-  --sheet:#13151c;
-  --nav:rgba(14,16,22,.96);
-  --toast:rgba(24,27,36,.96);
-  --overlay:rgba(4,5,8,.75);
-  --hdr:linear-gradient(180deg,rgba(40,34,10,.95),rgba(8,9,12,.92));
-  --pulse:linear-gradient(135deg,rgba(255,196,0,.12),rgba(34,197,94,.08) 70%,rgba(18,20,27,.95));
-  --txt:#f8fafc;
-  --txt2:#e2e8f0;
-  --txt3:#cbd5e1;
-  --m:#94a3b8;
-  --p:#ffc400;
-  --b:rgba(255,255,255,.08);
-  --b2:rgba(255,255,255,.1);
-  --bg2:rgba(245,196,0,.25);
-  --dash:rgba(255,255,255,.1);
-  --tg:#2d313d;
-  --deal-in:#11141c;
-  --star0:#3f3f46;
-  --okTxt:#d1fae5;
-  --d:#ef4444;
-  --v:#38bdf8;
-  --e:#22c55e;
-  --pg:linear-gradient(135deg,#ffd000,#e5a700);
-  --pglow:rgba(255,196,0,.28);
-  --eg:linear-gradient(135deg,#22c55e,#15803d);
-  --ph:#64748b;
-}
-/* ===== الوضع الفاتح (مشرق) ===== */
-:root[data-theme="light"]{
   color-scheme:light;
-  --bg:#fffdf7;
-  --bgGlow:rgba(255,213,79,.28);
+  --bg:#fbf7ea;
+  --bgGlow:rgba(16,120,80,.07);
   --card:#ffffff;
   --surf:#ffffff;
   --inp:#ffffff;
   --chip:#ffffff;
-  --row:#fff9e6;
-  --glass:rgba(255,255,255,.96);
+  --row:#f8f4e6;
+  --glass:rgba(255,255,255,.92);
   --sheet:#ffffff;
   --nav:#ffffff;
-  --toast:#1f2937;
-  --overlay:rgba(60,40,0,.30);
-  --hdr:linear-gradient(180deg,#ffe98a 0%,#fff6cc 60%,#fffdf7 100%);
-  --pulse:linear-gradient(135deg,#fff0a6,#dcfce7 70%,#ffffff);
-  --txt:#111827;
-  --txt2:#1f2937;
-  --txt3:#374151;
-  --m:#6b7280;
-  --p:#c98a00;
-  --b:rgba(150,110,0,.14);
-  --b2:rgba(150,110,0,.22);
-  --bg2:rgba(230,170,0,.55);
-  --dash:rgba(150,110,0,.22);
+  --toast:#0c3b28;
+  --overlay:rgba(10,35,25,.35);
+  --hdr:linear-gradient(180deg,#e4efe9 0%,#f5f2e4 62%,#fbf7ea 100%);
+  --pulse:#ffffff;
+  --txt:#102a22;
+  --txt2:#1f3d33;
+  --txt3:#4b635b;
+  --m:#6b7c76;
+  --p:#0c5d3f;         /* الأخضر الزمردي الأساسي */
+  --p2:#158057;        /* أخضر أفتح للأزرار */
+  --gold:#f59e0b;      /* الذهبي المميز */
+  --gold-soft:#fef3c7;
+  --b:rgba(12,93,63,.10);
+  --b2:rgba(12,93,63,.18);
+  --bg2:rgba(245,158,11,.42);
+  --dash:rgba(12,93,63,.14);
   --tg:#d1d5db;
-  --deal-in:#fffbeb;
+  --deal-in:#ffffff;
   --star0:#d1d5db;
   --okTxt:#065f46;
+  --d:#dc2626;
+  --v:#0284c7;
+  --e:#16a34a;
+  --pg:linear-gradient(135deg,#127a52,#0a4f34);
+  --pglow:rgba(12,93,63,.22);
+  --eg:linear-gradient(135deg,#22c55e,#15803d);
+  --gg:linear-gradient(135deg,#fbbf24,#f59e0b);
   --ph:#9ca3af;
-  --pglow:rgba(255,196,0,.45);
+  --shadow:0 6px 22px rgba(15,45,35,.06);
 }
-:root[data-theme="light"] .ib{background:#fff3c4;border-color:rgba(230,170,0,.55)}
-:root[data-theme="light"] .card{box-shadow:0 6px 22px rgba(150,110,0,.12);border-color:rgba(230,170,0,.22)}
-:root[data-theme="light"] .tool{background:#ffffff;box-shadow:0 2px 10px rgba(150,110,0,.08)}
-:root[data-theme="light"] .tool.active{background:#fff1b8}
-:root[data-theme="light"] .badge{background:#fffaf0}
-:root[data-theme="light"] .pulse-card{box-shadow:0 8px 24px rgba(150,110,0,.12)}
+
+/* ===== الوضع الليلي (اختياري من زر القمر) ===== */
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#08090c;
+  --bgGlow:rgba(16,185,129,.10);
+  --card:rgba(20,24,28,.94);
+  --surf:rgba(18,22,26,.96);
+  --inp:rgba(15,18,22,.9);
+  --chip:rgba(22,27,32,.85);
+  --row:rgba(255,255,255,.04);
+  --glass:rgba(15,20,22,.75);
+  --sheet:#12171a;
+  --nav:rgba(16,20,24,.97);
+  --toast:rgba(18,32,26,.98);
+  --overlay:rgba(4,5,8,.78);
+  --hdr:linear-gradient(180deg,rgba(12,55,38,.92),rgba(8,9,12,.95));
+  --pulse:rgba(20,25,28,.95);
+  --txt:#f8fafc;
+  --txt2:#e2e8f0;
+  --txt3:#cbd5e1;
+  --m:#94a3b8;
+  --p:#22c55e;
+  --p2:#16a34a;
+  --gold:#facc15;
+  --gold-soft:rgba(250,204,21,.15);
+  --b:rgba(255,255,255,.08);
+  --b2:rgba(255,255,255,.12);
+  --bg2:rgba(250,204,21,.30);
+  --dash:rgba(255,255,255,.1);
+  --tg:#2d313d;
+  --deal-in:#141a1e;
+  --star0:#3f3f46;
+  --okTxt:#d1fae5;
+  --ph:#64748b;
+  --pglow:rgba(34,197,94,.25);
+  --shadow:0 8px 28px rgba(0,0,0,.28);
+}
 
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:Cairo,system-ui,sans-serif;background:radial-gradient(circle at 50% 0%,var(--bgGlow),transparent 50%),var(--bg);color:var(--txt);min-height:100vh;font-size:15px;line-height:1.6;overflow-x:hidden;transition:background .25s,color .25s}
+body{font-family:Cairo,system-ui,sans-serif;background:radial-gradient(circle at 50% 0%,var(--bgGlow),transparent 55%),var(--bg);color:var(--txt);min-height:100vh;font-size:15px;line-height:1.6;overflow-x:hidden;transition:background .25s,color .25s}
 button,input,select,textarea{font:inherit;outline:none}
 button{cursor:pointer;border:0;background:none;color:inherit}
 a{text-decoration:none;color:inherit}
 .hidden{display:none!important}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @keyframes up{from{transform:translateY(100%)}to{transform:none}}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(16,185,129,.7)}70%{box-shadow:0 0 0 7px rgba(16,185,129,0)}100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}}
-@keyframes blink{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.9);background:rgba(239,68,68,.15)}50%{box-shadow:0 0 0 12px rgba(239,68,68,0);background:rgba(239,68,68,.6)}}
-.wrap{max-width:520px;margin:0 auto;padding:12px 16px 120px;animation:fadeIn .4s ease-out}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(22,163,74,.65)}70%{box-shadow:0 0 0 7px rgba(22,163,74,0)}100%{box-shadow:0 0 0 0 rgba(22,163,74,0)}}
+@keyframes blink{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.7)}50%{box-shadow:0 0 0 8px rgba(220,38,38,0)}}
+.wrap{max-width:520px;margin:0 auto;padding:10px 16px 115px;animation:fadeIn .4s ease-out}
 
-header{position:sticky;top:0;z-index:25;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--hdr);border-bottom:1px solid var(--bg2)}
-.brand{display:flex;align-items:center;gap:10px}
-.logo{width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid var(--p);box-shadow:0 0 14px var(--pglow)}
-.brand h1{font-size:18px;font-weight:900;color:var(--p);line-height:1.2}
-.brand small{color:var(--m);font-size:11.5px}
+/* ===== الهيدر الاحترافي مثل الصورة ===== */
+.hero-hdr{position:relative;background:var(--hdr);padding:10px 16px 18px;overflow:hidden;border-bottom:3px solid var(--p)}
+.hero-hdr::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:linear-gradient(90deg,var(--p),var(--gold),var(--p))}
+.hdr-top{display:flex;justify-content:space-between;align-items:center;max-width:520px;margin:0 auto 10px}
+.hdr-greet{font-size:12px;font-weight:800;color:var(--p);background:var(--glass);padding:4px 11px;border-radius:999px;border:1px solid var(--b)}
 .hact{display:flex;gap:6px}
-.ib{width:38px;height:38px;border-radius:50%;border:1px solid var(--bg2);background:rgba(255,196,0,.08);font-size:16px;display:flex;align-items:center;justify-content:center;color:var(--txt)}
-.ib.alert{border-color:rgba(239,68,68,.6);animation:blink 1.2s infinite}
+.ib{width:34px;height:34px;border-radius:50%;border:1px solid var(--b2);background:var(--glass);font-size:15px;display:flex;align-items:center;justify-content:center;color:var(--txt);box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.ib.alert{border-color:rgba(220,38,38,.45);background:rgba(254,226,226,.9);animation:blink 1.4s infinite}
 .ib:active{transform:scale(.92)}
 
-/* نبض منوف */
-.pulse-card{background:var(--pulse);border:1px solid var(--bg2);border-radius:20px;padding:14px 16px;margin:12px 0 14px;box-shadow:0 8px 24px rgba(0,0,0,.15)}
-.pulse-top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
-.pulse-greet{font-size:14.5px;font-weight:800;color:var(--txt)}
-.pulse-weather{font-size:12.5px;font-weight:800;color:var(--p);background:var(--glass);padding:4px 10px;border-radius:999px;border:1px solid var(--bg2);white-space:nowrap}
-.pulse-train{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--glass);border:1px solid rgba(34,197,94,.28);border-radius:12px;padding:8px 12px;font-size:12.5px;font-weight:700;color:var(--okTxt);cursor:pointer}
-.pulse-train strong{color:var(--e)}
+.hero-main{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:520px;margin:0 auto}
+.hero-logo-wrap{position:relative;flex:none}
+.logo{width:74px;height:74px;border-radius:50%;object-fit:cover;border:3px solid var(--gold);box-shadow:0 6px 18px rgba(12,93,63,.18);background:#fff}
+.hero-title{flex:1;text-align:center}
+.hero-title h1{font-size:28px;font-weight:900;line-height:1.05;color:var(--txt);letter-spacing:-.5px}
+.hero-title h1 span{display:block;font-size:32px;color:var(--p);font-weight:900}
+.hero-sub{display:inline-flex;align-items:center;gap:8px;margin-top:4px;font-size:13px;font-weight:800;color:var(--txt2)}
+.hero-sub::before,.hero-sub::after{content:"";width:18px;height:2.5px;border-radius:99px;background:var(--gold)}
 
-/* عروض اليوم */
-.deals-wrap{margin:2px 0 12px}
-.deals-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.deals-head span{font-size:14px;font-weight:900;color:var(--p)}
-.deals-head small{font-size:11.5px;color:var(--m)}
-.deals{display:flex;gap:12px;overflow-x:auto;padding:2px 2px 6px;scrollbar-width:none}
-.deals::-webkit-scrollbar{display:none}
-.deal-item{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:74px;max-width:78px;cursor:pointer}
-.deal-ring{width:64px;height:64px;border-radius:50%;padding:3px;background:linear-gradient(135deg,#ffd000,#ef4444,#22c55e);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(255,196,0,.22)}
-.deal-inner{width:100%;height:100%;border-radius:50%;background:var(--deal-in);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:var(--p);text-align:center;line-height:1.15;border:2px solid var(--bg);padding:4px}
-.deal-item b{font-size:11px;font-weight:700;color:var(--txt2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;text-align:center}
+/* ===== شريط الطقس والموقع (3 أقسام مثل الصورة) ===== */
+.weather-bar{display:grid;grid-template-columns:1.25fr .85fr .9fr;align-items:center;background:var(--pulse);border:1px solid var(--b);border-radius:16px;padding:10px 8px;margin:6px 0 10px;box-shadow:var(--shadow)}
+.w-cell{display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;font-weight:800;color:var(--txt2);padding:0 6px}
+.w-cell+.w-cell{border-right:1px solid var(--b2)}
+.w-temp{font-size:16px;font-weight:900;color:var(--txt)}
+.pulse-train{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--card);border:1px solid rgba(12,93,63,.16);border-radius:14px;padding:8px 14px;margin-bottom:12px;font-size:12.5px;font-weight:700;color:var(--okTxt);cursor:pointer;box-shadow:var(--shadow)}
+.pulse-train strong{color:var(--p)}
 
-/* البحث والأدوات */
-.search{display:flex;align-items:center;gap:8px;background:var(--surf);border:1px solid var(--bg2);border-radius:16px;padding:0 12px;margin:10px 0}
-.search input{border:0;background:transparent;padding:13px 0;color:var(--txt);font-size:14.5px;flex:1;width:100%}
+/* ===== البحث ===== */
+.search{display:flex;align-items:center;gap:8px;background:var(--surf);border:1px solid var(--b);border-radius:999px;padding:0 16px;margin:6px 0 12px;box-shadow:var(--shadow)}
+.search input{border:0;background:transparent;padding:12px 0;color:var(--txt);font-size:14px;flex:1;width:100%;font-weight:600}
 .search input:focus{box-shadow:none}
 .search input::placeholder{color:var(--ph)}
 .clear-btn{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--row);color:var(--m);font-size:12px;flex:none;border:1px solid var(--b)}
-.clear-btn:hover{color:var(--txt)}
-.mic-btn{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,196,0,.1);color:var(--p);font-size:16px;flex:none}
-.mic-btn.rec{background:rgba(239,68,68,.25);color:#f87171;animation:pulse 1s infinite}
-.tools{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
-.tool{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:11px 14px;border-radius:14px;background:var(--surf);border:1px solid var(--b);font-size:13px;font-weight:700;color:var(--txt2);position:relative}
-.tool.active{border-color:var(--bg2);background:rgba(255,196,0,.14);color:var(--p)}
-#bellCount{background:var(--d);color:#fff;border-radius:999px;padding:0 6px;font-size:11px;font-weight:800;margin-right:4px}
-.sec{font-size:17px;font-weight:900;color:var(--txt);margin:14px 0 10px;display:flex;justify-content:space-between;align-items:center}
+.mic-btn{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(12,93,63,.08);color:var(--p);font-size:16px;flex:none}
+.mic-btn.rec{background:rgba(220,38,38,.18);color:var(--d);animation:pulse 1s infinite}
 
-.cats{display:flex;gap:12px;overflow-x:auto;padding:4px 2px 8px;scrollbar-width:none}
+/* ===== أدوات الفلترة السريعة ===== */
+.tools{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 10px;margin-bottom:6px;scrollbar-width:none}
+.tools::-webkit-scrollbar{display:none}
+.tool{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;padding:8px 13px;border-radius:999px;background:var(--surf);border:1px solid var(--b);font-size:12.5px;font-weight:800;color:var(--txt2);box-shadow:0 2px 8px rgba(15,45,35,.04)}
+.tool.active{border-color:var(--p);background:var(--p);color:#fff}
+#bellCount{background:var(--d);color:#fff;border-radius:999px;padding:0 6px;font-size:11px;font-weight:800}
+
+/* ===== عناوين الأقسام (مع خط ذهبي/أخضر تحت العنوان مثل الصورة) ===== */
+.sec{font-size:17.5px;font-weight:900;color:var(--txt);margin:14px 0 10px;display:flex;justify-content:space-between;align-items:center}
+.sec-title{display:inline-flex;align-items:center;gap:7px;position:relative;padding-bottom:4px}
+.sec-title.gold-line::after{content:"";position:absolute;right:0;bottom:0;width:72%;height:3px;border-radius:99px;background:var(--gold)}
+.sec-title.green-line::after{content:"";position:absolute;right:0;bottom:0;width:72%;height:3px;border-radius:99px;background:var(--p)}
+.sec-more{font-size:13px;font-weight:800;color:var(--p);display:inline-flex;align-items:center;gap:3px}
+
+/* ===== التصنيفات (كروت مربعة بيضاء بظل ناعم مثل الصورة) ===== */
+.cats{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none}
 .cats::-webkit-scrollbar{display:none}
-.cat{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:64px;font-size:12px;font-weight:700;color:var(--m)}
-.ci{width:54px;height:54px;border-radius:50%;background:var(--surf);border:1px solid var(--b);display:flex;align-items:center;justify-content:center;font-size:22px}
-.cat.on{color:var(--p)}
-.cat.on .ci{background:var(--pg);box-shadow:0 6px 18px var(--pglow);border-color:transparent}
+.cat{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-width:74px;padding:10px 6px;border-radius:18px;background:var(--card);border:1.5px solid transparent;box-shadow:var(--shadow);font-size:11.5px;font-weight:800;color:var(--txt2);transition:.2s}
+.ci{width:40px;height:40px;border-radius:12px;background:var(--row);display:flex;align-items:center;justify-content:center;font-size:22px}
+.cat.on{border-color:var(--p);background:rgba(12,93,63,.06);color:var(--p)}
+.cat.on .ci{background:var(--pg);color:#fff;box-shadow:0 4px 12px var(--pglow)}
 
-/* الكروت */
-.card{background:var(--card);border:1px solid var(--b);border-radius:20px;padding:16px;margin-bottom:14px;box-shadow:0 8px 28px rgba(0,0,0,.12);position:relative;transition:transform .2s}
+/* ===== عروض اليوم (كروت بصورة وخصم أصفر وزر المزيد الأخضر مثل الصورة) ===== */
+.deals-wrap{margin:4px 0 10px}
+.deals{display:flex;gap:12px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none}
+.deals::-webkit-scrollbar{display:none}
+.deal-card{min-width:195px;max-width:210px;background:var(--card);border:1px solid var(--b);border-radius:20px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;cursor:pointer;flex:none;transition:transform .2s}
+.deal-card:active{transform:scale(.97)}
+.deal-media{position:relative;height:96px;background:linear-gradient(135deg,#0c5d3f,#16a34a);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.deal-media img{width:100%;height:100%;object-fit:cover;display:block}
+.deal-media .deal-ph{font-size:34px;color:#fff}
+.deal-badge{position:absolute;top:8px;right:8px;background:#fde047;color:#111827;font-size:11.5px;font-weight:900;padding:3px 10px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.15);line-height:1.3;text-align:center}
+.deal-body{padding:10px 12px 12px;text-align:center;display:flex;flex-direction:column;flex:1;justify-content:space-between;gap:6px}
+.deal-title{font-size:13.5px;font-weight:900;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.deal-sub{font-size:11.5px;color:var(--m);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.deal-btn{background:var(--p);color:#fff;border-radius:999px;padding:6px 14px;font-size:12px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:4px;margin-top:2px;box-shadow:0 4px 12px var(--pglow)}
+
+/* ===== كروت الأنشطة (تخطيط الصورة: بيانات يمين + صورة يسار + أزرار خضراء) ===== */
+.card{background:var(--card);border:1px solid var(--b);border-radius:22px;padding:14px;margin-bottom:14px;box-shadow:var(--shadow);position:relative;transition:transform .2s}
 .card:active{transform:scale(.99)}
-.card.fe{border-color:var(--bg2)}
-.card-cover{width:100%;height:150px;object-fit:cover;border-radius:14px;margin-bottom:10px;border:1px solid var(--b);display:block;background:var(--row)}
-.ct{font-size:17px;font-weight:800;color:var(--txt)}
-.muted{color:var(--m);font-size:13px}
+.card.fe{border:1.5px solid var(--gold)}
+.biz-body{display:flex;gap:12px;align-items:stretch}
+.biz-main{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:space-between;gap:6px}
+.biz-top{display:flex;align-items:flex-start;gap:8px}
+.biz-ico{width:38px;height:38px;border-radius:50%;background:var(--row);border:1px solid var(--b);display:flex;align-items:center;justify-content:center;font-size:18px;flex:none}
+.biz-thumb-wrap{position:relative;width:118px;flex:none;border-radius:16px;overflow:hidden;background:var(--row);border:1px solid var(--b)}
+.biz-thumb{width:100%;height:100%;min-height:112px;object-fit:cover;display:block}
+.fav{position:absolute;top:10px;left:10px;width:30px;height:30px;border-radius:50%;border:1px solid var(--b);background:var(--glass);display:flex;align-items:center;justify-content:center;font-size:14px;z-index:2;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.ct{font-size:16.5px;font-weight:800;color:var(--txt)}
+.muted{color:var(--m);font-size:12.5px}
 .row{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
-.type{font-size:12.5px;color:var(--m)}
-.name{font-size:17.5px;font-weight:900;color:var(--txt);margin:2px 0}
-.spec{color:var(--p);font-weight:700;font-size:13.5px}
-.tags{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
-.info{margin-top:10px;font-size:13.5px;color:var(--txt3);line-height:1.9}
-.dist{color:var(--p);font-size:13px;font-weight:700}
-.re-facts{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.re-facts span{background:var(--row);border:1px solid var(--b);border-radius:999px;padding:3px 10px;font-size:12px;font-weight:700;color:var(--txt2)}
-.re-price{font-size:19px;font-weight:900;color:var(--p)}
-.foot{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--dash)}
-.acts{display:flex;gap:8px;flex:1}
-.acts .btn{flex:1}
-.rt{font-size:12.5px;color:var(--p);font-weight:700;white-space:nowrap}
-.fav{position:absolute;top:14px;left:14px;width:32px;height:32px;border-radius:50%;border:1px solid var(--b);background:var(--glass);display:flex;align-items:center;justify-content:center;font-size:15px;z-index:2}
+.type{font-size:11.5px;color:var(--m);font-weight:700}
+.name{font-size:16px;font-weight:900;color:var(--txt);line-height:1.3}
+.spec{color:var(--p);font-weight:800;font-size:12.5px}
+.tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.info{font-size:12px;color:var(--txt3);line-height:1.6}
+.dist{color:var(--p);font-size:12px;font-weight:800}
+.re-facts{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+.re-facts span{background:var(--row);border:1px solid var(--b);border-radius:999px;padding:2px 9px;font-size:11.5px;font-weight:700;color:var(--txt2)}
+.biz-btns{display:flex;gap:6px;margin-top:6px}
+.biz-btns .btn{flex:1;padding:7px 8px;font-size:12px;border-radius:999px}
+.rt{font-size:12px;color:var(--gold);font-weight:800;white-space:nowrap}
 
-/* الأزرار */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:12px 14px;border-radius:14px;font-weight:800;font-size:14.5px;text-align:center;background:var(--pg);color:#0d0e12;box-shadow:0 6px 16px var(--pglow)}
+/* ===== الأزرار ===== */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;width:100%;padding:12px 14px;border-radius:14px;font-weight:800;font-size:14px;text-align:center;background:var(--pg);color:#fff;box-shadow:0 6px 16px var(--pglow)}
 .btn:active{transform:scale(.96)}
-.btn.s{background:rgba(255,196,0,.08);color:var(--p);border:1px solid var(--bg2);box-shadow:none}
-.btn.sm{width:auto;padding:8px 14px;font-size:13px;border-radius:999px;box-shadow:none}
+.btn.s{background:var(--row);color:var(--p);border:1px solid var(--b2);box-shadow:none}
+.btn.sm{width:auto;padding:7px 13px;font-size:12.5px;border-radius:999px;box-shadow:none}
 .btn.d{background:linear-gradient(135deg,#dc2626,#ef4444);color:#fff;box-shadow:none}
-.btn.g{background:linear-gradient(135deg,#059669,#10b981);color:#fff;box-shadow:none}
+.btn.g{background:var(--p);color:#fff;box-shadow:none}
+.btn.wa{background:var(--eg);color:#fff;box-shadow:none}
 .btn:disabled{opacity:.5}
 
-/* الفورم */
+/* ===== الفورم والشارات ===== */
 .field{margin-bottom:14px}
 .field label{display:block;font-size:13.5px;font-weight:700;margin-bottom:6px;color:var(--txt2)}
-input,select,textarea{width:100%;background:var(--inp);border:1px solid var(--b2);border-radius:14px;padding:13px 16px;color:var(--txt);font-size:14.5px}
+input,select,textarea{width:100%;background:var(--inp);border:1px solid var(--b2);border-radius:14px;padding:12px 15px;color:var(--txt);font-size:14.5px}
 input:focus,select:focus,textarea:focus{border-color:var(--p);box-shadow:0 0 0 3.5px var(--pglow)}
 input[type="checkbox"]{width:auto;padding:0}
 select option{background:var(--sheet);color:var(--txt)}
 textarea{min-height:85px;resize:vertical}
-.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;margin-bottom:12px;scrollbar-width:none}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;margin-bottom:10px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
-.chip{white-space:nowrap;padding:8px 15px;border-radius:999px;border:1px solid var(--b);background:var(--chip);font-size:13.5px;font-weight:700;color:var(--m)}
-.chip.on{background:var(--pg);color:#0d0e12;border-color:transparent;box-shadow:0 4px 14px var(--pglow)}
-.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 11px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap;border:1px solid var(--b);color:var(--m)}
-.badge.ok{color:#059669;border-color:rgba(16,185,129,.35);background:rgba(16,185,129,.12)}
-:root:not([data-theme="light"]) .badge.ok{color:#34d399}
-.badge.ok .dot{width:7px;height:7px;background:#34d399;border-radius:50%;animation:pulse 1.8s infinite}
-.badge.p{color:var(--p);background:rgba(255,196,0,.12);border-color:var(--bg2)}
-.badge.r{color:#f87171;background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.3)}
-.badge.v{color:var(--v);border-color:rgba(56,189,248,.35);background:rgba(56,189,248,.1)}
+.chip{white-space:nowrap;padding:7px 14px;border-radius:999px;border:1px solid var(--b2);background:var(--chip);font-size:13px;font-weight:700;color:var(--txt3)}
+.chip.on{background:var(--pg);color:#fff;border-color:transparent;box-shadow:0 4px 14px var(--pglow)}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:2px 10px;border-radius:999px;font-size:11.5px;font-weight:800;white-space:nowrap;border:1px solid var(--b);color:var(--m);background:var(--row)}
+.badge.ok{color:#15803d;border-color:rgba(22,163,74,.25);background:#dcfce7}
+:root[data-theme="dark"] .badge.ok{color:#4ade80;background:rgba(34,197,94,.15)}
+.badge.ok .dot{width:7px;height:7px;background:#16a34a;border-radius:50%;animation:pulse 1.8s infinite}
+.badge.p{color:#b45309;background:#fef3c7;border-color:rgba(245,158,11,.35)}
+:root[data-theme="dark"] .badge.p{color:#fbbf24;background:rgba(250,204,21,.15)}
+.badge.r{color:#dc2626;background:#fee2e2;border-color:rgba(220,38,38,.3)}
+.badge.v{color:var(--v);border-color:rgba(2,132,199,.3);background:rgba(2,132,199,.1)}
 .acts-w{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;margin-top:12px;padding-top:12px;border-top:1px dashed var(--dash)}
 
-/* صور النشاط */
 .photo-prev{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
 .photo-prev img{width:110px;height:110px;object-fit:cover;border-radius:14px;border:1px solid var(--b)}
 .gallery{display:flex;gap:8px;overflow-x:auto;margin-bottom:12px;padding-bottom:6px;scrollbar-width:none}
 .gallery img{height:200px;width:auto;max-width:100%;border-radius:14px;border:1px solid var(--b);flex:none;object-fit:contain;background:var(--row)}
 
-/* المواعيد */
 .day{padding:12px 0;border-bottom:1px solid var(--dash)}
 .day-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .day-times{display:grid;grid-template-columns:auto 1fr auto 1fr;gap:6px;align-items:center;margin-top:8px;font-size:12.5px;color:var(--m)}
@@ -235,128 +263,60 @@ textarea{min-height:85px;resize:vertical}
 .tg{width:46px;height:26px;background:var(--tg);border-radius:999px;position:relative;cursor:pointer;flex:none;transition:.25s}
 .tg::after{content:"";position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.25s}
 .tg.on{background:var(--p)}
-.tg.on::after{transform:translateX(-20px);background:#0d0e12}
+.tg.on::after{transform:translateX(-20px);background:#fff}
 
 /* الخريطة */
-#pickMap{height:270px;border-radius:16px;margin:10px 0;border:1px solid var(--bg2)}
-#browseMapBox{position:relative;z-index:1;isolation:isolate;height:480px;border-radius:18px;margin-bottom:16px;border:1px solid var(--bg2);background:#e5e7eb}
+#pickMap{height:270px;border-radius:16px;margin:10px 0;border:1px solid var(--b2)}
+#browseMapBox{position:relative;z-index:1;isolation:isolate;height:460px;border-radius:20px;margin-bottom:16px;border:1px solid var(--b2);background:#e5e7eb}
 .leaflet-container{background:#e5e7eb}
 .leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#fff;color:#111}
 .leaflet-popup-content{color:#111}
-.map-pin{width:34px;height:34px;border-radius:50%;background:var(--sheet);border:2.5px solid var(--p);display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 4px 10px rgba(0,0,0,.25)}
-.map-pin.doc{border-color:#38bdf8}
-.map-pin.shop{border-color:#ffc400}
-.map-pin.srv{border-color:#22c55e}
-.map-pin.re{border-color:#a855f7}
-.map-locate{background:var(--sheet);color:var(--p);border:1px solid var(--bg2);border-radius:999px;padding:8px 14px;font-family:Cairo,system-ui,sans-serif;font-size:13px;font-weight:800;box-shadow:0 4px 14px rgba(0,0,0,.25);display:flex;align-items:center;gap:5px;cursor:pointer}
-.user-dot{width:16px;height:16px;border-radius:50%;background:#38bdf8;border:3px solid #fff;box-shadow:0 0 0 6px rgba(56,189,248,.35)}
+.map-pin{width:34px;height:34px;border-radius:50%;background:#fff;border:2.5px solid var(--p);display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 4px 10px rgba(0,0,0,.22)}
+.map-pin.doc{border-color:#0284c7}
+.map-pin.shop{border-color:#f59e0b}
+.map-pin.srv{border-color:#16a34a}
+.map-pin.re{border-color:#9333ea}
+.map-locate{background:#fff;color:var(--p);border:1px solid var(--b2);border-radius:999px;padding:8px 14px;font-family:Cairo,system-ui,sans-serif;font-size:13px;font-weight:800;box-shadow:0 4px 14px rgba(0,0,0,.2);display:flex;align-items:center;gap:5px;cursor:pointer}
+.user-dot{width:16px;height:16px;border-radius:50%;background:#0284c7;border:3px solid #fff;box-shadow:0 0 0 6px rgba(2,132,199,.35)}
 
 .lr{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 14px;border:1px solid var(--b);border-radius:12px;margin-bottom:6px;background:var(--row);font-size:14px;color:var(--txt)}
-.lr.today{border-color:var(--p);background:rgba(255,196,0,.12);color:var(--txt);font-weight:800}
-.hours-next{font-size:12.5px;font-weight:700;color:var(--p);background:rgba(255,196,0,.08);border:1px solid var(--bg2);border-radius:10px;padding:7px 12px;margin-bottom:8px}
-.empty{text-align:center;color:var(--m);padding:40px 16px;font-weight:700}
+.lr.today{border-color:var(--p);background:rgba(12,93,63,.08);color:var(--txt);font-weight:800}
+.hours-next{font-size:12.5px;font-weight:700;color:var(--p);background:rgba(12,93,63,.06);border:1px solid var(--b2);border-radius:10px;padding:7px 12px;margin-bottom:8px}
+.empty{text-align:center;color:var(--m);padding:38px 16px;font-weight:700}
 .empty p{font-size:15px;color:var(--txt2);margin-bottom:6px}
 .empty small{display:block;color:var(--m);font-size:13px;font-weight:600;line-height:1.7;margin-bottom:14px}
-.edit{background:rgba(255,196,0,.12);border:1px solid var(--bg2);color:var(--p);padding:12px 14px;border-radius:14px;font-size:13.5px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
+.edit{background:var(--gold-soft);border:1px solid var(--bg2);color:#92400e;padding:12px 14px;border-radius:14px;font-size:13.5px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;font-weight:700}
 
 .qty-box{display:flex;align-items:center;gap:6px;flex:none}
-.qty-btn{width:28px;height:28px;border-radius:50%;background:rgba(255,196,0,.15);color:var(--p);border:1px solid var(--bg2);font-weight:900;display:flex;align-items:center;justify-content:center}
-.cart-bar{background:linear-gradient(135deg,rgba(34,197,94,.18),rgba(255,196,0,.12));border:1px solid rgba(34,197,94,.45);border-radius:16px;padding:12px;margin-top:10px}
+.qty-btn{width:28px;height:28px;border-radius:50%;background:rgba(12,93,63,.12);color:var(--p);border:1px solid var(--b2);font-weight:900;display:flex;align-items:center;justify-content:center}
+.cart-bar{background:rgba(22,163,74,.1);border:1px solid rgba(22,163,74,.35);border-radius:16px;padding:12px;margin-top:10px}
 
-/* الشريط السفلي */
-.nav{position:fixed;bottom:12px;left:12px;right:12px;max-width:496px;margin:0 auto;z-index:35;display:flex;justify-content:space-around;align-items:flex-end;padding:8px 6px 10px;background:var(--nav);border:1px solid var(--b2);border-radius:26px;box-shadow:0 12px 35px rgba(0,0,0,.25)}
-.nav .tb{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11.5px;font-weight:700;color:var(--m);min-width:64px;flex:1;padding:4px 0}
+/* ===== الشريط السفلي (مثل الصورة: أبيض ناعم + زر + دائري أخضر بحلقة ذهبية) ===== */
+.nav{position:fixed;bottom:0;left:0;right:0;max-width:520px;margin:0 auto;z-index:35;display:flex;justify-content:space-around;align-items:flex-end;padding:8px 10px 10px;background:var(--nav);border-top:1px solid var(--b);border-radius:26px 26px 0 0;box-shadow:0 -6px 25px rgba(15,45,35,.08)}
+.nav .tb{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:12px;font-weight:800;color:var(--m);min-width:68px;flex:1;padding:4px 0;position:relative}
 .nav .tb .ic{font-size:20px;line-height:1}
 .nav .tb.on{color:var(--p)}
+.nav .tb.on::after{content:"";width:38px;height:3px;border-radius:99px;background:var(--p);margin-top:2px}
 .fabwrap{display:flex;flex-direction:column;align-items:center;min-width:86px;flex:1}
-.fab{width:62px;height:62px;border-radius:50%;background:var(--pg);color:#0d0e12;font-size:32px;font-weight:900;display:flex;align-items:center;justify-content:center;margin-top:-34px;box-shadow:0 8px 22px var(--pglow);border:4px solid var(--bg);padding:0;line-height:1}
-.fabwrap span{color:var(--p);font-size:11.5px;font-weight:700;margin-top:4px;white-space:nowrap}
+.fab{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,#22c55e,#0c5d3f);color:#fff;font-size:32px;font-weight:900;display:flex;align-items:center;justify-content:center;margin-top:-32px;box-shadow:0 8px 20px rgba(12,93,63,.30);border:3px solid var(--gold);outline:3px solid var(--nav);padding:0;line-height:1}
+.fabwrap span{color:var(--txt);font-size:12px;font-weight:800;margin-top:5px;white-space:nowrap}
 
 /* إشعارات ونوافذ */
-.toast{position:fixed;bottom:100px;left:50%;transform:translate(-50%,20px);background:var(--toast);border:1px solid var(--bg2);padding:12px 22px;border-radius:999px;font-weight:700;color:#fff;opacity:0;transition:.3s;pointer-events:none;z-index:100;max-width:90%;text-align:center}
+.toast{position:fixed;bottom:100px;left:50%;transform:translate(-50%,20px);background:var(--toast);border:1px solid var(--gold);padding:11px 22px;border-radius:999px;font-weight:700;color:#fff;opacity:0;transition:.3s;pointer-events:none;z-index:100;max-width:90%;text-align:center}
 .toast.show{opacity:1;transform:translate(-50%,0)}
-.modal{position:fixed;inset:0;background:var(--overlay);backdrop-filter:blur(8px);display:flex;align-items:flex-end;justify-content:center;z-index:60}
+.modal{position:fixed;inset:0;background:var(--overlay);backdrop-filter:blur(6px);display:flex;align-items:flex-end;justify-content:center;z-index:60}
 .sheet{background:var(--sheet);border:1px solid var(--b2);width:100%;max-width:520px;border-radius:28px 28px 0 0;padding:22px 20px 30px;max-height:88vh;overflow-y:auto;animation:up .3s ease;color:var(--txt)}
 .rt-bar{border:1px solid var(--b);border-radius:14px;padding:12px;margin-top:14px}
-.stars{color:var(--p);font-size:17px;letter-spacing:2px}
+.stars{color:var(--gold);font-size:17px;letter-spacing:2px}
 .star-pick button{font-size:28px;color:var(--star0);margin-left:4px}
-.star-pick button.on{color:var(--p)}
+.star-pick button.on{color:var(--gold)}
 .nitem{border:1px solid var(--b);border-radius:14px;padding:12px;margin-bottom:8px;background:var(--row)}
-.nitem.unread{border-color:var(--bg2)}
+.nitem.unread{border-color:var(--gold)}
 .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .stat{border:1px solid var(--b);border-radius:14px;padding:12px;background:var(--row)}
 .stat b{display:block;font-size:19px;color:var(--p)}
-
-/* لوحة الإدارة: أقسام */
 .asec{display:none}
 .asec.on{display:block}
-
-/* ===== التصميم الجديد (الوضع الفاتح) ===== */
-:root[data-theme="light"]{
-  --bg:#fbf7ee;--bgGlow:rgba(255,196,0,.10);--card:#ffffff;--surf:#ffffff;--inp:#ffffff;--chip:#ffffff;--row:#f6f8f4;--glass:rgba(255,255,255,.96);--sheet:#ffffff;--nav:#ffffff;--toast:#14231b;--overlay:rgba(20,35,27,.35);
-  --hdr:linear-gradient(180deg,#fff3c4 0%,#fbf7ee 100%);--pulse:#ffffff;
-  --txt:#14231b;--txt2:#22332a;--txt3:#3c4b42;--m:#6b7a70;--p:#0f7a4a;
-  --b:rgba(15,122,74,.12);--b2:rgba(15,122,74,.18);--bg2:rgba(15,122,74,.25);--dash:rgba(15,122,74,.18);--tg:#d1d5db;--deal-in:#ffffff;--star0:#d1d5db;--okTxt:#0f7a4a;--ph:#9aa79f;--pglow:rgba(15,122,74,.28);
-  --pg:linear-gradient(135deg,#1aa864,#0f7a4a);
-}
-:root[data-theme="light"] body{background:var(--bg);color:var(--txt)}
-:root[data-theme="light"] header{border-bottom:none;padding:14px 16px 8px}
-:root[data-theme="light"] .brand h1{color:#0f7a4a;font-size:21px;font-weight:900}
-:root[data-theme="light"] .brand small{color:#6b7a70;font-size:12px}
-:root[data-theme="light"] .logo{border:2px solid #f5b400;box-shadow:0 4px 12px rgba(0,0,0,.10)}
-:root[data-theme="light"] .ib{background:#ffffff;border:1px solid rgba(15,122,74,.18);color:#0f7a4a;box-shadow:0 2px 8px rgba(0,0,0,.05)}
-:root[data-theme="light"] .ib.alert{border-color:rgba(239,68,68,.5)}
-:root[data-theme="light"] .pulse-card{background:#ffffff;border:1px solid rgba(15,122,74,.10);border-radius:20px;padding:12px 14px;margin:8px 0 12px;box-shadow:0 6px 18px rgba(0,0,0,.05)}
-:root[data-theme="light"] .pulse-greet{color:#14231b;font-size:14px}
-:root[data-theme="light"] .pulse-weather{background:#fff7d9;border-color:rgba(245,180,0,.4);color:#8a5a00}
-:root[data-theme="light"] .pulse-train{background:#eefaf3;border-color:rgba(15,122,74,.18);color:#0f7a4a}
-:root[data-theme="light"] .pulse-train strong{color:#0f7a4a}
-:root[data-theme="light"] .search{background:#ffffff;border:none;border-radius:22px;box-shadow:0 8px 22px rgba(0,0,0,.07);height:58px;margin:12px 0}
-:root[data-theme="light"] .search input{font-size:15px}
-:root[data-theme="light"] .tools{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin-bottom:12px;padding-bottom:2px}
-:root[data-theme="light"] .tools::-webkit-scrollbar{display:none}
-:root[data-theme="light"] .tool{flex:none;border-radius:999px;padding:9px 14px;background:#ffffff;border:1px solid rgba(15,122,74,.12);box-shadow:0 2px 8px rgba(0,0,0,.04);white-space:nowrap;font-size:12.5px;color:#22332a}
-:root[data-theme="light"] .tool.active{background:#eefaf3;border-color:rgba(15,122,74,.35);color:#0f7a4a}
-:root[data-theme="light"] .sec{color:#14231b;font-size:17px;font-weight:900;margin:16px 0 10px}
-:root[data-theme="light"] .cats{gap:10px;padding:4px 0 10px}
-:root[data-theme="light"] .cat{min-width:72px;font-size:12px;color:#22332a;font-weight:800}
-:root[data-theme="light"] .ci{width:66px;height:66px;border-radius:22px;background:#ffffff;border:none;box-shadow:0 6px 16px rgba(0,0,0,.07);font-size:26px}
-:root[data-theme="light"] .cat.on{color:#0f7a4a}
-:root[data-theme="light"] .cat.on .ci{background:#ffffff;border:2px solid #0f7a4a;box-shadow:0 6px 16px rgba(15,122,74,.18)}
-:root[data-theme="light"] .deals{gap:12px;padding:4px 2px 10px}
-:root[data-theme="light"] .deals-head span{color:#14231b;font-size:16px}
-:root[data-theme="light"] .deals-head small{color:#6b7a70}
-:root[data-theme="light"] .deal-item{min-width:240px;max-width:240px;background:#ffffff;border-radius:20px;overflow:hidden;box-shadow:0 8px 22px rgba(0,0,0,.07);position:relative;padding-bottom:10px;align-items:stretch;gap:0;cursor:pointer}
-:root[data-theme="light"] .deal-item img{width:100%;height:130px;object-fit:cover;display:block}
-:root[data-theme="light"] .deal-noimg{height:130px;background:linear-gradient(135deg,#fff3c4,#e8f8ee);display:flex;align-items:center;justify-content:center;font-size:40px}
-:root[data-theme="light"] .deal-disc{position:absolute;top:10px;right:10px;background:#f5b400;color:#14231b;font-weight:900;font-size:13px;padding:4px 10px;border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,.12)}
-:root[data-theme="light"] .deal-title{font-weight:800;color:#14231b;font-size:14px;padding:8px 12px 0;white-space:normal;line-height:1.5}
-:root[data-theme="light"] .deal-item small{color:#6b7a70;padding:0 12px;font-size:12px;text-align:right}
-:root[data-theme="light"] .card{background:#ffffff;border:none;border-radius:22px;padding:14px;box-shadow:0 8px 22px rgba(0,0,0,.07)}
-:root[data-theme="light"] .card:active{transform:scale(.99)}
-:root[data-theme="light"] .card.fe{border:1.5px solid rgba(245,180,0,.6)}
-:root[data-theme="light"] .card-cover{height:170px;border-radius:16px;margin-bottom:12px;border:none;background:#f6f8f4}
-:root[data-theme="light"] .name{color:#14231b;font-size:17px}
-:root[data-theme="light"] .spec{color:#0f7a4a}
-:root[data-theme="light"] .type{color:#6b7a70}
-:root[data-theme="light"] .info{color:#3c4b42}
-:root[data-theme="light"] .foot{border-top:1px dashed rgba(15,122,74,.15)}
-:root[data-theme="light"] .btn{color:#ffffff;box-shadow:0 6px 16px rgba(15,122,74,.22)}
-:root[data-theme="light"] .btn.s{background:#ffffff;color:#0f7a4a;border:1px solid rgba(15,122,74,.25);box-shadow:none}
-:root[data-theme="light"] .btn.g{background:linear-gradient(135deg,#25d366,#128c4a);color:#fff}
-:root[data-theme="light"] .chip{background:#ffffff;border:1px solid rgba(15,122,74,.12);color:#3c4b42}
-:root[data-theme="light"] .chip.on{background:#0f7a4a;color:#ffffff;border-color:transparent;box-shadow:0 4px 12px rgba(15,122,74,.25)}
-:root[data-theme="light"] .nav{background:#ffffff;border:none;border-radius:28px;box-shadow:0 -4px 22px rgba(0,0,0,.08);bottom:14px}
-:root[data-theme="light"] .nav .tb{color:#6b7a70;font-weight:800}
-:root[data-theme="light"] .nav .tb.on{color:#0f7a4a}
-:root[data-theme="light"] .fab{background:linear-gradient(135deg,#1aa864,#0f7a4a);color:#fff;border:4px solid #fbf7ee;box-shadow:0 8px 20px rgba(15,122,74,.35)}
-:root[data-theme="light"] .fabwrap span{color:#0f7a4a}
-:root[data-theme="light"] .acts-w{border-top:1px dashed rgba(15,122,74,.15)}
-:root[data-theme="light"] .lr{background:#f6f8f4;border:1px solid rgba(15,122,74,.10)}
-:root[data-theme="light"] .lr.today{background:#eefaf3;border-color:#0f7a4a}
-:root[data-theme="light"] .toast{background:#14231b;border-color:#0f7a4a}
-:root[data-theme="light"] .sheet{background:#ffffff;color:#14231b}
-:root[data-theme="light"] .modal{background:rgba(20,35,27,.35)}
 </style>
 <script>
 let dp=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;});
@@ -374,9 +334,10 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
 
 <!-- الدخول -->
 <section id="authView" class="hidden">
-  <div class="wrap" style="max-width:400px;margin-top:35px">
-    <div style="text-align:center;margin-bottom:28px">
-      <img src="logo.png" alt="منوف 360" style="display:block;width:180px;max-width:70%;margin:0 auto 12px;border-radius:18px">
+  <div class="wrap" style="max-width:400px;margin-top:32px">
+    <div style="text-align:center;margin-bottom:24px">
+      <img src="logo.png" alt="منوف 360" style="display:block;width:110px;height:110px;object-fit:cover;margin:0 auto 12px;border-radius:50%;border:3px solid var(--gold);box-shadow:var(--shadow)">
+      <h2 style="font-size:28px;font-weight:900;color:var(--txt)">منوف <span style="color:var(--p)">360</span></h2>
       <p class="muted">دليلك الكامل للدكاترة والمحلات والخدمات والعقارات ومواعيد القطارات في منوف</p>
     </div>
     <form id="authForm" class="card" style="padding:24px">
@@ -388,7 +349,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
       <div id="forgotWrap" style="text-align:center;margin-top:12px">
         <button type="button" id="forgotBtn" style="color:var(--m);font-size:13px;font-weight:700">نسيت كلمة المرور؟ تواصل مع الإدارة 💬</button>
       </div>
-      <div style="text-align:center;margin-top:14px"><button type="button" id="toggleAuth" style="color:var(--p);font-weight:700;font-size:13.5px">ليس لديك حساب؟ سجّل الآن</button></div>
+      <div style="text-align:center;margin-top:14px"><button type="button" id="toggleAuth" style="color:var(--p);font-weight:800;font-size:13.5px">ليس لديك حساب؟ سجّل الآن</button></div>
       <button type="button" id="guestBtn" class="btn s" style="margin-top:12px">👀 تصفح كزائر</button>
       <p style="text-align:center;margin-top:14px;font-size:12px"><a href="privacy.html" target="_blank" style="color:var(--m);font-weight:700">سياسة الخصوصية</a></p>
     </form>
@@ -397,44 +358,52 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
 
 <!-- التطبيق -->
 <section id="appView" class="hidden">
-  <header>
-    <div class="brand">
-      <img class="logo" src="logo.png" alt="منوف 360">
-      <div><h1>منوف 360 📍</h1><small>دليلك في منوف</small></div>
+  <header class="hero-hdr">
+    <div class="hdr-top">
+      <div class="hdr-greet" id="pulseGreet">أهلاً بكم في منوف</div>
+      <div class="hact">
+        <button class="ib alert" id="emergencyBtn" title="طوارئ">🚨</button>
+        <button class="ib" id="themeBtn" title="تغيير الوضع">🌙</button>
+        <button class="ib" onclick="installApp()" title="تثبيت">📲</button>
+        <button class="ib" id="contactBtn" title="الإدارة">💬</button>
+        <button class="ib" id="logoutBtn" title="خروج">🚪</button>
+      </div>
     </div>
-    <div class="hact">
-      <button class="ib alert" id="emergencyBtn" title="طوارئ">🚨</button>
-      <button class="ib" id="themeBtn" title="تغيير الوضع">🌙</button>
-      <button class="ib" onclick="installApp()" title="تثبيت">📲</button>
-      <button class="ib" id="contactBtn" title="الإدارة">💬</button>
-      <button class="ib" id="logoutBtn" title="خروج">🚪</button>
+    <div class="hero-main">
+      <div class="hero-logo-wrap">
+        <img class="logo" src="logo.png" alt="منوف 360">
+      </div>
+      <div class="hero-title">
+        <h1>منوف<span>360</span></h1>
+        <div class="hero-sub">دليلك في منوف</div>
+      </div>
+      <div style="width:74px;flex:none" aria-hidden="true"></div>
     </div>
   </header>
 
   <div class="wrap">
     <div id="tab-browse">
-      <!-- نبض منوف -->
-      <div class="pulse-card">
-        <div class="pulse-top">
-          <div class="pulse-greet" id="pulseGreet">أهلاً بكم في منوف 360</div>
-          <div class="pulse-weather" id="pulseWeather">🌤️ منوف</div>
-        </div>
-        <div class="pulse-train" id="pulseTrain"><span>🚆 مواعيد القطارات في منوف</span><span style="color:var(--p)">الجدول ←</span></div>
+      <!-- شريط الطقس مثل الصورة -->
+      <div class="weather-bar">
+        <div class="w-cell"><span>⛅</span><span>الطقس في منوف</span></div>
+        <div class="w-cell"><span style="color:var(--p)">📍</span><span>منوف</span></div>
+        <div class="w-cell w-temp" id="pulseWeather">☀️ 26°</div>
       </div>
+      <div class="pulse-train" id="pulseTrain"><span>🚆 مواعيد القطارات في منوف</span><span style="color:var(--p)">الجدول ←</span></div>
 
-      <!-- عروض اليوم -->
-      <div id="dealsBar" class="deals-wrap hidden">
-        <div class="deals-head"><span>🔥 عروض اليوم في منوف</span><small>اضغط على العرض للتفاصيل</small></div>
-        <div class="deals" id="dealsList"></div>
-      </div>
-
+      <!-- البحث -->
       <div class="search">
-        <span>🔍</span>
-        <input id="searchInput" placeholder="ابحث بالاسم أو التخصص أو العنوان...">
+        <span style="color:var(--txt2)">🔍</span>
+        <input id="searchInput" placeholder="ابحث عن نشاط أو خدمة في منوف">
         <button type="button" class="clear-btn hidden" id="clearSearch" title="مسح">✖</button>
         <button type="button" class="mic-btn hidden" id="voiceBtn" title="بحث صوتي">🎙️</button>
       </div>
 
+      <!-- التصنيفات -->
+      <div class="cats" id="catChips"></div>
+      <div class="chips hidden" id="subCatChips" style="margin-top:2px;margin-bottom:6px"></div>
+
+      <!-- أدوات الفلترة -->
       <div class="tools">
         <button class="tool" id="bellBtn">🔔 الإشعارات <span id="bellCount" class="hidden"></span></button>
         <button class="tool" id="fOpen">🟢 مفتوح الآن</button>
@@ -444,9 +413,14 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
         <button class="tool" id="fTrain">🚆 القطارات</button>
       </div>
 
-      <div class="sec">التصنيفات</div>
-      <div class="cats" id="catChips"></div>
-      <div class="chips hidden" id="subCatChips" style="margin-top:4px;margin-bottom:8px"></div>
+      <!-- عروض اليوم -->
+      <div id="dealsBar" class="deals-wrap hidden">
+        <div class="sec" style="margin-top:4px">
+          <span class="sec-title gold-line">📢 عروض اليوم</span>
+          <span class="sec-more">المزيد ‹</span>
+        </div>
+        <div class="deals" id="dealsList"></div>
+      </div>
 
       <div id="trainBox" class="hidden">
         <div class="chips" id="trainChips"></div>
@@ -456,8 +430,8 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
       <div id="browseMapBox" class="hidden"></div>
 
       <div class="sec">
-        <span>أنشطة قريبة منك</span>
-        <small id="countLabel" class="muted"></small>
+        <span class="sec-title green-line">📍 أنشطة قريبة منك</span>
+        <small id="countLabel" class="sec-more"></small>
       </div>
       <div id="browseList"></div>
     </div>
@@ -490,7 +464,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
               <input id="bPhotos" type="file" accept="image/*">
               <div id="photoPrev" class="photo-prev"></div>
               <p class="muted" id="curPhotos" style="margin-top:6px"></p>
-              <label id="rmWrap" class="hidden" style="display:flex;align-items:center;gap:8px;margin-top:6px;font-weight:700;color:#f87171;cursor:pointer">
+              <label id="rmWrap" class="hidden" style="display:flex;align-items:center;gap:8px;margin-top:6px;font-weight:700;color:var(--d);cursor:pointer">
                 <input type="checkbox" id="rmPhotos"> امسح الصورة الحالية
               </label>
             </div>
@@ -543,7 +517,6 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
         <button type="button" class="chip on" data-asec="sStats">📊 نظرة عامة</button>
         <button type="button" class="chip" data-asec="sBiz">🏪 الأنشطة</button>
         <button type="button" class="chip" data-asec="sOffers">🔥 العروض</button>
-        <button type="button" class="chip hidden" data-asec="sTrains">🚆 القطارات</button>
         <button type="button" class="chip" data-asec="sAnn">📢 الإعلانات</button>
       </div>
 
@@ -573,21 +546,6 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
         </div>
       </div>
 
-      <div class="asec" id="sTrains">
-        <div class="card">
-          <div class="ct" style="margin-bottom:10px">🚆 مواعيد القطارات</div>
-          <div class="field"><label>الاتجاه</label><select id="tDir"></select></div>
-          <div class="field"><label>القيام (من منوف)</label><input id="tDep" type="time"></div>
-          <div class="field"><label>الوصول</label><input id="tArr" type="time"></div>
-          <div class="field"><label>رقم القطار</label><input id="tNum" inputmode="numeric" placeholder="مثال: 562"></div>
-          <div class="field"><label>نوع القطار</label><select id="tType"></select></div>
-          <div class="field"><label>ملاحظات (اختياري)</label><textarea id="tNote" placeholder="مثال: لا يعمل أيام الجمع والأجازات الرسمية"></textarea></div>
-          <button class="btn" id="tSave" type="button">إضافة ميعاد</button>
-          <button class="btn s" id="tCancel" type="button" style="margin-top:8px;display:none">إلغاء التعديل</button>
-          <div id="tList" style="margin-top:12px"></div>
-        </div>
-      </div>
-
       <div class="asec" id="sAnn">
         <div class="card">
           <div class="ct" style="margin-bottom:10px">📢 إرسال إعلان للمستخدمين</div>
@@ -600,12 +558,12 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
   </div>
 
   <nav class="nav">
-    <button class="tb on" data-tab="browse"><span class="ic">🔍</span>تصفح</button>
+    <button class="tb on" data-tab="browse"><span class="ic">🏠</span>الرئيسية</button>
     <div class="fabwrap" id="navAdd">
       <button class="fab" data-tab="add">+</button>
       <span id="navAddLbl">أضف نشاط</span>
     </div>
-    <button class="tb" data-tab="mine" id="navMine"><span class="ic">📋</span>أنشطتي</button>
+    <button class="tb" data-tab="mine" id="navMine"><span class="ic">👤</span>حسابي</button>
     <button class="tb hidden" data-tab="admin" id="adminTab"><span class="ic">🛡️</span>الإدارة</button>
   </nav>
 </section>
@@ -637,15 +595,15 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
       <div id="mItems"></div>
       <div id="mCartBar" class="cart-bar hidden">
         <strong id="mCartTxt" style="font-size:13.5px;color:var(--txt);display:block;margin-bottom:8px"></strong>
-        <button type="button" id="mCartWa" class="btn g">💬 إرسال الطلب عبر واتساب</button>
+        <button type="button" id="mCartWa" class="btn wa">💬 إرسال الطلب عبر واتساب</button>
       </div>
     </div>
 
-    <div id="mDocBookBox" class="hidden" style="border:1px solid rgba(16,185,129,.3);border-radius:14px;padding:12px;margin-bottom:14px;background:rgba(16,185,129,.06)">
-      <div style="color:#059669;font-weight:800;margin-bottom:8px">📅 حجز كشف عبر واتساب</div>
+    <div id="mDocBookBox" class="hidden" style="border:1px solid rgba(22,163,74,.3);border-radius:14px;padding:12px;margin-bottom:14px;background:rgba(22,163,74,.06)">
+      <div style="color:var(--p);font-weight:800;margin-bottom:8px">📅 حجز كشف عبر واتساب</div>
       <div class="field" style="margin-bottom:8px"><input id="mBookName" placeholder="اسم المريض"></div>
       <div class="field" style="margin-bottom:8px"><select id="mBookDay"></select></div>
-      <button type="button" id="mBookWa" class="btn g">💬 تأكيد الحجز على واتساب العيادة</button>
+      <button type="button" id="mBookWa" class="btn wa">💬 تأكيد الحجز على واتساب العيادة</button>
     </div>
 
     <div id="mHoursTitle" style="color:var(--p);font-weight:700;margin-bottom:6px">مواعيد العمل</div>
@@ -665,8 +623,8 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
     </div>
     <img id="dImg" class="hidden" alt="" style="width:100%;height:220px;object-fit:cover;border-radius:16px;margin-bottom:12px;border:1px solid var(--b)">
     <h3 id="dTitle" class="ct" style="font-size:20px;margin-bottom:4px"></h3>
-    <p id="dBizName" style="color:#059669;font-weight:800;margin-bottom:8px"></p>
-    <div id="dDiscount" style="display:inline-block;background:var(--d);color:#fff;padding:4px 12px;border-radius:999px;font-weight:900;font-size:13px;margin-bottom:10px"></div>
+    <p id="dBizName" style="color:var(--p);font-weight:800;margin-bottom:8px"></p>
+    <div id="dDiscount" style="display:inline-block;background:#fde047;color:#111827;padding:4px 12px;border-radius:999px;font-weight:900;font-size:13px;margin-bottom:10px"></div>
     <p id="dDesc" style="color:var(--txt2);margin-bottom:12px;line-height:1.8"></p>
     <p id="dExp" class="muted" style="margin-bottom:14px"></p>
     <button type="button" id="dGoBiz" class="btn">📍 فتح صفحة النشاط</button>
@@ -683,7 +641,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
     <p id="oBizName" class="muted" style="margin-bottom:12px"></p>
     <input type="hidden" id="oBizId">
     <div class="field"><label>عنوان العرض</label><input id="oTitle" placeholder="مثال: وجبة شاورما سوبر" maxlength="50"></div>
-    <div class="field"><label>الخصم أو الميزة (يظهر داخل الدائرة)</label><input id="oDiscount" placeholder="خصم 25%" maxlength="16"></div>
+    <div class="field"><label>الخصم أو الميزة (يظهر داخل الشارة الصفراء)</label><input id="oDiscount" placeholder="خصم 25%" maxlength="16"></div>
     <div class="field"><label>تفاصيل العرض</label><textarea id="oDesc" placeholder="اشرح العرض والشروط..." maxlength="200"></textarea></div>
     <div class="field"><label>📸 صورة المنتج (اختياري)</label>
       <input id="oPhoto" type="file" accept="image/*">
@@ -711,7 +669,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
 <div id="emergencyModal" class="modal hidden">
   <div class="sheet">
     <div class="row" style="margin-bottom:12px">
-      <h3 class="ct" style="color:#f87171">🚨 أرقام الطوارئ</h3>
+      <h3 class="ct" style="color:var(--d)">🚨 أرقام الطوارئ</h3>
       <button id="closeEmergency" style="font-size:26px;color:var(--m)">&times;</button>
     </div>
     <p class="muted" style="margin-bottom:14px">اضغط على الجهة للاتصال المباشر:</p>
@@ -743,21 +701,22 @@ const APP_NAME = 'منوف 360';
 const MAX_PER_DAY = 3;
 const RE_DAYS = 30;
 const DAY_MS = 86400000;
+const WEATHER_TTL = 3 * 60 * 60 * 1000; // حفظ الطقس 3 ساعات
 const tsMs = x => x?.toMillis?.() ?? 0;
 const fd = ms => ms ? new Date(ms).toLocaleString('ar-EG') : '';
 
-/* ---------- الوضع الليلي / الفاتح ---------- */
+/* ---------- الوضع الفاتح (الافتراضي) / الليلي ---------- */
 function applyThemeBtn() {
-  const light = document.documentElement.getAttribute('data-theme') === 'light';
-  $('themeBtn').textContent = light ? '🌙' : '☀️';
-  $('themeBtn').title = light ? 'الوضع الليلي' : 'الوضع الفاتح';
+  const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  $('themeBtn').textContent = dark ? '☀️' : '🌙';
+  $('themeBtn').title = dark ? 'الوضع الفاتح' : 'الوضع الليلي';
 }
 $('themeBtn').onclick = () => {
-  const light = document.documentElement.getAttribute('data-theme') === 'light';
-  if (light) document.documentElement.removeAttribute('data-theme');
-  else document.documentElement.setAttribute('data-theme', 'light');
-  try { localStorage.setItem('menouf_theme', light ? 'dark' : 'light'); } catch (e) {}
-  $('themeMeta').content = light ? '#08090c' : '#fffdf7';
+  const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  if (dark) document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme', 'dark');
+  try { localStorage.setItem('menouf_theme', dark ? 'light' : 'dark'); } catch (e) {}
+  $('themeMeta').content = dark ? '#fbf7ea' : '#08090c';
   applyThemeBtn();
   if (bMap) setTimeout(() => bMap.invalidateSize(), 50);
 };
@@ -788,8 +747,8 @@ const CAT_TABS = [
   { k: 'المفضلة', i: '❤️' },
   { k: 'دكاترة', i: '🩺' },
   { k: 'صيدليات', i: '💊' },
-  { k: 'محل / مطعم', i: '🛍️' },
-  { k: 'خدمة', i: '🛠️' },
+  { k: 'محل / مطعم', i: '🍴' },
+  { k: 'خدمة', i: '⚙️' },
   { k: 'عقارات', i: '🏠' },
   { k: 'معامل وأشعة', i: '🧪' },
   { k: 'جيم ونادي', i: '🏋️' },
@@ -797,7 +756,7 @@ const CAT_TABS = [
 ];
 const CENTER = [30.46, 30.93];
 
-/* ---------- القطارات ---------- */
+/* ---------- القطارات (مدمجة محلياً لتقليل قراءات قاعدة البيانات) ---------- */
 const DIR_LABEL = {
   out_cairo: 'من منوف ← القاهرة',
   out_tanta: 'من منوف ← طنطا',
@@ -812,14 +771,156 @@ const SHORT_DIR = {
   out_cairo: 'القاهرة', out_tanta: 'طنطا', out_benha: 'بنها', out_kafr: 'كفر الزيات',
   in_cairo: 'القاهرة', in_tanta: 'طنطا', in_benha: 'بنها', in_kafr: 'كفر الزيات'
 };
-const TRAIN_TYPES = ['محسن', 'روسي', 'مكيف روسي', 'اكسبريس', 'عادي'];
 
-$('tDir').innerHTML = Object.entries(DIR_LABEL).map(([k, v]) => `<option value="${k}">${v}</option>`).join('');
-$('tType').innerHTML = TRAIN_TYPES.map(t => `<option>${t}</option>`).join('');
+const TRAINS = [
+  /* من منوف ← القاهرة */
+  { dir: 'out_cairo', depart: '04:00', arrive: '06:05', num: '512', type: 'محسن' },
+  { dir: 'out_cairo', depart: '04:25', arrive: '06:25', num: '530', type: 'محسن' },
+  { dir: 'out_cairo', depart: '05:20', arrive: '07:25', num: '532', type: 'محسن' },
+  { dir: 'out_cairo', depart: '05:52', arrive: '07:35', num: '1190', type: 'مكيف روسي', note: 'لا يعمل أيام الجمع والأجازات الرسمية' },
+  { dir: 'out_cairo', depart: '06:26', arrive: '08:45', num: '534', type: 'محسن' },
+  { dir: 'out_cairo', depart: '06:46', arrive: '09:10', num: '538', type: 'محسن' },
+  { dir: 'out_cairo', depart: '08:05', arrive: '10:05', num: '540', type: 'محسن', note: 'لا يعمل أيام الجمع والأجازات الرسمية' },
+  { dir: 'out_cairo', depart: '08:31', arrive: '10:30', num: '122', type: 'محسن', note: 'لا يعمل أيام الجمع والأجازات الرسمية' },
+  { dir: 'out_cairo', depart: '09:19', arrive: '11:05', num: '124', type: 'محسن' },
+  { dir: 'out_cairo', depart: '10:59', arrive: '13:00', num: '544', type: 'محسن' },
+  { dir: 'out_cairo', depart: '12:45', arrive: '15:00', num: '562', type: 'محسن' },
+  { dir: 'out_cairo', depart: '14:36', arrive: '17:05', num: '546', type: 'محسن', note: 'لا يعمل أيام الجمع والأجازات الرسمية' },
+  { dir: 'out_cairo', depart: '15:49', arrive: '18:00', num: '548', type: 'محسن' },
+  { dir: 'out_cairo', depart: '16:43', arrive: '18:55', num: '550', type: 'محسن' },
+  { dir: 'out_cairo', depart: '17:24', arrive: '19:25', num: '552', type: 'محسن' },
+  { dir: 'out_cairo', depart: '18:26', arrive: '20:20', num: '554', type: 'محسن' },
+  { dir: 'out_cairo', depart: '19:45', arrive: '21:55', num: '556', type: 'محسن', note: 'ينتهي بمحطة منوف اليوم السابق للجمع والاجازات' },
+  { dir: 'out_cairo', depart: '20:32', arrive: '22:20', num: '118', type: 'روسي' },
+  { dir: 'out_cairo', depart: '22:12', arrive: '00:10', num: '558', type: 'محسن' },
+
+  /* القاهرة ← منوف */
+  { dir: 'in_cairo', depart: '04:10', arrive: '06:25', num: '533', type: 'محسن' },
+  { dir: 'in_cairo', depart: '05:00', arrive: '06:47', num: '119', type: 'روسي' },
+  { dir: 'in_cairo', depart: '05:15', arrive: '07:33', num: '535', type: 'محسن' },
+  { dir: 'in_cairo', depart: '06:20', arrive: '08:26', num: '537', type: 'محسن' },
+  { dir: 'in_cairo', depart: '07:20', arrive: '09:18', num: '539', type: 'محسن' },
+  { dir: 'in_cairo', depart: '09:10', arrive: '11:24', num: '543', type: 'محسن' },
+  { dir: 'in_cairo', depart: '11:05', arrive: '13:05', num: '545', type: 'محسن', note: 'لا يعمل أيام الجمع والأجازات الرسمية' },
+  { dir: 'in_cairo', depart: '12:05', arrive: '14:03', num: '547', type: 'محسن' },
+  { dir: 'in_cairo', depart: '13:20', arrive: '15:21', num: '549', type: 'محسن', note: 'لا يعمل أيام الجمع والأجازات الرسمية' },
+  { dir: 'in_cairo', depart: '14:30', arrive: '16:30', num: '121', type: 'محسن' },
+  { dir: 'in_cairo', depart: '15:00', arrive: '17:04', num: '551', type: 'محسن' },
+  { dir: 'in_cairo', depart: '15:50', arrive: '17:22', num: '1191', type: 'مكيف روسي', note: 'لا يعمل أيام الجمع والأجازات الرسمية' },
+  { dir: 'in_cairo', depart: '16:10', arrive: '18:11', num: '553', type: 'محسن' },
+  { dir: 'in_cairo', depart: '17:05', arrive: '19:14', num: '555', type: 'محسن', note: 'لا يعمل أيام الجمع والأجازات الرسمية' },
+  { dir: 'in_cairo', depart: '17:30', arrive: '19:40', num: '563', type: 'محسن' },
+  { dir: 'in_cairo', depart: '18:40', arrive: '20:50', num: '557', type: 'محسن' },
+  { dir: 'in_cairo', depart: '20:00', arrive: '21:51', num: '123', type: 'محسن' },
+  { dir: 'in_cairo', depart: '21:25', arrive: '23:25', num: '561', type: 'محسن' },
+  { dir: 'in_cairo', depart: '23:10', arrive: '01:05', num: '529', type: 'محسن' },
+
+  /* من منوف ← طنطا */
+  { dir: 'out_tanta', depart: '04:00', arrive: '05:10', num: '531', type: 'محسن' },
+  { dir: 'out_tanta', depart: '05:20', arrive: '06:35', num: '347', type: 'محسن' },
+  { dir: 'out_tanta', depart: '06:48', arrive: '07:45', num: '119', type: 'روسي' },
+  { dir: 'out_tanta', depart: '07:34', arrive: '08:45', num: '535', type: 'محسن' },
+  { dir: 'out_tanta', depart: '08:05', arrive: '09:15', num: '541', type: 'محسن' },
+  { dir: 'out_tanta', depart: '08:27', arrive: '09:35', num: '537', type: 'محسن' },
+  { dir: 'out_tanta', depart: '10:15', arrive: '11:25', num: '565', type: 'محسن' },
+  { dir: 'out_tanta', depart: '11:25', arrive: '12:35', num: '543', type: 'محسن' },
+  { dir: 'out_tanta', depart: '13:06', arrive: '14:15', num: '545', type: 'محسن', note: 'لا يعمل أيام الجمع والأجازات الرسمية' },
+  { dir: 'out_tanta', depart: '14:05', arrive: '15:10', num: '547', type: 'محسن' },
+  { dir: 'out_tanta', depart: '15:22', arrive: '16:40', num: '549', type: 'محسن', note: 'لا يعمل أيام الجمع والأجازات الرسمية' },
+  { dir: 'out_tanta', depart: '16:31', arrive: '17:45', num: '121', type: 'محسن' },
+  { dir: 'out_tanta', depart: '17:05', arrive: '18:10', num: '551', type: 'محسن' },
+  { dir: 'out_tanta', depart: '17:32', arrive: '18:30', num: '1191', type: 'مكيف روسي', note: 'لا يعمل أيام الجمع والأجازات الرسمية' },
+  { dir: 'out_tanta', depart: '18:12', arrive: '19:30', num: '553', type: 'محسن' },
+  { dir: 'out_tanta', depart: '19:15', arrive: '20:25', num: '555', type: 'محسن', note: 'لا يعمل أيام الجمع والأجازات الرسمية' },
+  { dir: 'out_tanta', depart: '19:41', arrive: '20:50', num: '563', type: 'محسن' },
+  { dir: 'out_tanta', depart: '21:52', arrive: '23:10', num: '123', type: 'محسن' },
+
+  /* طنطا ← منوف */
+  { dir: 'in_tanta', depart: '04:40', arrive: '05:42', num: '1190', type: 'مكيف روسي', note: 'لا يعمل أيام الجمع والأجازات الرسمية' },
+  { dir: 'in_tanta', depart: '05:10', arrive: '06:17', num: '534', type: 'محسن' },
+  { dir: 'in_tanta', depart: '06:00', arrive: '07:10', num: '536', type: 'محسن' },
+  { dir: 'in_tanta', depart: '06:50', arrive: '08:05', num: '540', type: 'محسن', note: 'لا يعمل أيام الجمع والأجازات الرسمية' },
+  { dir: 'in_tanta', depart: '07:15', arrive: '08:30', num: '122', type: 'محسن', note: 'لا يعمل أيام الجمع والأجازات الرسمية' },
+  { dir: 'in_tanta', depart: '08:10', arrive: '09:18', num: '124', type: 'محسن' },
+  { dir: 'in_tanta', depart: '09:50', arrive: '10:58', num: '544', type: 'محسن' },
+  { dir: 'in_tanta', depart: '11:35', arrive: '12:44', num: '562', type: 'محسن' },
+  { dir: 'in_tanta', depart: '13:15', arrive: '14:31', num: '546', type: 'محسن', note: 'لا يعمل أيام الجمع والأجازات الرسمية' },
+  { dir: 'in_tanta', depart: '14:35', arrive: '15:48', num: '548', type: 'محسن' },
+  { dir: 'in_tanta', depart: '15:30', arrive: '16:42', num: '550', type: 'محسن' },
+  { dir: 'in_tanta', depart: '16:05', arrive: '17:17', num: '552', type: 'محسن' },
+  { dir: 'in_tanta', depart: '17:10', arrive: '18:25', num: '554', type: 'محسن' },
+  { dir: 'in_tanta', depart: '18:30', arrive: '19:40', num: '556', type: 'محسن', note: 'ينتهي بمحطة منوف اليوم السابق للجمع والاجازات' },
+  { dir: 'in_tanta', depart: '19:30', arrive: '20:31', num: '118', type: 'روسي' },
+  { dir: 'in_tanta', depart: '21:00', arrive: '22:11', num: '558', type: 'محسن' },
+  { dir: 'in_tanta', depart: '22:10', arrive: '23:30', num: '564', type: 'محسن' },
+  { dir: 'in_tanta', depart: '23:10', arrive: '00:15', num: '560', type: 'محسن' },
+
+  /* من منوف ← بنها */
+  { dir: 'out_benha', depart: '04:25', arrive: '05:15', num: '604', type: 'محسن', note: 'لا يعمل أيام الجمع والأجازات الرسمية' },
+  { dir: 'out_benha', depart: '05:25', arrive: '06:15', num: '606', type: 'محسن' },
+  { dir: 'out_benha', depart: '06:55', arrive: '07:45', num: '608', type: 'محسن' },
+  { dir: 'out_benha', depart: '08:25', arrive: '09:20', num: '610', type: 'محسن' },
+  { dir: 'out_benha', depart: '10:25', arrive: '11:15', num: '612', type: 'محسن' },
+  { dir: 'out_benha', depart: '12:00', arrive: '12:50', num: '614', type: 'محسن' },
+  { dir: 'out_benha', depart: '14:25', arrive: '15:15', num: '616', type: 'محسن' },
+  { dir: 'out_benha', depart: '15:35', arrive: '16:25', num: '618', type: 'محسن' },
+  { dir: 'out_benha', depart: '16:40', arrive: '17:30', num: '620', type: 'محسن' },
+  { dir: 'out_benha', depart: '17:55', arrive: '18:45', num: '622', type: 'محسن' },
+  { dir: 'out_benha', depart: '19:05', arrive: '19:55', num: '624', type: 'محسن' },
+  { dir: 'out_benha', depart: '21:25', arrive: '22:15', num: '626', type: 'محسن' },
+
+  /* بنها ← منوف */
+  { dir: 'in_benha', depart: '04:20', arrive: '05:10', num: '603', type: 'محسن' },
+  { dir: 'in_benha', depart: '05:35', arrive: '06:25', num: '605', type: 'محسن', note: 'لا يعمل أيام الجمع والأجازات الرسمية' },
+  { dir: 'in_benha', depart: '07:10', arrive: '08:00', num: '607', type: 'محسن' },
+  { dir: 'in_benha', depart: '08:15', arrive: '09:10', num: '609', type: 'محسن' },
+  { dir: 'in_benha', depart: '10:30', arrive: '11:20', num: '611', type: 'محسن' },
+  { dir: 'in_benha', depart: '12:05', arrive: '12:55', num: '613', type: 'محسن' },
+  { dir: 'in_benha', depart: '14:20', arrive: '15:10', num: '615', type: 'محسن' },
+  { dir: 'in_benha', depart: '15:30', arrive: '16:20', num: '617', type: 'محسن' },
+  { dir: 'in_benha', depart: '16:40', arrive: '17:35', num: '619', type: 'محسن' },
+  { dir: 'in_benha', depart: '18:00', arrive: '18:55', num: '621', type: 'محسن' },
+  { dir: 'in_benha', depart: '19:10', arrive: '20:00', num: '623', type: 'محسن' },
+  { dir: 'in_benha', depart: '22:30', arrive: '23:20', num: '625', type: 'محسن' },
+
+  /* من منوف ← كفر الزيات */
+  { dir: 'out_kafr', depart: '05:30', arrive: '06:55', num: '845', type: 'محسن' },
+  { dir: 'out_kafr', depart: '06:48', arrive: '08:07', num: '119', type: 'روسي' },
+  { dir: 'out_kafr', depart: '08:00', arrive: '09:30', num: '847', type: 'محسن' },
+  { dir: 'out_kafr', depart: '09:40', arrive: '11:15', num: '539', type: 'محسن' },
+  { dir: 'out_kafr', depart: '12:35', arrive: '14:05', num: '851', type: 'محسن' },
+  { dir: 'out_kafr', depart: '14:40', arrive: '16:10', num: '853', type: 'محسن' },
+  { dir: 'out_kafr', depart: '15:40', arrive: '17:10', num: '855', type: 'محسن' },
+  { dir: 'out_kafr', depart: '17:45', arrive: '19:20', num: '857', type: 'محسن' },
+  { dir: 'out_kafr', depart: '18:40', arrive: '20:15', num: '859', type: 'محسن' },
+  { dir: 'out_kafr', depart: '20:05', arrive: '21:35', num: '861', type: 'محسن' },
+  { dir: 'out_kafr', depart: '21:00', arrive: '22:45', num: '557', type: 'محسن' },
+
+  /* كفر الزيات ← منوف */
+  { dir: 'in_kafr', depart: '04:55', arrive: '06:29', num: '538', type: 'محسن' },
+  { dir: 'in_kafr', depart: '06:15', arrive: '07:45', num: '844', type: 'محسن' },
+  { dir: 'in_kafr', depart: '08:40', arrive: '10:05', num: '846', type: 'محسن' },
+  { dir: 'in_kafr', depart: '10:40', arrive: '12:10', num: '848', type: 'محسن' },
+  { dir: 'in_kafr', depart: '13:20', arrive: '15:00', num: '850', type: 'محسن' },
+  { dir: 'in_kafr', depart: '15:00', arrive: '16:35', num: '852', type: 'محسن' },
+  { dir: 'in_kafr', depart: '16:20', arrive: '18:05', num: '854', type: 'محسن' },
+  { dir: 'in_kafr', depart: '17:25', arrive: '18:55', num: '856', type: 'محسن' },
+  { dir: 'in_kafr', depart: '18:58', arrive: '20:31', num: '118', type: 'روسي' },
+  { dir: 'in_kafr', depart: '19:40', arrive: '21:20', num: '858', type: 'محسن' },
+  { dir: 'in_kafr', depart: '21:40', arrive: '23:10', num: '860', type: 'محسن' }
+];
+
 $('reCat').innerHTML = CATS.real_estate.map(s => `<option>${s}</option>`).join('');
 const tDep = t => t.depart || t.time || '';
+function fmtTrainTime(s) {
+  if (!s || !s.includes(':')) return s || '-';
+  let [h, m] = s.split(':').map(Number);
+  const suf = h >= 12 ? 'م' : 'ص';
+  h = h % 12 || 12;
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')} ${suf}`;
+}
 
-let trains = [], trainDir = 'out_cairo', trainOn = false, editTrainId = null;
+let trainDir = 'out_cairo', trainOn = false;
 
 /* ---------- البحث بالمرادفات ---------- */
 const normAr = s => String(s || '').toLowerCase()
@@ -1010,34 +1111,51 @@ const ratingOf = id => {
 const isRE = b => b && b.type === 'real_estate';
 const reExpired = b => isRE(b) && b.expiresAt && b.expiresAt < Date.now();
 const fmtPrice = n => n ? Number(n).toLocaleString('ar-EG') : '';
+const iconOfBiz = b => {
+  if (isRE(b)) return '🏠';
+  if (b.type === 'delivery') return '🛵';
+  if (b.type === 'lab') return '🧪';
+  if (b.type === 'gym') return '🏋️';
+  if (b.type === 'pharmacy' || b.category === 'صيدلية' || normAr(b.name).includes('صيدلي')) return '💊';
+  if (b.type === 'doctor') return '🩺';
+  if (b.type === 'service') return '⚙️';
+  if (normAr(b.category).includes('كافيه') || normAr(b.name).includes('كافيه')) return '☕';
+  return '🛍️';
+};
 
-/* ---------- نبض منوف ---------- */
+/* ---------- نبض منوف والطقس (مع حفظ 3 ساعات على الموبايل) ---------- */
 function initPulse() {
   const hr = new Date().getHours();
   $('pulseGreet').textContent = hr < 12 ? '☀️ صباح الخير يا أهل منوف' : hr < 17 ? '🌤️ طاب يومكم في منوف' : '🌙 مساء الخير يا أهل منوف';
-  const showWx = (temp, code) => {
-    const ic = code <= 1 ? '☀️' : code <= 3 ? '⛅' : code >= 51 ? '🌧️' : '🌤️';
-    if (!isNaN(temp)) $('pulseWeather').textContent = `${ic} ${temp}°`;
-  };
-  const WX_TTL = 3 * 60 * 60 * 1000;
+
   try {
-    const c = JSON.parse(localStorage.getItem('menouf_wx') || 'null');
-    if (c && Date.now() - c.ts < WX_TTL) { showWx(c.temp, c.code); return; }
+    const cached = JSON.parse(localStorage.getItem('menouf_weather_cache') || 'null');
+    if (cached?.text) {
+      $('pulseWeather').textContent = cached.text;
+      const age = Date.now() - (cached.ts || 0);
+      if (age >= 0 && age < WEATHER_TTL) return;
+    }
   } catch (e) {}
+
   fetch('https://api.open-meteo.com/v1/forecast?latitude=30.465&longitude=30.931&current=temperature_2m,weather_code&timezone=Africa%2FCairo')
     .then(r => r.json())
     .then(d => {
       const temp = Math.round(d?.current?.temperature_2m);
       const code = d?.current?.weather_code ?? 0;
+      const ic = code <= 1 ? '☀️' : code <= 3 ? '⛅' : code >= 51 ? '🌧️' : '🌤️';
       if (!isNaN(temp)) {
-        showWx(temp, code);
-        try { localStorage.setItem('menouf_wx', JSON.stringify({ ts: Date.now(), temp, code })); } catch (e) {}
+        const text = `${ic} ${temp}°`;
+        $('pulseWeather').textContent = text;
+        try {
+          localStorage.setItem('menouf_weather_cache', JSON.stringify({ text, ts: Date.now() }));
+        } catch (e) {}
       }
     }).catch(() => {});
 }
+
 function updateNextTrainPulse() {
   const now = new Date(), cur = now.getHours() * 60 + now.getMinutes();
-  const allOut = trains.filter(t => String(t.dir || '').startsWith('out_') && tDep(t))
+  const allOut = TRAINS.filter(t => String(t.dir || '').startsWith('out_') && tDep(t))
     .map(t => ({ ...t, m: toMin(tDep(t)) }))
     .sort((a, b) => a.m - b.m);
   if (!allOut.length) {
@@ -1048,10 +1166,10 @@ function updateNextTrainPulse() {
   if (todayOut.length) {
     const nx = todayOut[0], diff = nx.m - cur;
     const txt = diff === 0 ? 'يتحرك الآن' : diff < 60 ? `بعد ${diff} دقيقة` : `بعد ${Math.floor(diff / 60)} س و ${diff % 60} د`;
-    $('pulseTrain').innerHTML = `<span>🚆 القطار القادم (<strong>${esc(SHORT_DIR[nx.dir])}</strong>): ${esc(tDep(nx))} · <strong>${txt}</strong></span><span style="color:var(--p)">الجدول ←</span>`;
+    $('pulseTrain').innerHTML = `<span>🚆 القطار القادم (<strong>${esc(SHORT_DIR[nx.dir])}</strong>): ${esc(fmtTrainTime(tDep(nx)))} · <strong>${txt}</strong></span><span style="color:var(--p)">الجدول ←</span>`;
   } else {
     const nx = allOut[0];
-    $('pulseTrain').innerHTML = `<span>🚆 القطار القادم (<strong>${esc(SHORT_DIR[nx.dir])}</strong>): ${esc(tDep(nx))} · <strong>(غداً)</strong></span><span style="color:var(--p)">الجدول ←</span>`;
+    $('pulseTrain').innerHTML = `<span>🚆 القطار القادم (<strong>${esc(SHORT_DIR[nx.dir])}</strong>): ${esc(fmtTrainTime(tDep(nx)))} · <strong>(غداً)</strong></span><span style="color:var(--p)">الجدول ←</span>`;
   }
 }
 $('pulseTrain').onclick = () => { if (!trainOn) $('fTrain').click(); };
@@ -1106,7 +1224,6 @@ async function loadApproved() {
 let reviewsLoadedAll = false;
 const revLoaded = new Set();
 
-/* تقييمات نشاط واحد بس لما يتفتح */
 async function loadReviewsFor(bizId) {
   if (guest || !me?.uid || revLoaded.has(bizId)) return;
   revLoaded.add(bizId);
@@ -1118,7 +1235,6 @@ async function loadReviewsFor(bizId) {
   } catch (e) { revLoaded.delete(bizId); }
 }
 
-/* كل التقييمات: للفلترة بالأعلى تقييماً ولوحة الإدارة بس */
 async function loadReviewsOnce() {
   if (reviewsLoadedAll || guest || !me?.uid) return;
   try {
@@ -1138,7 +1254,7 @@ function listenOffers() {
   }, () => {});
 }
 
-/* ---------- عروض اليوم ---------- */
+/* ---------- عروض اليوم (استايل الكروت بالصورة) ---------- */
 function activeOffers() {
   const now = Date.now();
   return offers.filter(o => o.status === 'approved' && (!o.expiresAt || o.expiresAt > now))
@@ -1148,11 +1264,18 @@ function renderDeals() {
   const list = activeOffers();
   $('dealsBar').classList.toggle('hidden', !list.length);
   $('dealsList').innerHTML = list.map(o => `
-    <div class="deal-item" data-deal="${o.id}">
-      ${o.image ? `<img src="${o.image}" alt="">` : '<div class="deal-noimg">🔥</div>'}
-      <span class="deal-disc">${esc(o.discount || 'عرض')}</span>
-      <div class="deal-title">${esc(o.title || '')}</div>
-      <small>${esc(o.bizName || '')}</small>
+    <div class="deal-card" data-deal="${o.id}">
+      <div class="deal-media">
+        ${o.image ? `<img src="${o.image}" loading="lazy" alt="">` : `<span class="deal-ph">🎁</span>`}
+        <div class="deal-badge">${esc(o.discount || 'عرض')}</div>
+      </div>
+      <div class="deal-body">
+        <div>
+          <div class="deal-title">${esc(o.bizName || o.title)}</div>
+          <div class="deal-sub">${esc(o.title || o.desc || 'عرض حصري في منوف')}</div>
+        </div>
+        <span class="deal-btn">المزيد ←</span>
+      </div>
     </div>`).join('');
 }
 $('dealsList').onclick = e => {
@@ -1236,138 +1359,10 @@ $('adminOffersBox').onclick = async e => {
 };
 
 /* ---------- القطارات: عرض ---------- */
-/* جدول القطارات الثابت (من railego/railraleg مواعيد منوف) - بيتعدل من الكود بس */
-const STATIC_TRAINS = [
-  {"id": "st001", "dir": "out_cairo", "depart": "04:00", "arrive": "06:05", "num": "512", "type": "محسن", "note": null},
-  {"id": "st002", "dir": "out_cairo", "depart": "04:25", "arrive": "06:25", "num": "530", "type": "محسن", "note": null},
-  {"id": "st003", "dir": "out_cairo", "depart": "05:20", "arrive": "07:25", "num": "532", "type": "محسن", "note": null},
-  {"id": "st004", "dir": "out_cairo", "depart": "05:52", "arrive": "07:35", "num": "1190", "type": "مكيف روسي", "note": "لا يعمل أيام الجمع والأجازات الرسمية"},
-  {"id": "st005", "dir": "out_cairo", "depart": "06:26", "arrive": "08:45", "num": "534", "type": "محسن", "note": null},
-  {"id": "st006", "dir": "out_cairo", "depart": "06:46", "arrive": "09:10", "num": "538", "type": "محسن", "note": null},
-  {"id": "st007", "dir": "out_cairo", "depart": "08:05", "arrive": "10:05", "num": "540", "type": "محسن", "note": "لا يعمل أيام الجمع والأجازات الرسمية"},
-  {"id": "st008", "dir": "out_cairo", "depart": "08:31", "arrive": "10:30", "num": "122", "type": "محسن", "note": "لا يعمل أيام الجمع والأجازات الرسمية"},
-  {"id": "st009", "dir": "out_cairo", "depart": "09:19", "arrive": "11:05", "num": "124", "type": "محسن", "note": null},
-  {"id": "st010", "dir": "out_cairo", "depart": "10:59", "arrive": "13:00", "num": "544", "type": "محسن", "note": null},
-  {"id": "st011", "dir": "out_cairo", "depart": "12:45", "arrive": "15:00", "num": "562", "type": "محسن", "note": null},
-  {"id": "st012", "dir": "out_cairo", "depart": "14:36", "arrive": "17:05", "num": "546", "type": "محسن", "note": "لا يعمل أيام الجمع والأجازات الرسمية"},
-  {"id": "st013", "dir": "out_cairo", "depart": "15:49", "arrive": "18:00", "num": "548", "type": "محسن", "note": null},
-  {"id": "st014", "dir": "out_cairo", "depart": "16:43", "arrive": "18:55", "num": "550", "type": "محسن", "note": null},
-  {"id": "st015", "dir": "out_cairo", "depart": "17:24", "arrive": "19:25", "num": "552", "type": "محسن", "note": null},
-  {"id": "st016", "dir": "out_cairo", "depart": "18:26", "arrive": "20:20", "num": "554", "type": "محسن", "note": null},
-  {"id": "st017", "dir": "out_cairo", "depart": "19:45", "arrive": "21:55", "num": "556", "type": "محسن", "note": "ينتهي بمحطة منوف اليوم السابق للجمع والاجازات"},
-  {"id": "st018", "dir": "out_cairo", "depart": "20:32", "arrive": "22:20", "num": "118", "type": "روسي", "note": null},
-  {"id": "st019", "dir": "out_cairo", "depart": "22:12", "arrive": "00:10", "num": "558", "type": "محسن", "note": null},
-  {"id": "st020", "dir": "out_tanta", "depart": "04:00", "arrive": "05:10", "num": "531", "type": "محسن", "note": null},
-  {"id": "st021", "dir": "out_tanta", "depart": "05:20", "arrive": "06:35", "num": "347", "type": "محسن", "note": null},
-  {"id": "st022", "dir": "out_tanta", "depart": "06:48", "arrive": "07:45", "num": "119", "type": "روسي", "note": null},
-  {"id": "st023", "dir": "out_tanta", "depart": "07:34", "arrive": "08:45", "num": "535", "type": "محسن", "note": null},
-  {"id": "st024", "dir": "out_tanta", "depart": "08:05", "arrive": "09:15", "num": "541", "type": "محسن", "note": null},
-  {"id": "st025", "dir": "out_tanta", "depart": "08:27", "arrive": "09:35", "num": "537", "type": "محسن", "note": null},
-  {"id": "st026", "dir": "out_tanta", "depart": "10:15", "arrive": "23:25", "num": "565", "type": "محسن", "note": null},
-  {"id": "st027", "dir": "out_tanta", "depart": "11:25", "arrive": "12:35", "num": "543", "type": "محسن", "note": null},
-  {"id": "st028", "dir": "out_tanta", "depart": "13:06", "arrive": "14:15", "num": "545", "type": "محسن", "note": "لا يعمل أيام الجمع والأجازات الرسمية"},
-  {"id": "st029", "dir": "out_tanta", "depart": "14:05", "arrive": "15:10", "num": "547", "type": "محسن", "note": null},
-  {"id": "st030", "dir": "out_tanta", "depart": "15:22", "arrive": "16:40", "num": "549", "type": "محسن", "note": "لا يعمل أيام الجمع والأجازات الرسمية"},
-  {"id": "st031", "dir": "out_tanta", "depart": "16:31", "arrive": "17:45", "num": "121", "type": "محسن", "note": null},
-  {"id": "st032", "dir": "out_tanta", "depart": "17:05", "arrive": "18:10", "num": "551", "type": "محسن", "note": null},
-  {"id": "st033", "dir": "out_tanta", "depart": "17:32", "arrive": "18:30", "num": "1191", "type": "مكيف روسي", "note": "لا يعمل أيام الجمع والأجازات الرسمية"},
-  {"id": "st034", "dir": "out_tanta", "depart": "18:12", "arrive": "19:30", "num": "553", "type": "محسن", "note": null},
-  {"id": "st035", "dir": "out_tanta", "depart": "19:15", "arrive": "20:25", "num": "555", "type": "محسن", "note": "لا يعمل أيام الجمع والأجازات الرسمية"},
-  {"id": "st036", "dir": "out_tanta", "depart": "19:41", "arrive": "20:50", "num": "563", "type": "محسن", "note": null},
-  {"id": "st037", "dir": "out_tanta", "depart": "21:52", "arrive": "23:10", "num": "123", "type": "محسن", "note": null},
-  {"id": "st038", "dir": "out_benha", "depart": "04:25", "arrive": "05:15", "num": "604", "type": "محسن", "note": "لا يعمل أيام الجمع والأجازات الرسمية"},
-  {"id": "st039", "dir": "out_benha", "depart": "05:25", "arrive": "06:15", "num": "606", "type": "محسن", "note": null},
-  {"id": "st040", "dir": "out_benha", "depart": "06:55", "arrive": "07:45", "num": "608", "type": "محسن", "note": null},
-  {"id": "st041", "dir": "out_benha", "depart": "08:25", "arrive": "09:20", "num": "610", "type": "محسن", "note": null},
-  {"id": "st042", "dir": "out_benha", "depart": "10:25", "arrive": "11:15", "num": "612", "type": "محسن", "note": null},
-  {"id": "st043", "dir": "out_benha", "depart": "12:00", "arrive": "12:50", "num": "614", "type": "محسن", "note": null},
-  {"id": "st044", "dir": "out_benha", "depart": "14:25", "arrive": "15:15", "num": "616", "type": "محسن", "note": null},
-  {"id": "st045", "dir": "out_benha", "depart": "15:35", "arrive": "16:25", "num": "618", "type": "محسن", "note": null},
-  {"id": "st046", "dir": "out_benha", "depart": "16:40", "arrive": "17:30", "num": "620", "type": "محسن", "note": null},
-  {"id": "st047", "dir": "out_benha", "depart": "17:55", "arrive": "18:45", "num": "622", "type": "محسن", "note": null},
-  {"id": "st048", "dir": "out_benha", "depart": "19:05", "arrive": "19:55", "num": "624", "type": "محسن", "note": null},
-  {"id": "st049", "dir": "out_benha", "depart": "21:25", "arrive": "22:15", "num": "626", "type": "محسن", "note": null},
-  {"id": "st050", "dir": "out_kafr", "depart": "05:30", "arrive": "06:55", "num": "845", "type": "محسن", "note": null},
-  {"id": "st051", "dir": "out_kafr", "depart": "06:48", "arrive": "08:07", "num": "119", "type": "روسي", "note": null},
-  {"id": "st052", "dir": "out_kafr", "depart": "08:00", "arrive": "09:30", "num": "847", "type": "محسن", "note": null},
-  {"id": "st053", "dir": "out_kafr", "depart": "09:40", "arrive": "11:15", "num": "539", "type": "محسن", "note": null},
-  {"id": "st054", "dir": "out_kafr", "depart": "12:35", "arrive": "14:05", "num": "851", "type": "محسن", "note": null},
-  {"id": "st055", "dir": "out_kafr", "depart": "14:40", "arrive": "16:10", "num": "853", "type": "محسن", "note": null},
-  {"id": "st056", "dir": "out_kafr", "depart": "15:40", "arrive": "17:10", "num": "855", "type": "محسن", "note": null},
-  {"id": "st057", "dir": "out_kafr", "depart": "17:45", "arrive": "19:20", "num": "857", "type": "محسن", "note": null},
-  {"id": "st058", "dir": "out_kafr", "depart": "18:40", "arrive": "20:15", "num": "859", "type": "محسن", "note": null},
-  {"id": "st059", "dir": "out_kafr", "depart": "20:05", "arrive": "21:35", "num": "861", "type": "محسن", "note": null},
-  {"id": "st060", "dir": "out_kafr", "depart": "21:00", "arrive": "22:45", "num": "557", "type": "محسن", "note": null},
-  {"id": "st061", "dir": "in_cairo", "depart": "04:10", "arrive": "06:25", "num": "533", "type": "محسن", "note": null},
-  {"id": "st062", "dir": "in_cairo", "depart": "05:00", "arrive": "06:47", "num": "119", "type": "روسي", "note": null},
-  {"id": "st063", "dir": "in_cairo", "depart": "05:15", "arrive": "07:33", "num": "535", "type": "محسن", "note": null},
-  {"id": "st064", "dir": "in_cairo", "depart": "06:20", "arrive": "08:26", "num": "537", "type": "محسن", "note": null},
-  {"id": "st065", "dir": "in_cairo", "depart": "07:20", "arrive": "09:18", "num": "539", "type": "محسن", "note": null},
-  {"id": "st066", "dir": "in_cairo", "depart": "09:10", "arrive": "11:24", "num": "543", "type": "محسن", "note": null},
-  {"id": "st067", "dir": "in_cairo", "depart": "11:05", "arrive": "13:05", "num": "545", "type": "محسن", "note": "لا يعمل أيام الجمع والأجازات الرسمية"},
-  {"id": "st068", "dir": "in_cairo", "depart": "12:05", "arrive": "14:03", "num": "547", "type": "محسن", "note": null},
-  {"id": "st069", "dir": "in_cairo", "depart": "13:20", "arrive": "15:21", "num": "549", "type": "محسن", "note": "لا يعمل أيام الجمع والأجازات الرسمية"},
-  {"id": "st070", "dir": "in_cairo", "depart": "14:30", "arrive": "16:30", "num": "121", "type": "محسن", "note": null},
-  {"id": "st071", "dir": "in_cairo", "depart": "15:00", "arrive": "17:04", "num": "551", "type": "محسن", "note": null},
-  {"id": "st072", "dir": "in_cairo", "depart": "15:50", "arrive": "17:22", "num": "1191", "type": "مكيف روسي", "note": "لا يعمل أيام الجمع والأجازات الرسمية"},
-  {"id": "st073", "dir": "in_cairo", "depart": "16:10", "arrive": "18:11", "num": "553", "type": "محسن", "note": null},
-  {"id": "st074", "dir": "in_cairo", "depart": "17:05", "arrive": "19:14", "num": "555", "type": "محسن", "note": "لا يعمل أيام الجمع والأجازات الرسمية"},
-  {"id": "st075", "dir": "in_cairo", "depart": "17:30", "arrive": "19:40", "num": "563", "type": "محسن", "note": null},
-  {"id": "st076", "dir": "in_cairo", "depart": "18:40", "arrive": "20:50", "num": "557", "type": "محسن", "note": null},
-  {"id": "st077", "dir": "in_cairo", "depart": "20:00", "arrive": "21:51", "num": "123", "type": "محسن", "note": null},
-  {"id": "st078", "dir": "in_cairo", "depart": "21:25", "arrive": "23:25", "num": "561", "type": "محسن", "note": null},
-  {"id": "st079", "dir": "in_cairo", "depart": "23:10", "arrive": "01:05", "num": "529", "type": "محسن", "note": null},
-  {"id": "st080", "dir": "in_tanta", "depart": "04:40", "arrive": "05:42", "num": "1190", "type": "مكيف روسي", "note": "لا يعمل أيام الجمع والأجازات الرسمية"},
-  {"id": "st081", "dir": "in_tanta", "depart": "05:10", "arrive": "06:17", "num": "534", "type": "محسن", "note": null},
-  {"id": "st082", "dir": "in_tanta", "depart": "06:00", "arrive": "07:10", "num": "536", "type": "محسن", "note": null},
-  {"id": "st083", "dir": "in_tanta", "depart": "06:50", "arrive": "08:05", "num": "540", "type": "محسن", "note": "لا يعمل أيام الجمع والأجازات الرسمية"},
-  {"id": "st084", "dir": "in_tanta", "depart": "07:15", "arrive": "08:30", "num": "122", "type": "محسن", "note": "لا يعمل أيام الجمع والأجازات الرسمية"},
-  {"id": "st085", "dir": "in_tanta", "depart": "08:10", "arrive": "09:18", "num": "124", "type": "محسن", "note": null},
-  {"id": "st086", "dir": "in_tanta", "depart": "09:50", "arrive": "10:58", "num": "544", "type": "محسن", "note": null},
-  {"id": "st087", "dir": "in_tanta", "depart": "11:35", "arrive": "12:44", "num": "562", "type": "محسن", "note": null},
-  {"id": "st088", "dir": "in_tanta", "depart": "13:15", "arrive": "14:31", "num": "546", "type": "محسن", "note": "لا يعمل أيام الجمع والأجازات الرسمية"},
-  {"id": "st089", "dir": "in_tanta", "depart": "14:35", "arrive": "15:48", "num": "548", "type": "محسن", "note": null},
-  {"id": "st090", "dir": "in_tanta", "depart": "15:30", "arrive": "16:42", "num": "550", "type": "محسن", "note": null},
-  {"id": "st091", "dir": "in_tanta", "depart": "16:05", "arrive": "17:17", "num": "552", "type": "محسن", "note": null},
-  {"id": "st092", "dir": "in_tanta", "depart": "17:10", "arrive": "18:25", "num": "554", "type": "محسن", "note": null},
-  {"id": "st093", "dir": "in_tanta", "depart": "18:30", "arrive": "19:40", "num": "556", "type": "محسن", "note": "ينتهي بمحطة منوف اليوم السابق للجمع والاجازات"},
-  {"id": "st094", "dir": "in_tanta", "depart": "19:30", "arrive": "20:31", "num": "118", "type": "روسي", "note": null},
-  {"id": "st095", "dir": "in_tanta", "depart": "21:00", "arrive": "22:11", "num": "558", "type": "محسن", "note": null},
-  {"id": "st096", "dir": "in_tanta", "depart": "22:10", "arrive": "23:30", "num": "564", "type": "محسن", "note": null},
-  {"id": "st097", "dir": "in_tanta", "depart": "23:10", "arrive": "00:15", "num": "560", "type": "محسن", "note": null},
-  {"id": "st098", "dir": "in_benha", "depart": "04:20", "arrive": "05:10", "num": "603", "type": "محسن", "note": null},
-  {"id": "st099", "dir": "in_benha", "depart": "05:35", "arrive": "06:25", "num": "605", "type": "محسن", "note": "لا يعمل أيام الجمع والأجازات الرسمية"},
-  {"id": "st100", "dir": "in_benha", "depart": "07:10", "arrive": "08:00", "num": "607", "type": "محسن", "note": null},
-  {"id": "st101", "dir": "in_benha", "depart": "08:15", "arrive": "09:10", "num": "609", "type": "محسن", "note": null},
-  {"id": "st102", "dir": "in_benha", "depart": "10:30", "arrive": "11:20", "num": "611", "type": "محسن", "note": null},
-  {"id": "st103", "dir": "in_benha", "depart": "12:05", "arrive": "12:55", "num": "613", "type": "محسن", "note": null},
-  {"id": "st104", "dir": "in_benha", "depart": "14:20", "arrive": "15:10", "num": "615", "type": "محسن", "note": null},
-  {"id": "st105", "dir": "in_benha", "depart": "15:30", "arrive": "16:20", "num": "617", "type": "محسن", "note": null},
-  {"id": "st106", "dir": "in_benha", "depart": "16:40", "arrive": "17:35", "num": "619", "type": "محسن", "note": null},
-  {"id": "st107", "dir": "in_benha", "depart": "18:00", "arrive": "18:55", "num": "621", "type": "محسن", "note": null},
-  {"id": "st108", "dir": "in_benha", "depart": "19:10", "arrive": "20:00", "num": "623", "type": "محسن", "note": null},
-  {"id": "st109", "dir": "in_benha", "depart": "22:30", "arrive": "23:20", "num": "625", "type": "محسن", "note": null},
-  {"id": "st110", "dir": "in_kafr", "depart": "04:55", "arrive": "06:29", "num": "538", "type": "محسن", "note": null},
-  {"id": "st111", "dir": "in_kafr", "depart": "06:15", "arrive": "07:45", "num": "844", "type": "محسن", "note": null},
-  {"id": "st112", "dir": "in_kafr", "depart": "08:40", "arrive": "10:05", "num": "846", "type": "محسن", "note": null},
-  {"id": "st113", "dir": "in_kafr", "depart": "10:40", "arrive": "12:10", "num": "848", "type": "محسن", "note": null},
-  {"id": "st114", "dir": "in_kafr", "depart": "13:20", "arrive": "15:00", "num": "850", "type": "محسن", "note": null},
-  {"id": "st115", "dir": "in_kafr", "depart": "15:00", "arrive": "16:35", "num": "852", "type": "محسن", "note": null},
-  {"id": "st116", "dir": "in_kafr", "depart": "16:20", "arrive": "18:05", "num": "854", "type": "محسن", "note": null},
-  {"id": "st117", "dir": "in_kafr", "depart": "17:25", "arrive": "18:55", "num": "856", "type": "محسن", "note": null},
-  {"id": "st118", "dir": "in_kafr", "depart": "18:58", "arrive": "20:31", "num": "118", "type": "روسي", "note": null},
-  {"id": "st119", "dir": "in_kafr", "depart": "19:40", "arrive": "21:20", "num": "858", "type": "محسن", "note": null},
-  {"id": "st120", "dir": "in_kafr", "depart": "21:40", "arrive": "23:10", "num": "860", "type": "محسن", "note": null}
-];
-function listenTrains() {
-  trains = STATIC_TRAINS.map(t => ({ ...t }));
-  renderTrains(); renderTrainAdmin(); updateNextTrainPulse();
-  return () => {};
-}
 function renderTrains() {
   $('trainChips').innerHTML = Object.keys(DIR_LABEL).map(k =>
     `<button class="chip ${k === trainDir ? 'on' : ''}" data-tdir="${k}">${esc(SHORT_DIR[k])} ${k.startsWith('out') ? '←' : '→'}</button>`).join('');
-  const list = trains.filter(t => t.dir === trainDir).sort((a, b) => tDep(a).localeCompare(tDep(b)));
+  const list = TRAINS.filter(t => t.dir === trainDir).sort((a, b) => tDep(a).localeCompare(tDep(b)));
   const now = new Date(), cur = now.getHours() * 60 + now.getMinutes();
   let nextIdx = list.findIndex(t => tDep(t) && toMin(tDep(t)) >= cur);
   let isTomorrow = false;
@@ -1376,68 +1371,14 @@ function renderTrains() {
     (list.length ? list.map((t, i) => `
       <div class="card" style="padding:12px;margin-bottom:10px;${i === nextIdx ? 'border-color:var(--p)' : ''}">
         <div class="row">
-          <div><div class="muted">قيام</div><div style="font-size:20px;font-weight:900;color:var(--p)">${esc(tDep(t))}</div></div>
-          <div style="text-align:left"><div class="muted">وصول</div><div style="font-size:18px;font-weight:800">${esc(t.arrive || '-')}</div></div>
+          <div><div class="muted">قيام</div><div style="font-size:19px;font-weight:900;color:var(--p)">${esc(fmtTrainTime(tDep(t)))}</div></div>
+          <div style="text-align:left"><div class="muted">وصول</div><div style="font-size:17px;font-weight:800">${esc(fmtTrainTime(t.arrive))}</div></div>
           ${i === nextIdx ? `<span class="badge p">${isTomorrow ? 'الجاي (غداً)' : 'الجاي'}</span>` : ''}
         </div>
         ${(t.num || t.type) ? `<div class="info" style="margin-top:6px">🚆 ${t.num ? 'قطار ' + esc(t.num) : ''}${t.num && t.type ? ' · ' : ''}${t.type ? esc(t.type) : ''}</div>` : ''}
         ${t.note ? `<div class="muted" style="margin-top:6px">📝 ${esc(t.note)}</div>` : ''}
       </div>`).join('') : '<div class="empty">لا توجد مواعيد لهذا الاتجاه</div>');
 }
-
-/* ---------- القطارات: الإدارة ---------- */
-function renderTrainAdmin() {
-  $('tList').innerHTML = trains.slice()
-    .sort((a, b) => a.dir.localeCompare(b.dir) || tDep(a).localeCompare(tDep(b)))
-    .map(t => `<div class="lr" style="flex-direction:column;align-items:stretch;gap:6px">
-      <div><strong>${esc(DIR_LABEL[t.dir] || t.dir)}</strong></div>
-      <div class="muted">قيام <b>${esc(tDep(t))}</b> · وصول <b>${esc(t.arrive || '-')}</b>${t.num ? ' · قطار ' + esc(t.num) : ''}${t.type ? ' · ' + esc(t.type) : ''}</div>
-      ${t.note ? `<div class="muted">📝 ${esc(t.note)}</div>` : ''}
-      <div style="display:flex;gap:8px;justify-content:flex-end">
-        <button class="btn sm s" data-tedit="${t.id}">تعديل ✏️</button>
-        <button class="btn sm d" data-tdel="${t.id}">حذف 🗑️</button>
-      </div>
-    </div>`).join('') || '<div class="empty">لا توجد مواعيد</div>';
-}
-function resetTrainForm() {
-  editTrainId = null;
-  $('tDep').value = ''; $('tArr').value = ''; $('tNum').value = ''; $('tNote').value = '';
-  $('tType').value = TRAIN_TYPES[0];
-  $('tSave').textContent = 'إضافة ميعاد';
-  $('tCancel').style.display = 'none';
-}
-function startTrainEdit(t) {
-  editTrainId = t.id;
-  $('tDir').value = t.dir; $('tDep').value = tDep(t); $('tArr').value = t.arrive || '';
-  $('tNum').value = t.num || ''; $('tType').value = t.type || TRAIN_TYPES[0]; $('tNote').value = t.note || '';
-  $('tSave').textContent = 'حفظ التعديل'; $('tCancel').style.display = '';
-  $('tDep').scrollIntoView({ behavior: 'smooth', block: 'center' });
-}
-$('tSave').onclick = async () => {
-  const dep = $('tDep').value, arr = $('tArr').value;
-  if (!dep) return toast('اكتب ميعاد القيام');
-  if (!arr) return toast('اكتب ميعاد الوصول');
-  const data = {
-    dir: $('tDir').value, depart: dep, arrive: arr,
-    num: $('tNum').value.trim() || null,
-    type: $('tType').value || null,
-    note: $('tNote').value.trim() || null
-  };
-  try {
-    if (editTrainId) { await updateDoc(doc(db, 'trains', editTrainId), data); toast('تم حفظ التعديل ✅'); }
-    else { await addDoc(collection(db, 'trains'), { ...data, createdAt: serverTimestamp() }); toast('تم إضافة القطار ✅'); }
-    resetTrainForm();
-  } catch (e) { toast('تعذر الحفظ'); }
-};
-$('tCancel').onclick = () => resetTrainForm();
-$('tList').onclick = async e => {
-  const ed = e.target.closest('[data-tedit]');
-  if (ed) { const t = trains.find(x => x.id === ed.dataset.tedit); if (t) startTrainEdit(t); return; }
-  const del = e.target.closest('[data-tdel]');
-  if (!del || !confirm('حذف الميعاد؟')) return;
-  try { await deleteDoc(doc(db, 'trains', del.dataset.tdel)); if (editTrainId === del.dataset.tdel) resetTrainForm(); toast('تم الحذف'); }
-  catch (err) { toast('تعذر الحذف'); }
-};
 function applyView() {
   $('trainBox').classList.toggle('hidden', !trainOn);
   $('browseList').classList.toggle('hidden', trainOn || mapView);
@@ -1518,7 +1459,8 @@ async function enterGuest() {
   $('logoutBtn').onclick = goToAuth;
   initPulse();
   unsubs.forEach(u => u()); unsubs = [];
-  unsubs.push(listenTrains(), listenOffers());
+  unsubs.push(listenOffers());
+  renderTrains(); updateNextTrainPulse();
   buildCats(); buildSubCats(); buildTypeChips(); buildHours();
   currentTab = 'browse'; switchTab('browse');
   await loadApproved();
@@ -1542,13 +1484,13 @@ onAuthStateChanged(auth, async user => {
   profile = s.exists() ? { uid: user.uid, ...s.data() } : { uid: user.uid, name: 'مستخدم', role: 'user', phone: '' };
   $('authView').classList.add('hidden'); $('appView').classList.remove('hidden');
   $('adminTab').classList.toggle('hidden', profile.role !== 'admin');
-  initPulse(); listen(); buildCats(); buildSubCats(); buildTypeChips(); buildHours();
+  initPulse(); listen(); renderTrains(); updateNextTrainPulse(); buildCats(); buildSubCats(); buildTypeChips(); buildHours();
   currentTab = 'browse'; switchTab('browse');
   await loadApproved();
 });
 
 function listen() {
-  unsubs.push(listenTrains(), listenOffers());
+  unsubs.push(listenOffers());
   unsubs.push(onSnapshot(query(collection(db, 'businesses'), where('ownerId', '==', me.uid)), s => {
     myBiz = s.docs.map(d => ({ id: d.id, ...d.data() }));
     renderMine();
@@ -1741,7 +1683,7 @@ document.addEventListener('visibilitychange', () => { if (document.hidden) flush
 
 function renderBrowse() {
   const list = filtered();
-  $('countLabel').textContent = list.length ? `(${list.length})` : '';
+  $('countLabel').textContent = list.length ? `المزيد (${list.length}) ‹` : '';
   if (mapView) renderMap();
   const cards = list.map(b => {
     const re = isRE(b);
@@ -1750,37 +1692,41 @@ function renderBrowse() {
     const rt = ratingOf(b.id), isDoc = b.type === 'doctor';
     const cover = b.thumb || b.imageUrl || '';
     const reFacts = re ? `<div class="re-facts">
-        ${b.rePrice ? `<span>💰 ${fmtPrice(b.rePrice)} جنيه</span>` : ''}
+        ${b.rePrice ? `<span>💰 ${fmtPrice(b.rePrice)} ج</span>` : ''}
         ${b.reArea ? `<span>📐 ${esc(b.reArea)} م²</span>` : ''}
         ${b.reRooms ? `<span>🛏️ ${esc(b.reRooms)} غرف</span>` : ''}
       </div>` : '';
     return `<div class="card ${b.featured ? 'fe' : ''}" data-open="${b.id}" style="cursor:pointer">
       <button class="fav" data-fav="${b.id}">${fav ? '❤️' : '🤍'}</button>
-      ${cover ? `<img class="card-cover" src="${cover}" loading="lazy" alt="" onerror="this.remove()">` : ''}
-      <div class="row" style="padding-left:34px">
-        <div>
-          <div class="type">${esc(TYPES[b.type]?.label || b.category)}</div>
-          <div class="name">${esc(b.name)}</div>
-          <div class="spec">${del ? esc(b.desc || '') : re ? esc(b.category) : isDoc ? esc(b.specialty) : esc(b.category)}</div>
+      <div class="biz-body">
+        <div class="biz-main">
+          <div>
+            <div class="biz-top">
+              <div class="biz-ico">${iconOfBiz(b)}</div>
+              <div style="min-width:0;flex:1">
+                <div class="name">${esc(b.name)}</div>
+                <div class="spec">${del ? esc(b.desc || '') : re ? esc(b.category) : isDoc ? esc(b.specialty) : esc(b.category)}</div>
+              </div>
+            </div>
+            <div class="tags">
+              ${re || del ? '' : `<span class="badge ${open ? 'ok' : ''}">${open ? '<span class="dot"></span> مفتوح الآن' : '⚪ مغلق'}</span>`}
+              ${b.featured ? '<span class="badge p">⭐ مميز</span>' : ''}
+              ${b.verified ? '<span class="badge v">✓ موثق</span>' : ''}
+              ${rt.n ? `<span class="rt">⭐ ${rt.avg.toFixed(1)} (${rt.n})</span>` : ''}
+            </div>
+            ${reFacts}
+            <div class="info" style="margin-top:4px">
+              ${b.price && isDoc ? `<div>💰 الكشف: ${esc(b.price)} جنيه</div>` : ''}
+              ${del ? '' : `<div>📍 ${esc(b.address)}${b.landmark ? ' · ' + esc(b.landmark) : ''}</div>`}
+              ${b.km != null ? `<div class="dist">🚗 ${fmtDist(b.km)}</div>` : ''}
+            </div>
+          </div>
+          ${ph ? `<div class="biz-btns">
+            <a class="btn g" href="tel:${ph}" data-track-call="${b.id}">📞 اتصال</a>
+            <a class="btn wa" target="_blank" href="https://wa.me/2${ph}" data-track-wa="${b.id}">💬 واتساب</a>
+          </div>` : ''}
         </div>
-        <div class="tags">
-          ${b.featured ? '<span class="badge p">⭐ مميز</span>' : ''}
-          ${b.verified ? '<span class="badge v">✓ موثق</span>' : ''}
-          ${re || del ? '' : `<span class="badge ${open ? 'ok' : ''}">${open ? '<span class="dot"></span> مفتوح' : '⚪ مغلق'}</span>`}
-        </div>
-      </div>
-      ${reFacts}
-      <div class="info">
-        ${b.price && isDoc ? `<div>💰 الكشف: ${esc(b.price)} جنيه</div>` : ''}
-        ${del ? '' : `<div>📍 ${esc(b.address)}${b.landmark ? ' (بجوار ' + esc(b.landmark) + ')' : ''}</div>`}
-        ${b.km != null ? `<div class="dist">🚗 ${fmtDist(b.km)}</div>` : ''}
-      </div>
-      <div class="foot">
-        ${ph ? `<div class="acts">
-          <a class="btn sm g" target="_blank" href="https://wa.me/2${ph}" data-track-wa="${b.id}">💬 واتساب</a>
-          <a class="btn sm s" href="tel:${ph}" data-track-call="${b.id}">📞 اتصال</a>
-        </div>` : '<div></div>'}
-        ${rt.n ? `<span class="rt">⭐ ${rt.avg.toFixed(1)} (${rt.n})</span>` : ''}
+        ${cover ? `<div class="biz-thumb-wrap"><img class="biz-thumb" src="${cover}" loading="lazy" alt="" onerror="this.parentElement.remove()"></div>` : ''}
       </div>
     </div>`;
   }).join('');
@@ -1826,7 +1772,7 @@ function renderMap() {
   bMarkers.forEach(m => bMap.removeLayer(m)); bMarkers = [];
   filtered().filter(b => b.lat && b.lng).forEach(b => {
     const isPharm = b.category === 'صيدلية' || normAr(b.name).includes('صيدلي');
-    const pinIcon = isRE(b) ? '🏠' : b.type === 'delivery' ? '🛵' : b.type === 'lab' ? '🧪' : b.type === 'gym' ? '🏋️' : isPharm ? '💊' : b.type === 'doctor' ? '🩺' : b.type === 'service' ? '🛠️' : '🛍️';
+    const pinIcon = isRE(b) ? '🏠' : b.type === 'delivery' ? '🛵' : b.type === 'lab' ? '🧪' : b.type === 'gym' ? '🏋️' : isPharm ? '💊' : b.type === 'doctor' ? '🩺' : b.type === 'service' ? '⚙️' : '🛍️';
     const pinCls = isRE(b) ? 're' : b.type === 'doctor' ? 'doc' : b.type === 'service' ? 'srv' : 'shop';
     const icon = L.divIcon({
       className: '',
@@ -1840,7 +1786,7 @@ function renderMap() {
     m.bindPopup(`<div style="font-family:Cairo;text-align:right;min-width:140px">
       <strong>${esc(b.name)}</strong><br>
       <small style="color:#555">${esc(sub || '')}${isRE(b) ? '' : ' · ' + (isOpen(b.hours) ? '🟢 مفتوح' : '⚪ مغلق')}</small><br>
-      <button style="margin-top:6px;background:#ffc400;border:0;padding:4px 10px;border-radius:6px;font-weight:700;cursor:pointer" onclick="window.openById('${b.id}')">التفاصيل</button>
+      <button style="margin-top:6px;background:#0c5d3f;color:#fff;border:0;padding:4px 10px;border-radius:99px;font-weight:700;cursor:pointer" onclick="window.openById('${b.id}')">التفاصيل</button>
     </div>`);
     bMarkers.push(m);
   });
@@ -1916,7 +1862,6 @@ $('mBookWa').onclick = () => {
   window.open(`https://wa.me/2${ph}?text=${encodeURIComponent(msg)}`, '_blank');
 };
 
-/* صورة النشاط الكبيرة: بتتحمّل من bizPhotos لما النشاط يتفتح */
 async function loadGallery(b) {
   const box = $('mGallery');
   box.innerHTML = ''; box.classList.add('hidden');
@@ -2004,7 +1949,7 @@ function openModal(b) {
   }
 
   $('mActs').innerHTML = `
-    ${ph ? `<a class="btn g" target="_blank" href="https://wa.me/2${ph}" data-track-wa="${b.id}">💬 واتساب</a><a class="btn" href="tel:${ph}" data-track-call="${b.id}">📞 اتصال</a>` : ''}
+    ${ph ? `<a class="btn wa" target="_blank" href="https://wa.me/2${ph}" data-track-wa="${b.id}">💬 واتساب</a><a class="btn" href="tel:${ph}" data-track-call="${b.id}">📞 اتصال</a>` : ''}
     ${b.lat ? `<a class="btn s" style="grid-column:span 2" target="_blank" href="https://www.google.com/maps?q=${b.lat},${b.lng}">📍 فتح في خرائط جوجل</a>` : ''}
     ${isOwner ? '' : '<button class="btn s" data-report style="grid-column:span 2">⚠️ إبلاغ عن خطأ في البيانات</button>'}`;
   renderRatings(b);
@@ -2356,7 +2301,7 @@ function renderMine() {
       ${b.status === 'approved' ? `<div style="display:flex;gap:12px;font-size:12.5px;color:var(--p);font-weight:700;margin:4px 0">
         <span>👁️ ${st.views || 0} مشاهدة</span><span>📞 ${contacts} تواصل</span>
       </div>` : ''}
-      ${b.status === 'rejected' && b.rejectReason ? `<p style="color:#f87171;font-size:13px;margin-bottom:6px">سبب الرفض: ${esc(b.rejectReason)}</p>` : ''}
+      ${b.status === 'rejected' && b.rejectReason ? `<p style="color:var(--d);font-size:13px;margin-bottom:6px">سبب الرفض: ${esc(b.rejectReason)}</p>` : ''}
       <div class="acts-w">
         ${re ? `<button class="btn sm g" data-renew="${b.id}">🔄 جدد 30 يوم</button>` : ''}
         ${b.status === 'approved' && !re ? `<button class="btn sm" data-addoffer="${b.id}">🔥 أضف عرض</button>` : ''}
@@ -2469,7 +2414,7 @@ function renderAdmin() {
         <p class="muted" style="margin:4px 0">${esc(r.text)}</p>
         <p class="muted">من: ${esc(r.reporterName || '')} · ${esc(r.reporterPhone || '')}</p>
         <div class="acts-w">
-          <a class="btn sm g" target="_blank" href="https://wa.me/2${esc(r.reporterPhone)}">💬 المُبلِّغ</a>
+          <a class="btn sm wa" target="_blank" href="https://wa.me/2${esc(r.reporterPhone)}">💬 المُبلِّغ</a>
           <button class="btn sm" data-rdel="${r.id}">تم الحل ✓</button>
         </div></div>`).join('') : '';
   const aq = normAr(adminQ);
@@ -2492,7 +2437,7 @@ function renderAdmin() {
     ${reInfo}
     <p class="muted">${b.address ? '📍 ' + esc(b.address) + ' · ' : ''}📸 ${b.photoCount || 0} صورة</p>
     <div class="acts-w">
-      <a class="btn sm g" target="_blank" href="https://wa.me/2${esc(b.phone || b.ownerPhone)}">💬 واتساب</a>
+      <a class="btn sm wa" target="_blank" href="https://wa.me/2${esc(b.phone || b.ownerPhone)}">💬 واتساب</a>
       <button class="btn sm s" data-aedit="${b.id}">تعديل ✏️</button>
       ${b.type === 'doctor' ? `<button class="btn sm s" data-showreg="${b.id}">رقم القيد</button>` : ''}
       ${b.status === 'approved' ? `<button class="btn sm s" data-verify="${b.id}">${b.verified ? 'إلغاء التوثيق' : 'توثيق ✓'}</button>` : ''}
