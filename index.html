@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>منوف 360 — دليلك في منوف</title>
+<meta name="description" content="دليلك الكامل للدكاترة والمحلات والخدمات والعقارات ومواعيد القطارات في منوف">
+<meta property="og:type" content="website">
+<meta property="og:title" content="منوف 360 — دليلك في منوف">
+<meta property="og:description" content="دليلك الكامل للدكاترة والصيدليات والمحلات والخدمات والعقارات ومواعيد القطارات في منوف">
+<meta property="og:image" content="icon-512.png">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#fbf7ea" id="themeMeta">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -256,7 +261,7 @@ textarea{min-height:85px;resize:vertical}
 .photo-prev{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
 .photo-prev img{width:110px;height:110px;object-fit:cover;border-radius:14px;border:1px solid var(--b)}
 .gallery{display:flex;gap:8px;overflow-x:auto;margin-bottom:12px;padding-bottom:6px;scrollbar-width:none}
-.gallery img{height:200px;width:auto;max-width:100%;border-radius:14px;border:1px solid var(--b);flex:none;object-fit:contain;background:var(--row)}
+.gallery img{height:200px;width:auto;max-width:100%;border-radius:14px;border:1px solid var(--b);flex:none;object-fit:contain;background:var(--row);cursor:zoom-in}
 
 .day{padding:12px 0;border-bottom:1px solid var(--dash)}
 .day-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
@@ -321,6 +326,9 @@ textarea{min-height:85px;resize:vertical}
 .stat b{display:block;font-size:19px;color:var(--p)}
 .asec{display:none}
 .asec.on{display:block}
+.img-zoom-modal{position:fixed;inset:0;background:rgba(0,0,0,.92);display:flex;align-items:center;justify-content:center;padding:16px;z-index:85}
+.img-zoom-modal img{max-width:100%;max-height:86vh;object-fit:contain;border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.img-zoom-close{position:absolute;top:16px;left:16px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.16);color:#fff;font-size:26px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.25)}
 </style>
 <script>
 let dp=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;});
@@ -411,6 +419,8 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
       <div class="tools">
         <button class="tool" id="bellBtn">🔔 الإشعارات <span id="bellCount" class="hidden"></span></button>
         <button class="tool" id="fOpen">🟢 مفتوح الآن</button>
+        <button class="tool hidden" id="fPriceSort">💰 الأقل سعراً</button>
+        <button class="tool hidden" id="f24h">🌙 صيدليات 24 ساعة</button>
         <button class="tool" id="fMap">🗺️ الخريطة</button>
         <button class="tool" id="fNear">📍 الأقرب لمكاني</button>
         <button class="tool" id="fTopRated">⭐ الأعلى تقييماً</button>
@@ -505,9 +515,26 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
     </div>
 
     <div id="tab-mine" class="hidden">
+      <div class="card" id="myProfileCard" style="margin-bottom:14px">
+        <div class="row" style="align-items:center">
+          <div>
+            <div class="ct" id="myProfileName">أهلاً بك</div>
+            <div class="muted" id="myProfilePhone"></div>
+          </div>
+          <span class="badge ok">حسابي</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
+          <button type="button" class="btn sm s" id="myFavBtn">❤️ المفضلة (<span id="myFavCount">0</span>)</button>
+          <button type="button" class="btn sm" id="shareAppBtn">📤 شارك التطبيق</button>
+        </div>
+      </div>
+
+      <div class="sec" style="margin-top:4px">
+        <span class="sec-title green-line">🏪 أنشطتي التجارية</span>
+      </div>
       <div id="mineList"></div>
       <div class="card" style="margin-top:18px">
-        <div class="ct" style="margin-bottom:10px">⚙️ حسابي</div>
+        <div class="ct" style="margin-bottom:10px">⚙️ إعدادات الحساب</div>
         <p style="margin-bottom:10px"><a href="privacy.html" target="_blank" style="color:var(--p);font-weight:700">📄 سياسة الخصوصية</a></p>
         <button class="btn sm d" id="delAccBtn" style="width:100%">🗑️ حذف حسابي نهائياً</button>
         <p class="muted" style="margin-top:8px;font-size:12px">هيتحذف حسابك وكل أنشطتك وعروضك وتقييماتك، ومينفعش يترجع.</p>
@@ -531,6 +558,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
 
       <div class="asec on" id="sStats">
         <button class="btn" id="pubVerNowBtn" style="margin-bottom:10px">🔄 تحديث الدليل عند المستخدمين الآن</button>
+        <button class="btn s" id="cleanREBtn" style="margin-bottom:10px">🏠 إخفاء العقارات المنتهية</button>
         <button class="btn s" id="cleanBtn" style="margin-bottom:12px">🧹 تنظيف بيانات الأنشطة القديمة</button>
         <div id="adminStats"></div>
       </div>
@@ -642,7 +670,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
       <span class="badge p">🔥 عرض اليوم</span>
       <button id="closeDeal" style="font-size:26px;color:var(--m);line-height:1">&times;</button>
     </div>
-    <img id="dImg" class="hidden" alt="" style="width:100%;height:220px;object-fit:cover;border-radius:16px;margin-bottom:12px;border:1px solid var(--b)">
+    <img id="dImg" class="hidden" alt="" style="width:100%;height:220px;object-fit:cover;border-radius:16px;margin-bottom:12px;border:1px solid var(--b);cursor:zoom-in">
     <h3 id="dTitle" class="ct" style="font-size:20px;margin-bottom:4px"></h3>
     <p id="dBizName" style="color:var(--p);font-weight:800;margin-bottom:8px"></p>
     <div id="dDiscount" style="display:inline-block;background:#fde047;color:#111827;padding:4px 12px;border-radius:999px;font-weight:900;font-size:13px;margin-bottom:10px"></div>
@@ -701,19 +729,36 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
 <div id="emergencyModal" class="modal hidden">
   <div class="sheet">
     <div class="row" style="margin-bottom:12px">
-      <h3 class="ct" style="color:var(--d)">🚨 أرقام الطوارئ</h3>
+      <h3 class="ct" style="color:var(--d)">🚨 أرقام الطوارئ والخدمات</h3>
       <button id="closeEmergency" style="font-size:26px;color:var(--m)">&times;</button>
     </div>
-    <p class="muted" style="margin-bottom:14px">اضغط على الجهة للاتصال المباشر:</p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
+    <p class="muted" style="margin-bottom:10px">اضغط على الجهة للاتصال المباشر:</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px">
       <a class="btn d" href="tel:123">🚑 الإسعاف (123)</a>
       <a class="btn d" href="tel:122">👮 النجدة (122)</a>
       <a class="btn d" href="tel:180">🚒 المطافئ (180)</a>
       <a class="btn s" href="tel:129">🔥 الغاز (129)</a>
       <a class="btn s" href="tel:121">⚡ الكهرباء (121)</a>
       <a class="btn s" href="tel:125">💧 المياه (125)</a>
+      <a class="btn s" href="tel:105">🏥 وزارة الصحة (105)</a>
+      <a class="btn s" href="tel:16528">📢 الشكاوى (16528)</a>
+    </div>
+    <div class="ct" style="font-size:15px;margin-bottom:8px;color:var(--p)">🏥 مستشفيات وطوارئ منوف</div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <a class="lr" href="tel:0483660323"><span>🏥 مستشفى منوف العام</span><strong style="color:var(--p)">0483660323 📞</strong></a>
+      <a class="lr" href="tel:0483660011"><span>🏥 مستشفى هرمل التذكاري</span><strong style="color:var(--p)">0483660011 📞</strong></a>
+      <a class="lr" href="tel:0483660148"><span>🏥 مستشفى الصدر بمنوف</span><strong style="color:var(--p)">0483660148 📞</strong></a>
+      <a class="lr" href="tel:0483660115"><span>👁️ مستشفى الرمد بمنوف</span><strong style="color:var(--p)">0483660115 📞</strong></a>
+      <a class="lr" href="tel:01226005669"><span>💧 أعطال مياه منوف</span><strong style="color:var(--p)">01226005669 📞</strong></a>
+      <a class="lr" target="_blank" href="https://wa.me/201220906668"><span>💬 واتساب شكاوى مياه المنوفية</span><strong style="color:#16a34a">واتساب ←</strong></a>
     </div>
   </div>
+</div>
+
+<!-- تكبير الصورة -->
+<div id="imgModal" class="img-zoom-modal hidden">
+  <button type="button" id="closeImg" class="img-zoom-close" title="إغلاق">&times;</button>
+  <img id="zoomImg" src="" alt="">
 </div>
 
 <script type="module">
@@ -746,6 +791,54 @@ const BIZ_TS_KEY = 'menouf_biz_ts';
 const BIZ_MAX_AGE = 7 * DAY_MS; // تحديث احتياطي كل 7 أيام كحد أقصى
 const tsMs = x => x?.toMillis?.() ?? 0;
 const fd = ms => ms ? new Date(ms).toLocaleString('ar-EG') : '';
+
+/* ---------- إدارة النوافذ وزر الرجوع في الموبايل ---------- */
+const BASE_MODALS = ['bizModal', 'dealModal', 'allDealsModal', 'offerModal', 'notifModal', 'emergencyModal'];
+let skipPop = 0;
+
+function showModal(id) {
+  BASE_MODALS.forEach(m => { if (m !== id) $(m).classList.add('hidden'); });
+  $(id).classList.remove('hidden');
+  if (!history.state?.modalOpen) {
+    try { history.pushState({ modalOpen: true }, ''); } catch (e) {}
+  }
+}
+function closeBaseModal(id) {
+  $(id).classList.add('hidden');
+  if (history.state?.modalOpen && !history.state?.imgOpen) {
+    skipPop++;
+    try { history.back(); } catch (e) { skipPop = 0; }
+    setTimeout(() => { if (skipPop > 0) skipPop = 0; }, 300);
+  }
+}
+function openImgZoom(src) {
+  if (!src) return;
+  $('zoomImg').src = src;
+  $('imgModal').classList.remove('hidden');
+  if (!history.state?.imgOpen) {
+    try { history.pushState({ modalOpen: true, imgOpen: true }, ''); } catch (e) {}
+  }
+}
+function closeImgZoom() {
+  $('imgModal').classList.add('hidden');
+  $('zoomImg').src = '';
+  if (history.state?.imgOpen) {
+    skipPop++;
+    try { history.back(); } catch (e) { skipPop = 0; }
+    setTimeout(() => { if (skipPop > 0) skipPop = 0; }, 300);
+  }
+}
+window.addEventListener('popstate', () => {
+  if (skipPop > 0) { skipPop--; return; }
+  if (!$('imgModal').classList.contains('hidden')) {
+    $('imgModal').classList.add('hidden');
+    $('zoomImg').src = '';
+    return;
+  }
+  BASE_MODALS.forEach(m => $(m).classList.add('hidden'));
+});
+$('closeImg').onclick = closeImgZoom;
+$('imgModal').onclick = e => { if (e.target.id === 'imgModal') closeImgZoom(); };
 
 /* ---------- الوضع الفاتح (الافتراضي) / الليلي ---------- */
 function applyThemeBtn() {
@@ -1117,7 +1210,7 @@ let loadingPage = false, deepHandled = false, dirtyBizVer = false;
 let userCount = null, type = null, items = [], browseCat = 'الكل', browseSub = 'الكل', q = '', adminQ = '';
 let editId = null, editOrigType = null, editOrigStatus = null, adminEditing = false, adminFilter = 'pending';
 let map = null, marker = null, bMap = null, bMarkers = [], userMapMarker = null, curBiz = null, cart = {};
-let userPos = null, onlyOpen = false, nearMe = false, topRated = false, mapView = false;
+let userPos = null, onlyOpen = false, nearMe = false, topRated = false, mapView = false, priceSort = false, only24h = false;
 let currentTab = 'browse';
 let favs = JSON.parse(localStorage.getItem('menouf_favs') || '[]');
 let lastAnnSeen = Number(localStorage.getItem('menouf_ann_seen') || 0);
@@ -1390,12 +1483,13 @@ function openDealById(id) {
   if (o.image) { $('dImg').src = o.image; $('dImg').classList.remove('hidden'); }
   else { $('dImg').src = ''; $('dImg').classList.add('hidden'); }
   $('dGoBiz').onclick = () => {
-    $('dealModal').classList.add('hidden');
     const b = approved.find(x => x.id === o.bizId);
-    if (b) openModal(b); else toast('النشاط غير متاح حالياً');
+    if (b) openModal(b);
+    else { closeBaseModal('dealModal'); toast('النشاط غير متاح حالياً'); }
   };
-  $('dealModal').classList.remove('hidden');
+  showModal('dealModal');
 }
+$('dImg').onclick = () => { if ($('dImg').src) openImgZoom($('dImg').src); };
 $('dealsList').onclick = e => {
   const el = e.target.closest('[data-deal]'); if (el) openDealById(el.dataset.deal);
 };
@@ -1415,17 +1509,16 @@ $('moreDealsBtn').onclick = () => {
         <span style="background:#fde047;color:#111827;font-size:11.5px;font-weight:900;padding:4px 10px;border-radius:10px;flex:none">${esc(o.discount || 'عرض')}</span>
       </div>
     </div>`).join('') || '<div class="empty">لا توجد عروض حالياً</div>';
-  $('allDealsModal').classList.remove('hidden');
+  showModal('allDealsModal');
 };
 $('allDealsList').onclick = e => {
   const el = e.target.closest('[data-deal]'); if (!el) return;
-  $('allDealsModal').classList.add('hidden');
   openDealById(el.dataset.deal);
 };
-$('closeAllDeals').onclick = () => $('allDealsModal').classList.add('hidden');
-$('allDealsModal').onclick = e => { if (e.target.id === 'allDealsModal') $('allDealsModal').classList.add('hidden'); };
-$('closeDeal').onclick = () => $('dealModal').classList.add('hidden');
-$('dealModal').onclick = e => { if (e.target.id === 'dealModal') $('dealModal').classList.add('hidden'); };
+$('closeAllDeals').onclick = () => closeBaseModal('allDealsModal');
+$('allDealsModal').onclick = e => { if (e.target.id === 'allDealsModal') closeBaseModal('allDealsModal'); };
+$('closeDeal').onclick = () => closeBaseModal('dealModal');
+$('dealModal').onclick = e => { if (e.target.id === 'dealModal') closeBaseModal('dealModal'); };
 
 $('oPhoto').onchange = e => {
   const f = e.target.files && e.target.files[0];
@@ -1433,8 +1526,8 @@ $('oPhoto').onchange = e => {
   offerPhoto = f;
   $('oPrev').innerHTML = `<img src="${URL.createObjectURL(f)}" alt="" style="width:110px;height:110px;object-fit:cover;border-radius:14px">`;
 };
-$('closeOffer').onclick = () => $('offerModal').classList.add('hidden');
-$('offerModal').onclick = e => { if (e.target.id === 'offerModal') $('offerModal').classList.add('hidden'); };
+$('closeOffer').onclick = () => closeBaseModal('offerModal');
+$('offerModal').onclick = e => { if (e.target.id === 'offerModal') closeBaseModal('offerModal'); };
 $('oSave').onclick = async () => {
   const bizId = $('oBizId').value, title = $('oTitle').value.trim(), discount = $('oDiscount').value.trim();
   if (!title || !discount) return toast('اكتب عنوان العرض والخصم');
@@ -1452,7 +1545,7 @@ $('oSave').onclick = async () => {
       status: isAdm ? 'approved' : 'pending',
       createdAt: serverTimestamp()
     });
-    $('offerModal').classList.add('hidden');
+    closeBaseModal('offerModal');
     $('oTitle').value = ''; $('oDiscount').value = ''; $('oDesc').value = '';
     offerPhoto = null; $('oPhoto').value = ''; $('oPrev').innerHTML = '';
     toast(isAdm ? 'تم نشر العرض ✅' : 'تم إرسال العرض وهيظهر بعد موافقة الإدارة 🔥');
@@ -1539,9 +1632,9 @@ $('fTrain').onclick = () => {
 $('trainChips').onclick = e => { const b = e.target.closest('[data-tdir]'); if (b) { trainDir = b.dataset.tdir; renderTrains(); } };
 
 /* ---------- طوارئ ومشاركة ---------- */
-$('emergencyBtn').onclick = () => $('emergencyModal').classList.remove('hidden');
-$('closeEmergency').onclick = () => $('emergencyModal').classList.add('hidden');
-$('emergencyModal').onclick = e => { if (e.target.id === 'emergencyModal') $('emergencyModal').classList.add('hidden'); };
+$('emergencyBtn').onclick = () => showModal('emergencyModal');
+$('closeEmergency').onclick = () => closeBaseModal('emergencyModal');
+$('emergencyModal').onclick = e => { if (e.target.id === 'emergencyModal') closeBaseModal('emergencyModal'); };
 
 $('mShare').onclick = async () => {
   const b = curBiz; if (!b) return;
@@ -1590,9 +1683,9 @@ $('authForm').onsubmit = async e => {
 function goToAuth() {
   guest = false;
   unsubs.forEach(u => u()); unsubs = [];
-  $('bizModal').classList.add('hidden');
-  $('dealModal').classList.add('hidden');
-  $('allDealsModal').classList.add('hidden');
+  BASE_MODALS.forEach(m => $(m).classList.add('hidden'));
+  $('imgModal').classList.add('hidden');
+  if (history.state?.modalOpen) { try { history.replaceState({}, ''); } catch (e) {} }
   $('appView').classList.add('hidden');
   $('authView').classList.remove('hidden');
   setMode('login');
@@ -1609,7 +1702,7 @@ async function enterGuest() {
   unsubs.forEach(u => u()); unsubs = [];
   unsubs.push(listenOffers());
   renderTrains(); updateNextTrainPulse();
-  buildCats(); buildSubCats(); buildTypeChips(); buildHours();
+  buildCats(); buildSubCats(); updateDynamicTools(); buildTypeChips(); buildHours();
   currentTab = 'browse'; switchTab('browse');
   await loadApproved();
 }
@@ -1632,7 +1725,8 @@ onAuthStateChanged(auth, async user => {
   profile = s.exists() ? { uid: user.uid, ...s.data() } : { uid: user.uid, name: 'مستخدم', role: 'user', phone: '' };
   $('authView').classList.add('hidden'); $('appView').classList.remove('hidden');
   $('adminTab').classList.toggle('hidden', profile.role !== 'admin');
-  initPulse(); listen(); renderTrains(); updateNextTrainPulse(); buildCats(); buildSubCats(); buildTypeChips(); buildHours();
+  renderProfileCard();
+  initPulse(); listen(); renderTrains(); updateNextTrainPulse(); buildCats(); buildSubCats(); updateDynamicTools(); buildTypeChips(); buildHours();
   currentTab = 'browse'; switchTab('browse');
   await loadApproved();
 });
@@ -1669,6 +1763,25 @@ function listen() {
     unsubs.push(onSnapshot(collection(db, 'reports'), s => { reports = s.docs.map(d => ({ id: d.id, ...d.data() })); renderAdmin(); }));
   }
 }
+
+/* ---------- حسابي (كارت البيانات والمفضلة ومشاركة التطبيق) ---------- */
+function renderProfileCard() {
+  if (!profile) return;
+  $('myProfileName').textContent = profile.name || 'مستخدم';
+  $('myProfilePhone').textContent = profile.phone ? '📞 ' + profile.phone : '';
+  $('myFavCount').textContent = favs.length;
+}
+$('myFavBtn').onclick = () => {
+  browseCat = 'المفضلة'; browseSub = 'الكل';
+  buildCats(); buildSubCats(); updateDynamicTools(); renderBrowse();
+  switchTab('browse');
+};
+$('shareAppBtn').onclick = async () => {
+  const url = `${location.origin}${location.pathname}`;
+  const text = `📍 تطبيق ${APP_NAME} — دليلك الشامل للدكاترة والصيدليات والمحلات والخدمات والعقارات ومواعيد القطارات في منوف:\n${url}`;
+  if (navigator.share) { try { await navigator.share({ title: APP_NAME, text, url }); } catch (e) {} }
+  else window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+};
 
 /* ---------- حذف الحساب ---------- */
 $('delAccBtn').onclick = async () => {
@@ -1713,13 +1826,13 @@ function renderNotifs() {
   $('notifList').innerHTML = (a + n) || '<div class="empty">لا توجد إشعارات حالياً</div>';
 }
 $('bellBtn').onclick = () => {
-  renderNotifs(); $('notifModal').classList.remove('hidden');
+  renderNotifs(); showModal('notifModal');
   lastAnnSeen = Date.now(); localStorage.setItem('menouf_ann_seen', lastAnnSeen);
   notifs.filter(x => !x.read).forEach(x => updateDoc(doc(db, 'notifications', x.id), { read: true }).catch(() => {}));
   updateBell();
 };
-$('closeNotif').onclick = () => $('notifModal').classList.add('hidden');
-$('notifModal').onclick = e => { if (e.target.id === 'notifModal') $('notifModal').classList.add('hidden'); };
+$('closeNotif').onclick = () => closeBaseModal('notifModal');
+$('notifModal').onclick = e => { if (e.target.id === 'notifModal') closeBaseModal('notifModal'); };
 
 async function notifyOwner(bizId, title, body) {
   const b = allBiz.find(x => x.id === bizId);
@@ -1744,10 +1857,18 @@ function buildSubCats() {
   $('subCatChips').classList.remove('hidden');
   $('subCatChips').innerHTML = subs.map(s => `<button type="button" class="chip ${s === browseSub ? 'on' : ''}" data-sub="${esc(s)}">${esc(s)}</button>`).join('');
 }
+function updateDynamicTools() {
+  const isRECat = browseCat === 'عقارات';
+  const isPharmCat = browseCat === 'صيدليات';
+  $('fPriceSort').classList.toggle('hidden', !isRECat);
+  $('f24h').classList.toggle('hidden', !isPharmCat);
+  if (!isRECat && priceSort) { priceSort = false; $('fPriceSort').classList.remove('active'); }
+  if (!isPharmCat && only24h) { only24h = false; $('f24h').classList.remove('active'); }
+}
 $('catChips').onclick = e => {
   const b = e.target.closest('[data-cat]'); if (!b) return;
   browseCat = b.dataset.cat; browseSub = 'الكل';
-  buildCats(); buildSubCats(); renderBrowse();
+  buildCats(); buildSubCats(); updateDynamicTools(); renderBrowse();
 };
 $('subCatChips').onclick = e => {
   const b = e.target.closest('[data-sub]'); if (!b) return;
@@ -1767,6 +1888,8 @@ $('clearSearch').onclick = () => {
 };
 
 $('fOpen').onclick = () => { onlyOpen = !onlyOpen; $('fOpen').classList.toggle('active', onlyOpen); renderBrowse(); };
+$('fPriceSort').onclick = () => { priceSort = !priceSort; $('fPriceSort').classList.toggle('active', priceSort); renderBrowse(); };
+$('f24h').onclick = () => { only24h = !only24h; $('f24h').classList.toggle('active', only24h); renderBrowse(); };
 $('fTopRated').onclick = () => {
   topRated = !topRated;
   $('fTopRated').classList.toggle('active', topRated);
@@ -1807,9 +1930,14 @@ function filtered() {
       || (browseCat === 'دكاترة' && b.specialty === browseSub)
       || ((browseCat === 'محل / مطعم' || browseCat === 'خدمة' || browseCat === 'عقارات' || browseCat === 'معامل وأشعة' || browseCat === 'جيم ونادي') && b.category === browseSub);
     const qOk = !q || matchesQuery(b, q);
-    return catOk && subOk && qOk && (!onlyOpen || (!isRE(b) && isOpen(b.hours)));
+    const h24Ok = !only24h || b.category === 'صيدلية 24 ساعة' || normAr((b.name || '') + ' ' + (b.desc || '')).includes('24');
+    return catOk && subOk && qOk && h24Ok && (!onlyOpen || (!isRE(b) && isOpen(b.hours)));
   }).map(b => ({ ...b, km: userPos ? dist(userPos.lat, userPos.lng, b.lat, b.lng) : null }))
     .sort((a, b) => {
+      if (priceSort && browseCat === 'عقارات') {
+        const pa = Number(a.rePrice) || Infinity, pb = Number(b.rePrice) || Infinity;
+        if (pa !== pb) return pa - pb;
+      }
       if (topRated) {
         const ra = ratingOf(a.id), rb = ratingOf(b.id);
         if (rb.avg !== ra.avg) return rb.avg - ra.avg;
@@ -1966,6 +2094,7 @@ $('browseList').onclick = e => {
     const id = f.dataset.fav;
     favs = favs.includes(id) ? favs.filter(x => x !== id) : [...favs, id];
     localStorage.setItem('menouf_favs', JSON.stringify(favs));
+    renderProfileCard();
     return renderBrowse();
   }
   const c = e.target.closest('[data-open]');
@@ -2039,6 +2168,10 @@ async function loadGallery(b) {
   box.innerHTML = photos.map(p => `<img src="${p}" loading="lazy" alt="">`).join('');
   box.classList.remove('hidden');
 }
+$('mGallery').onclick = e => {
+  const img = e.target.closest('img');
+  if (img) openImgZoom(img.src);
+};
 
 function openModal(b) {
   curBiz = b; cart = {};
@@ -2049,11 +2182,11 @@ function openModal(b) {
   const open = !re && !del && isOpen(b.hours), ph = b.phone || b.ownerPhone || '';
   const km = userPos ? dist(userPos.lat, userPos.lng, b.lat, b.lng) : null;
   $('mBadge').className = 'badge ' + (open ? 'ok' : '');
-  $('mBadge').innerHTML = re ? `🏠 ${esc(b.category)}` : (open ? '<span class="dot"></span> مفتوح الآن' : '⚪ مغلق الآن');
+  $('mBadge').innerHTML = del ? '🛵 دليفري' : re ? `🏠 ${esc(b.category)}` : (open ? '<span class="dot"></span> مفتوح الآن' : '⚪ مغلق الآن');
   $('mVerified').classList.toggle('hidden', !b.verified);
   $('mFeatured').classList.toggle('hidden', !b.featured);
   $('mTitle').textContent = b.name;
-  $('mSub').textContent = re ? (b.category || '') : b.type === 'doctor' ? 'طبيب متخصص في ' + b.specialty : b.category;
+  $('mSub').textContent = del ? 'خدمة توصيل (دليفري)' : re ? (b.category || '') : b.type === 'doctor' ? 'طبيب متخصص في ' + b.specialty : b.category;
 
   if (re) {
     $('mReFacts').innerHTML = `
@@ -2095,7 +2228,7 @@ function openModal(b) {
   $('mHoursTitle').classList.toggle('hidden', re || del);
   $('mHoursNext').classList.toggle('hidden', re || del);
   $('mHours').classList.toggle('hidden', re || del);
-  if (!re) {
+  if (!re && !del) {
     const rem = nextOpenReminder(b.hours);
     $('mHoursNext').textContent = rem;
     $('mHoursNext').classList.toggle('hidden', !rem);
@@ -2115,7 +2248,7 @@ function openModal(b) {
     ${isOwner ? '' : '<button class="btn s" data-report style="grid-column:span 2">⚠️ إبلاغ عن خطأ في البيانات</button>'}`;
   renderRatings(b);
   loadReviewsFor(b.id);
-  $('bizModal').classList.remove('hidden');
+  showModal('bizModal');
   loadGallery(b);
 }
 
@@ -2137,8 +2270,8 @@ $('mActs').onclick = async e => {
     toast('تم إرسال البلاغ للإدارة ✅');
   } catch (err) { toast('إنت بلّغت عن النشاط ده قبل كده'); }
 };
-$('closeModal').onclick = () => $('bizModal').classList.add('hidden');
-$('bizModal').onclick = e => { if (e.target.id === 'bizModal') $('bizModal').classList.add('hidden'); };
+$('closeModal').onclick = () => closeBaseModal('bizModal');
+$('bizModal').onclick = e => { if (e.target.id === 'bizModal') closeBaseModal('bizModal'); };
 
 function renderRatings(b) {
   const list = reviews.filter(r => r.bizId === b.id);
@@ -2507,7 +2640,7 @@ $('mineList').onclick = async e => {
       } catch (err) {}
     }
     $('oBizId').value = b.id; $('oBizName').textContent = 'للنشاط: ' + b.name; $('oBizName').dataset.name = b.name;
-    $('offerModal').classList.remove('hidden'); return;
+    showModal('offerModal'); return;
   }
   if (t.dataset.edit) { const b = myBiz.find(x => x.id === t.dataset.edit); if (b) startEdit(b, false); return; }
   if (t.dataset.del && confirm('حذف النشاط نهائياً؟')) {
@@ -2540,6 +2673,20 @@ async function publishUpdatesAll() {
 }
 $('pubVerBtn').onclick = publishUpdatesAll;
 $('pubVerNowBtn').onclick = publishUpdatesAll;
+
+$('cleanREBtn').onclick = async () => {
+  const exp = allBiz.filter(b => b.status === 'approved' && reExpired(b));
+  if (!exp.length) return toast('لا توجد عقارات منتهية حالياً');
+  if (!confirm(`إخفاء ${exp.length} عقار انتهت مدته (30 يوم)؟`)) return;
+  try {
+    const batch = writeBatch(db);
+    exp.forEach(b => batch.update(doc(db, 'businesses', b.id), { status: 'hidden', updatedAt: serverTimestamp() }));
+    await batch.commit();
+    markBizDirty();
+    await loadApproved(true);
+    toast(`تم إخفاء ${exp.length} عقار منتهي ✅`);
+  } catch (err) { toast('تعذر التنفيذ'); }
+};
 
 function renderAdminStats() {
   const c = s => allBiz.filter(b => b.status === s).length;
@@ -2731,7 +2878,10 @@ $('contactBtn').onclick = () => {
 function switchTab(n) {
   if (n !== 'add' && editId) cancelEdit();
   currentTab = n;
-  if (n === 'mine') loadMyStatsOnce();
+  if (n === 'mine') {
+    renderProfileCard();
+    loadMyStatsOnce();
+  }
   if (n === 'admin') {
     loadReviewsOnce();
     if (userCount === null) loadUserCount();
