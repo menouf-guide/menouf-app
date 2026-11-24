@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+إ<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -1624,6 +1624,7 @@ $('delAccBtn').onclick = async () => {
   if (!confirm('هيتحذف حسابك وكل أنشطتك وعروضك وتقييماتك نهائياً. تكمل؟')) return;
   try {
     toast('جاري حذف حسابك...');
+    const hadApproved = myBiz.some(b => b.status === 'approved');
     for (const b of myBiz) {
       await deleteDoc(doc(db, 'regs', b.id)).catch(() => {});
       await deleteDoc(doc(db, 'bizPhotos', b.id)).catch(() => {});
@@ -1633,6 +1634,10 @@ $('delAccBtn').onclick = async () => {
     const rv = await getDocs(query(collection(db, 'reviews'), where('reviewerId', '==', me.uid)));
     for (const r of rv.docs) await deleteDoc(r.ref).catch(() => {});
     await deleteDoc(doc(db, 'users', me.uid)).catch(() => {});
+    if (hadApproved) {
+      await bumpBizVersion();
+      try { localStorage.removeItem(BIZ_VER_KEY); } catch (e) {}
+    }
     await deleteUser(me);
     toast('تم حذف حسابك ✅');
   } catch (err) {
@@ -2303,7 +2308,8 @@ $('bizForm').onsubmit = async e => {
         toast('تم حفظ التعديلات الإدارية بنجاح ✅');
         loadApproved(true);
       } else {
-        try { localStorage.removeItem(BIZ_VER_KEY); } catch (e) {}
+        if (editOrigStatus === 'approved') await bumpBizVersion();
+        else try { localStorage.removeItem(BIZ_VER_KEY); } catch (e) {}
         toast(typeChanged ? 'تم الحفظ، والنشاط رجع للمراجعة، وشلنا التوثيق لأن النوع اتغير ✅' : 'تم حفظ التعديلات وإعادة النشاط للمراجعة ✅');
         loadApproved(true);
       }
@@ -2423,8 +2429,13 @@ $('mineList').onclick = async e => {
   if (t.hasAttribute('data-first')) { cancelEdit(); switchTab('add'); return; }
   if (t.dataset.renew) {
     if (!confirm('تجديد الإعلان 30 يوم؟ هيرجع للمراجعة تاني.')) return;
+    const renBiz = myBiz.find(x => x.id === t.dataset.renew);
     try {
       await updateDoc(doc(db, 'businesses', t.dataset.renew), { expiresAt: Date.now() + RE_DAYS * DAY_MS, status: 'pending', updatedAt: serverTimestamp() });
+      if (renBiz?.status === 'approved' && !reExpired(renBiz)) {
+        await bumpBizVersion();
+        loadApproved(true);
+      }
       toast('تم تجديد الإعلان، وهيظهر بعد المراجعة ✅');
     } catch (err) { toast('تعذر التجديد'); }
     return;
@@ -2448,13 +2459,15 @@ $('mineList').onclick = async e => {
   }
   if (t.dataset.edit) { const b = myBiz.find(x => x.id === t.dataset.edit); if (b) startEdit(b, false); return; }
   if (t.dataset.del && confirm('حذف النشاط نهائياً؟')) {
+    const delBiz = myBiz.find(x => x.id === t.dataset.del);
     try {
       await deleteDoc(doc(db, 'regs', t.dataset.del)).catch(() => {});
       await deleteDoc(doc(db, 'bizPhotos', t.dataset.del)).catch(() => {});
       await deleteDoc(doc(db, 'offers', t.dataset.del)).catch(() => {});
       await deleteDoc(doc(db, 'businesses', t.dataset.del));
       delete photoCache[t.dataset.del];
-      try { localStorage.removeItem(BIZ_VER_KEY); } catch (ex) {}
+      if (delBiz?.status === 'approved') await bumpBizVersion();
+      else try { localStorage.removeItem(BIZ_VER_KEY); } catch (ex) {}
       loadApproved(true);
       toast('تم الحذف');
     } catch (err) { toast('تعذر الحذف'); }
