@@ -1,3 +1,5 @@
+<!DOCTYPE html>):
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -128,6 +130,9 @@ a{text-decoration:none;color:inherit}
 .ib{width:34px;height:34px;border-radius:50%;border:1px solid var(--b2);background:var(--glass);font-size:15px;display:flex;align-items:center;justify-content:center;color:var(--txt);box-shadow:0 2px 8px rgba(0,0,0,.05)}
 .ib.alert{border-color:rgba(220,38,38,.45);background:rgba(254,226,226,.9);animation:blink 1.4s infinite}
 .ib:active{transform:scale(.92)}
+.share-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:999px;border:1px solid var(--b2);background:var(--row);color:var(--txt2);font-size:13px;font-weight:800;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.share-btn:active{transform:scale(.95)}
+.share-btn svg{width:17px;height:17px;flex:none}
 
 .hero-main{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:520px;margin:0 auto}
 .hero-logo-wrap{position:relative;flex:none}
@@ -577,7 +582,15 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
         <span id="mVerified" class="badge v hidden">✓ موثق</span>
         <span id="mFeatured" class="badge p hidden">⭐ مميز</span>
       </div>
-      <div style="display:flex;gap:6px"><button id="mShare" class="ib" title="مشاركة">📤</button><button id="closeModal" style="font-size:26px;color:var(--m);line-height:1">&times;</button></div>
+      <div style="display:flex;align-items:center;gap:8px;flex:none">
+        <button id="mShare" type="button" class="share-btn" title="مشاركة النشاط">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true">
+            <path d="M14 9V5l7 7-7 7v-4.1c-5 0-8.5 1.6-11 5.1 1-5 4-10 11-11z"/>
+          </svg>
+          <span>مشاركة</span>
+        </button>
+        <button id="closeModal" type="button" style="font-size:26px;color:var(--m);line-height:1">&times;</button>
+      </div>
     </div>
     <div id="mGallery" class="gallery hidden"></div>
     <h2 id="mTitle" class="ct" style="font-size:21px;margin-bottom:4px"></h2>
