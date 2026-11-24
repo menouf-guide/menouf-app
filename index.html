@@ -687,11 +687,18 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, deleteUser } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, getDoc, getDocs, setDoc, deleteDoc, collection, addDoc, query, where, orderBy, onSnapshot, updateDoc, serverTimestamp, deleteField, getAggregateFromServer, count, writeBatch, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, getFirestore, doc, getDoc, getDocFromServer, getDocs, getDocsFromCache, getDocsFromServer, setDoc, deleteDoc, collection, addDoc, query, where, orderBy, onSnapshot, updateDoc, serverTimestamp, deleteField, getAggregateFromServer, count, writeBatch, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const app = initializeApp(window.FIREBASE_CONFIG);
 const auth = getAuth(app);
-const db = getFirestore(app);
+let db;
+try {
+  db = initializeFirestore(app, {
+    localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
+  });
+} catch (e) {
+  db = getFirestore(app);
+}
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const PHONE_RE = /^01[0125]\d{8}$/;
@@ -702,6 +709,9 @@ const MAX_PER_DAY = 3;
 const RE_DAYS = 30;
 const DAY_MS = 86400000;
 const WEATHER_TTL = 3 * 60 * 60 * 1000; // حفظ الطقس 3 ساعات
+const BIZ_VER_KEY = 'menouf_biz_ver';
+const BIZ_TS_KEY = 'menouf_biz_ts';
+const BIZ_MAX_AGE = 7 * DAY_MS; // تحديث احتياطي كل 7 أيام كحد أقصى
 const tsMs = x => x?.toMillis?.() ?? 0;
 const fd = ms => ms ? new Date(ms).toLocaleString('ar-EG') : '';
 
@@ -1195,14 +1205,63 @@ if (SR) {
   };
 }
 
-/* ---------- تحميل البيانات ---------- */
-async function loadApproved() {
+/* ---------- كاش الأنشطة الذكي (appMeta + IndexedDB) ---------- */
+async function bumpBizVersion() {
+  try {
+    const v = Date.now();
+    await setDoc(doc(db, 'appMeta', 'public'), { bizVer: v }, { merge: true });
+    localStorage.setItem(BIZ_VER_KEY, String(v));
+    localStorage.setItem(BIZ_TS_KEY, String(v));
+  } catch (e) {}
+}
+
+async function loadApproved(forceServer = false) {
   if (loadingPage) return;
   loadingPage = true;
   renderBrowse();
   try {
     const qy = query(collection(db, 'businesses'), where('status', '==', 'approved'), orderBy('createdAt', 'desc'));
-    const s = await getDocs(qy);
+    let s = null;
+
+    if (!forceServer) {
+      let localVer = null, lastTs = 0;
+      try {
+        localVer = localStorage.getItem(BIZ_VER_KEY);
+        lastTs = Number(localStorage.getItem(BIZ_TS_KEY) || 0);
+      } catch (e) {}
+
+      const cacheFresh = localVer && (Date.now() - lastTs) < BIZ_MAX_AGE;
+      if (cacheFresh) {
+        try {
+          const meta = await getDocFromServer(doc(db, 'appMeta', 'public'));
+          const serverVer = meta.exists() ? String(meta.data().bizVer || 'v0') : 'v0';
+          if (serverVer === localVer) {
+            const cached = await getDocsFromCache(qy);
+            if (!cached.empty) s = cached;
+          }
+        } catch (err) {
+          // في حالة انقطاع الإنترنت: نعرض الأنشطة من الكاش المحلي مباشرة
+          try {
+            const cached = await getDocsFromCache(qy);
+            if (!cached.empty) s = cached;
+          } catch (e) {}
+        }
+      }
+    }
+
+    if (!s) {
+      let serverVer = 'v0';
+      try {
+        const meta = await getDocFromServer(doc(db, 'appMeta', 'public'));
+        if (meta.exists() && meta.data().bizVer) serverVer = String(meta.data().bizVer);
+      } catch (e) {}
+      s = await getDocsFromServer(qy);
+      try {
+        localStorage.setItem(BIZ_VER_KEY, serverVer);
+        localStorage.setItem(BIZ_TS_KEY, String(Date.now()));
+      } catch (e) {}
+    }
+
     approved = s.docs.map(d => ({ id: d.id, ...d.data() }));
     if (deepBizId && !deepHandled) {
       deepHandled = true;
@@ -2195,10 +2254,13 @@ $('bizForm').onsubmit = async e => {
       }
       delete photoCache[editId];
       if (adminEditing) {
+        await bumpBizVersion();
         toast('تم حفظ التعديلات الإدارية بنجاح ✅');
-        loadApproved();
+        loadApproved(true);
       } else {
+        try { localStorage.removeItem(BIZ_VER_KEY); } catch (e) {}
         toast(typeChanged ? 'تم الحفظ، والنشاط رجع للمراجعة، وشلنا التوثيق لأن النوع اتغير ✅' : 'تم حفظ التعديلات وإعادة النشاط للمراجعة ✅');
+        loadApproved(true);
       }
     } else {
       const ref = doc(collection(db, 'businesses'));
@@ -2334,6 +2396,8 @@ $('mineList').onclick = async e => {
       await deleteDoc(doc(db, 'regs', t.dataset.del)).catch(() => {});
       await deleteDoc(doc(db, 'bizPhotos', t.dataset.del)).catch(() => {});
       delete photoCache[t.dataset.del];
+      try { localStorage.removeItem(BIZ_VER_KEY); } catch (ex) {}
+      loadApproved(true);
       toast('تم الحذف');
     } catch (err) { toast('تعذر الحذف'); }
   }
@@ -2386,6 +2450,7 @@ $('cleanBtn').onclick = async () => {
       if (b.ownerPhone) upd.ownerPhone = deleteField();
       if (Object.keys(upd).length) { await updateDoc(doc(db, 'businesses', b.id), upd); n++; }
     }
+    await bumpBizVersion();
     toast(`تم تنظيف ${n} نشاط ✅`);
   } catch (err) { toast('حصل خطأ أثناء التنظيف: ' + (err.code || err.message)); }
 };
@@ -2472,21 +2537,29 @@ $('adminList').onclick = async e => {
       await updateDoc(doc(db, 'businesses', d.pdel), { thumb: deleteField(), photoCount: 0 });
       await deleteDoc(doc(db, 'bizPhotos', d.pdel)).catch(() => {});
       delete photoCache[d.pdel];
+      await bumpBizVersion();
+      loadApproved(true);
       toast('تم حذف الصورة 🖼️');
     }
     else if (d.verify) {
       const b = allBiz.find(x => x.id === d.verify);
       await updateDoc(doc(db, 'businesses', d.verify), { verified: !b.verified });
+      await bumpBizVersion();
+      loadApproved(true);
       toast(b.verified ? 'تم إلغاء التوثيق' : 'تم توثيق النشاط ✓');
     }
     else if (d.feature) {
       const b = allBiz.find(x => x.id === d.feature);
       await updateDoc(doc(db, 'businesses', d.feature), { featured: !b.featured });
+      await bumpBizVersion();
+      loadApproved(true);
       toast(b.featured ? 'تم إلغاء التميز' : 'تم تمييز النشاط ⭐');
     }
     else if (d.approve) {
       await updateDoc(doc(db, 'businesses', d.approve), { status: 'approved' });
+      await bumpBizVersion();
       await notifyOwner(d.approve, '✅ تم اعتماد نشاطك', `أصبح ظاهراً للناس في ${APP_NAME}`);
+      loadApproved(true);
       toast('تم النشر وإرسال إشعار لصاحبه ✅');
     }
     else if (d.reject) {
@@ -2496,12 +2569,19 @@ $('adminList').onclick = async e => {
       await notifyOwner(d.reject, '❌ تم رفض نشاطك', reason.trim() || 'راجع البيانات وأعد الإرسال');
       toast('تم الرفض وإرسال إشعار لصاحبه');
     }
-    else if (d.hide) { await updateDoc(doc(db, 'businesses', d.hide), { status: 'hidden' }); toast('تم الإخفاء ⏸️'); }
+    else if (d.hide) {
+      await updateDoc(doc(db, 'businesses', d.hide), { status: 'hidden' });
+      await bumpBizVersion();
+      loadApproved(true);
+      toast('تم الإخفاء ⏸️');
+    }
     else if (d.del && confirm('حذف نهائي لهذا النشاط؟')) {
       await deleteDoc(doc(db, 'businesses', d.del));
       await deleteDoc(doc(db, 'regs', d.del)).catch(() => {});
       await deleteDoc(doc(db, 'bizPhotos', d.del)).catch(() => {});
       delete photoCache[d.del];
+      await bumpBizVersion();
+      loadApproved(true);
       toast('تم الحذف 🗑️');
     }
   } catch (err) { toast('تعذر تنفيذ العملية'); }
