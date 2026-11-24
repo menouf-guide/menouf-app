@@ -124,7 +124,7 @@ a{text-decoration:none;color:inherit}
 @keyframes blink{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.7)}50%{box-shadow:0 0 0 8px rgba(220,38,38,0)}}
 .wrap{max-width:520px;margin:0 auto;padding:10px 16px 115px;animation:fadeIn .4s ease-out}
 
-/* ===== الهيدر الاحترافي مثل الصورة ===== */
+/* ===== الهيدر ===== */
 .hero-hdr{position:relative;background:var(--hdr);padding:10px 16px 18px;overflow:hidden;border-bottom:3px solid var(--p)}
 .hero-hdr::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:linear-gradient(90deg,var(--p),var(--gold),var(--p))}
 .hdr-top{display:flex;justify-content:space-between;align-items:center;max-width:520px;margin:0 auto 10px}
@@ -137,16 +137,126 @@ a{text-decoration:none;color:inherit}
 .share-btn:active{transform:scale(.95)}
 .share-btn svg{width:17px;height:17px;flex:none}
 
-.hero-main{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:520px;margin:0 auto}
+.hero-main{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:520px;margin:0 auto}
 .hero-logo-wrap{position:relative;flex:none}
 .logo{width:74px;height:74px;border-radius:50%;object-fit:cover;border:3px solid var(--gold);box-shadow:0 6px 18px rgba(12,93,63,.18);background:#fff}
-.hero-title{flex:1;text-align:center}
+.hero-title{flex:1;text-align:center;min-width:0}
 .hero-title h1{font-size:28px;font-weight:900;line-height:1.05;color:var(--txt);letter-spacing:-.5px}
 .hero-title h1 span{display:block;font-size:32px;color:var(--p);font-weight:900}
 .hero-sub{display:inline-flex;align-items:center;gap:8px;margin-top:4px;font-size:13px;font-weight:800;color:var(--txt2)}
 .hero-sub::before,.hero-sub::after{content:"";width:18px;height:2.5px;border-radius:99px;background:var(--gold)}
 
-/* ===== شريط الطقس والموقع (3 أقسام مثل الصورة) ===== */
+/* ===== بطاقة وشاشة الأذكار ===== */
+.azkar-hero-card{
+  width:clamp(104px,29vw,124px);flex:none;
+  position:relative;overflow:hidden;
+  border-radius:18px;padding:8px 6px 7px;
+  background:radial-gradient(circle at 50% 15%,rgba(34,197,94,.28),transparent 65%),linear-gradient(170deg,#08432b,#042416);
+  border:1.5px solid rgba(250,204,21,.6);
+  box-shadow:0 6px 18px rgba(4,36,22,.35),inset 0 0 12px rgba(250,204,21,.12);
+  display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px;color:#fff;
+  transition:transform .2s
+}
+.azkar-hero-card:active{transform:scale(.95)}
+.azkar-hero-card .az-top-svg{width:100%;height:26px;display:block;margin-bottom:1px}
+.azkar-hero-card strong{font-size:12.5px;font-weight:900;color:#fde047;line-height:1.2}
+.azkar-hero-card span{font-size:9px;font-weight:700;color:#e2f5ea;line-height:1.2;white-space:nowrap}
+.azkar-hero-cta{
+  margin-top:3px;width:100%;padding:3px 6px;border-radius:999px;
+  background:linear-gradient(135deg,#fde047,#f59e0b);color:#102a22;
+  font-size:10px;font-weight:900;display:inline-flex;align-items:center;justify-content:center;gap:3px;
+  box-shadow:0 2px 8px rgba(245,158,11,.35)
+}
+@media(max-width:400px){
+  .logo{width:64px;height:64px}
+  .hero-title h1{font-size:23px}
+  .hero-title h1 span{font-size:27px}
+  .hero-sub{font-size:11.5px}
+  .hero-sub::before,.hero-sub::after{width:12px}
+}
+
+.az-sheet{
+  background:radial-gradient(circle at 50% 0%,rgba(22,163,74,.25),transparent 52%),linear-gradient(180deg,#063521 0%,#041d12 100%);
+  border:1.5px solid rgba(250,204,21,.45);color:#f8fafc;padding:0 0 24px
+}
+.az-banner{
+  position:relative;padding:14px 16px 18px;text-align:center;
+  border-bottom:1px solid rgba(250,204,21,.28);
+  background:radial-gradient(circle at 50% 25%,rgba(250,204,21,.16),transparent 65%)
+}
+.az-close{
+  position:absolute;top:12px;left:14px;width:34px;height:34px;border-radius:50%;
+  background:rgba(255,255,255,.1);color:#fde047;font-size:22px;border:1px solid rgba(250,204,21,.35);
+  display:flex;align-items:center;justify-content:center
+}
+.az-banner-title{
+  display:inline-block;padding:4px 22px;border-radius:999px;margin-top:4px;
+  background:linear-gradient(180deg,#084029,#042416);border:1.5px solid #facc15;
+  color:#fde047;font-size:21px;font-weight:900;box-shadow:0 4px 16px rgba(0,0,0,.35)
+}
+.az-banner-sub{font-size:13px;font-weight:700;color:#d1fae5;margin-top:6px}
+.az-body{padding:14px 16px 4px}
+.az-panel{
+  border:1px solid rgba(250,204,21,.3);border-radius:20px;padding:12px;
+  background:rgba(4,22,14,.62)
+}
+.az-cat{
+  width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:12px;border-radius:16px;margin-bottom:9px;text-align:right;
+  background:rgba(12,48,32,.78);border:1px solid rgba(250,204,21,.22);color:#fff;
+  transition:transform .15s,border-color .2s
+}
+.az-cat:last-child{margin-bottom:0}
+.az-cat:active{transform:scale(.98)}
+.az-cat-r{display:flex;align-items:center;gap:10px;min-width:0}
+.az-cat-ico{
+  width:42px;height:42px;border-radius:12px;flex:none;
+  background:rgba(250,204,21,.12);border:1px solid rgba(250,204,21,.3);
+  display:flex;align-items:center;justify-content:center;font-size:22px
+}
+.az-cat-t{font-size:15.5px;font-weight:900;color:#fff}
+.az-cat-d{font-size:11.5px;color:#cbd5e1;margin-top:1px}
+.az-cat-cnt{
+  flex:none;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:800;
+  background:rgba(22,163,74,.25);border:1px solid rgba(74,222,128,.45);color:#bbf7d0
+}
+.az-head-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}
+.az-back-btn{
+  padding:6px 12px;border-radius:999px;font-size:12.5px;font-weight:800;
+  background:rgba(255,255,255,.08);border:1px solid rgba(250,204,21,.35);color:#fde047
+}
+.az-reset-btn{
+  padding:6px 11px;border-radius:999px;font-size:12px;font-weight:800;
+  background:rgba(239,68,68,.15);border:1px solid rgba(248,113,113,.35);color:#fecaca
+}
+.az-item{
+  border:1px solid rgba(250,204,21,.24);border-radius:18px;padding:14px;margin-bottom:10px;
+  background:rgba(8,36,24,.88);transition:.2s
+}
+.az-item.done{border-color:rgba(74,222,128,.55);background:rgba(12,56,36,.85)}
+.az-item-top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+.az-item-title{font-size:14.5px;font-weight:900;color:#fde047}
+.az-copy-btn{
+  padding:3px 9px;border-radius:999px;font-size:11.5px;font-weight:700;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#e2e8f0
+}
+.az-item-txt{
+  font-size:15.5px;line-height:1.9;color:#f8fafc;font-weight:600;
+  user-select:text;-webkit-user-select:text;margin-bottom:10px
+}
+.az-item-foot{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.az-src{font-size:11.5px;color:#a7f3d0;font-weight:700}
+.az-cnt-btn{
+  min-width:96px;padding:7px 14px;border-radius:999px;font-size:13px;font-weight:900;
+  background:linear-gradient(135deg,#fde047,#f59e0b);color:#102a22;
+  box-shadow:0 4px 12px rgba(245,158,11,.25);transition:transform .12s
+}
+.az-cnt-btn:active{transform:scale(.94)}
+.az-item.done .az-cnt-btn{
+  background:linear-gradient(135deg,#22c55e,#15803d);color:#fff;box-shadow:none
+}
+
+/* ===== شريط الطقس والموقع (3 أقسام) ===== */
 .weather-bar{display:grid;grid-template-columns:1.25fr .85fr .9fr;align-items:center;background:var(--pulse);border:1px solid var(--b);border-radius:16px;padding:10px 8px;margin:6px 0 10px;box-shadow:var(--shadow)}
 .w-cell{display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;font-weight:800;color:var(--txt2);padding:0 6px}
 .w-cell+.w-cell{border-right:1px solid var(--b2)}
@@ -170,14 +280,14 @@ a{text-decoration:none;color:inherit}
 .tool.active{border-color:var(--p);background:var(--p);color:#fff}
 #bellCount{background:var(--d);color:#fff;border-radius:999px;padding:0 6px;font-size:11px;font-weight:800}
 
-/* ===== عناوين الأقسام (مع خط ذهبي/أخضر تحت العنوان مثل الصورة) ===== */
+/* ===== عناوين الأقسام ===== */
 .sec{font-size:17.5px;font-weight:900;color:var(--txt);margin:14px 0 10px;display:flex;justify-content:space-between;align-items:center}
 .sec-title{display:inline-flex;align-items:center;gap:7px;position:relative;padding-bottom:4px}
 .sec-title.gold-line::after{content:"";position:absolute;right:0;bottom:0;width:72%;height:3px;border-radius:99px;background:var(--gold)}
 .sec-title.green-line::after{content:"";position:absolute;right:0;bottom:0;width:72%;height:3px;border-radius:99px;background:var(--p)}
 .sec-more{font-size:13px;font-weight:800;color:var(--p);display:inline-flex;align-items:center;gap:3px}
 
-/* ===== التصنيفات (كروت مربعة بيضاء بظل ناعم مثل الصورة) ===== */
+/* ===== التصنيفات ===== */
 .cats{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none}
 .cats::-webkit-scrollbar{display:none}
 .cat{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-width:74px;padding:10px 6px;border-radius:18px;background:var(--card);border:1.5px solid transparent;box-shadow:var(--shadow);font-size:11.5px;font-weight:800;color:var(--txt2);transition:.2s}
@@ -185,7 +295,7 @@ a{text-decoration:none;color:inherit}
 .cat.on{border-color:var(--p);background:rgba(12,93,63,.06);color:var(--p)}
 .cat.on .ci{background:var(--pg);color:#fff;box-shadow:0 4px 12px var(--pglow)}
 
-/* ===== عروض اليوم (كروت بصورة وخصم أصفر وزر المزيد الأخضر مثل الصورة) ===== */
+/* ===== عروض اليوم ===== */
 .deals-wrap{margin:4px 0 10px}
 .deals{display:flex;gap:12px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none}
 .deals::-webkit-scrollbar{display:none}
@@ -200,7 +310,7 @@ a{text-decoration:none;color:inherit}
 .deal-sub{font-size:11.5px;color:var(--m);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .deal-btn{background:var(--p);color:#fff;border-radius:999px;padding:6px 14px;font-size:12px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:4px;margin-top:2px;box-shadow:0 4px 12px var(--pglow)}
 
-/* ===== كروت الأنشطة (تخطيط الصورة: بيانات يمين + صورة يسار + أزرار خضراء) ===== */
+/* ===== كروت الأنشطة ===== */
 .card{background:var(--card);border:1px solid var(--b);border-radius:22px;padding:14px;margin-bottom:14px;box-shadow:var(--shadow);position:relative;transition:transform .2s}
 .card:active{transform:scale(.99)}
 .card.fe{border:1.5px solid var(--gold)}
@@ -300,7 +410,7 @@ textarea{min-height:85px;resize:vertical}
 .qty-btn{width:28px;height:28px;border-radius:50%;background:rgba(12,93,63,.12);color:var(--p);border:1px solid var(--b2);font-weight:900;display:flex;align-items:center;justify-content:center}
 .cart-bar{background:rgba(22,163,74,.1);border:1px solid rgba(22,163,74,.35);border-radius:16px;padding:12px;margin-top:10px}
 
-/* ===== الشريط السفلي (مثل الصورة: أبيض ناعم + زر + دائري أخضر بحلقة ذهبية) ===== */
+/* ===== الشريط السفلي ===== */
 .nav{position:fixed;bottom:0;left:0;right:0;max-width:520px;margin:0 auto;z-index:35;display:flex;justify-content:space-around;align-items:flex-end;padding:8px 10px 10px;background:var(--nav);border-top:1px solid var(--b);border-radius:26px 26px 0 0;box-shadow:0 -6px 25px rgba(15,45,35,.08)}
 .nav .tb{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:12px;font-weight:800;color:var(--m);min-width:68px;flex:1;padding:4px 0;position:relative}
 .nav .tb .ic{font-size:20px;line-height:1}
@@ -389,13 +499,26 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
         <h1>منوف<span>360</span></h1>
         <div class="hero-sub">دليلك في منوف</div>
       </div>
-      <div style="width:74px;flex:none" aria-hidden="true"></div>
+      <button type="button" id="openAzkarBtn" class="azkar-hero-card" title="أذكار اليوم">
+        <svg class="az-top-svg" viewBox="0 0 120 34" fill="none" aria-hidden="true">
+          <path d="M18 32 C18 14, 42 10, 60 3 C78 10, 102 14, 102 32" stroke="#facc15" stroke-width="1.5" stroke-opacity=".75"/>
+          <path d="M40 24 L60 28 L80 24 L76 12 L60 16 L44 12 Z" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.2"/>
+          <line x1="60" y1="16" x2="60" y2="28" stroke="#b45309" stroke-width="1.2"/>
+          <rect x="14" y="13" width="8" height="12" rx="2" fill="#fde047" opacity=".85"/>
+          <line x1="18" y1="5" x2="18" y2="13" stroke="#facc15" stroke-width="1"/>
+          <rect x="98" y="13" width="8" height="12" rx="2" fill="#fde047" opacity=".85"/>
+          <line x1="102" y1="5" x2="102" y2="13" stroke="#facc15" stroke-width="1"/>
+        </svg>
+        <strong>أذكار اليوم</strong>
+        <span>راحة للقلب .. وبركة للحياة</span>
+        <div class="azkar-hero-cta">عرض الأذكار ❮</div>
+      </button>
     </div>
   </header>
 
   <div class="wrap">
     <div id="tab-browse">
-      <!-- شريط الطقس مثل الصورة -->
+      <!-- شريط الطقس -->
       <div class="weather-bar">
         <div class="w-cell"><span>⛅</span><span>الطقس في منوف</span></div>
         <div class="w-cell"><span style="color:var(--p)">📍</span><span>منوف</span></div>
@@ -755,6 +878,28 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
   </div>
 </div>
 
+<!-- شاشة الأذكار -->
+<div id="azkarModal" class="modal hidden">
+  <div class="sheet az-sheet">
+    <div class="az-banner">
+      <button type="button" id="closeAzkar" class="az-close" title="إغلاق">&times;</button>
+      <svg viewBox="0 0 220 68" style="width:190px;height:58px;display:block;margin:0 auto" fill="none" aria-hidden="true">
+        <path d="M22 65 C22 26, 74 20, 110 5 C146 20, 198 26, 198 65" stroke="#facc15" stroke-width="1.8" stroke-opacity=".7"/>
+        <path d="M126 14 A10 10 0 1 0 138 26 A8 8 0 1 1 126 14 Z" fill="#fde047"/>
+        <line x1="38" y1="14" x2="38" y2="28" stroke="#facc15" stroke-width="1.3"/>
+        <rect x="31" y="28" width="14" height="20" rx="3" fill="#fde047" fill-opacity=".9" stroke="#f59e0b"/>
+        <line x1="182" y1="14" x2="182" y2="28" stroke="#facc15" stroke-width="1.3"/>
+        <rect x="175" y="28" width="14" height="20" rx="3" fill="#fde047" fill-opacity=".9" stroke="#f59e0b"/>
+        <path d="M78 52 L110 58 L142 52 L136 33 L110 39 L84 33 Z" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
+        <line x1="110" y1="39" x2="110" y2="58" stroke="#b45309" stroke-width="1.5"/>
+      </svg>
+      <div class="az-banner-title">أذكار اليوم</div>
+      <div class="az-banner-sub">راحة للقلب .. وبركة للحياة 🌿</div>
+    </div>
+    <div class="az-body" id="azkarContent"></div>
+  </div>
+</div>
+
 <!-- تكبير الصورة -->
 <div id="imgModal" class="img-zoom-modal hidden">
   <button type="button" id="closeImg" class="img-zoom-close" title="إغلاق">&times;</button>
@@ -793,7 +938,7 @@ const tsMs = x => x?.toMillis?.() ?? 0;
 const fd = ms => ms ? new Date(ms).toLocaleString('ar-EG') : '';
 
 /* ---------- إدارة النوافذ وزر الرجوع في الموبايل ---------- */
-const BASE_MODALS = ['bizModal', 'dealModal', 'allDealsModal', 'offerModal', 'notifModal', 'emergencyModal'];
+const BASE_MODALS = ['bizModal', 'dealModal', 'allDealsModal', 'offerModal', 'notifModal', 'emergencyModal', 'azkarModal'];
 let skipPop = 0;
 
 function showModal(id) {
@@ -1373,7 +1518,6 @@ async function loadApproved(forceServer = false) {
             if (!cached.empty) s = cached;
           }
         } catch (err) {
-          // في حالة انقطاع الإنترنت: نعرض الأنشطة من الكاش المحلي مباشرة
           try {
             const cached = await getDocsFromCache(qy);
             if (!cached.empty) s = cached;
@@ -1449,7 +1593,7 @@ function listenOffers() {
   }, () => {});
 }
 
-/* ---------- عروض اليوم (استايل الكروت + قائمة المزيد) ---------- */
+/* ---------- عروض اليوم ---------- */
 function activeOffers() {
   const now = Date.now();
   return offers.filter(o => o.status === 'approved' && (!o.expiresAt || o.expiresAt > now))
@@ -1635,6 +1779,141 @@ $('trainChips').onclick = e => { const b = e.target.closest('[data-tdir]'); if (
 $('emergencyBtn').onclick = () => showModal('emergencyModal');
 $('closeEmergency').onclick = () => closeBaseModal('emergencyModal');
 $('emergencyModal').onclick = e => { if (e.target.id === 'emergencyModal') closeBaseModal('emergencyModal'); };
+
+/* ---------- أذكار اليوم (محلية بالكامل — 0 قراءة) ---------- */
+const AZKAR = [
+  { id: 1, category: "morning", title: "أصبحنا وأصبح الملك لله", text: "أصبحنا وأصبح الملك لله، والحمد لله، لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير. رب أسألك خير ما في هذا اليوم وخير ما بعده، وأعوذ بك من شر ما في هذا اليوم وشر ما بعده. رب أعوذ بك من الكسل وسوء الكبر، رب أعوذ بك من عذاب في النار وعذاب في القبر.", repeat: 1, source: "صحيح مسلم 2723" },
+  { id: 2, category: "evening", title: "أمسينا وأمسى الملك لله", text: "أمسينا وأمسى الملك لله، والحمد لله، لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير. رب أسألك خير ما في هذه الليلة وخير ما بعدها، وأعوذ بك من شر ما في هذه الليلة وشر ما بعدها، رب أعوذ بك من الكسل وسوء الكبر، رب أعوذ بك من عذاب في النار وعذاب في القبر.", repeat: 1, source: "صحيح مسلم 2723" },
+  { id: 3, category: "both", title: "رضيت بالله رباً", text: "رضيت بالله رباً، وبالإسلام ديناً، وبمحمد صلى الله عليه وسلم نبياً.", repeat: 3, source: "مسند أحمد 18967" },
+  { id: 4, category: "both", title: "التسبيح", text: "سبحان الله وبحمده.", repeat: 100, source: "صحيح مسلم 2692" },
+  { id: 5, category: "both", title: "بسم الله الذي لا يضر", text: "بسم الله الذي لا يضر مع اسمه شيء في الأرض ولا في السماء وهو السميع العليم.", repeat: 3, source: "سنن أبي داود 5088" },
+  { id: 6, category: "both", title: "سيد الاستغفار", text: "اللهم أنت ربي لا إله إلا أنت، خلقتني وأنا عبدك، وأنا على عهدك ووعدك ما استطعت، أعوذ بك من شر ما صنعت، أبوء لك بنعمتك علي، وأبوء بذنبي فاغفر لي، فإنه لا يغفر الذنوب إلا أنت.", repeat: 1, source: "صحيح البخاري 6306" },
+  { id: 7, category: "evening", title: "التعوذ بكلمات الله", text: "أعوذ بكلمات الله التامات من شر ما خلق.", repeat: 1, source: "صحيح مسلم 2709" }
+];
+
+const AZKAR_CATS = [
+  { key: 'morning', title: 'أذكار الصباح', desc: 'أذكار الصباح لتحصين نفسك طوال اليوم', icon: '☀️', filter: z => z.category === 'morning' || z.category === 'both' },
+  { key: 'evening', title: 'أذكار المساء', desc: 'أذكار المساء لراحة القلب وطمأنينة النفس', icon: '🌙', filter: z => z.category === 'evening' || z.category === 'both' },
+  { key: 'prayer',  title: 'أذكار الصلاة', desc: 'أذكار قبل وبعد الصلاة', icon: '🕌', filter: z => z.category === 'prayer' },
+  { key: 'both',    title: 'أذكار عامة',   desc: 'أذكار متنوعة للحياة اليومية', icon: '💛', filter: z => z.category === 'both' }
+];
+
+let azActiveCat = null;
+
+function todayLocalStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+}
+function getAzProgress() {
+  const today = todayLocalStr();
+  try {
+    const raw = JSON.parse(localStorage.getItem('menouf_azkar_prog') || 'null');
+    if (raw && raw.date === today && raw.counts) return raw;
+  } catch (e) {}
+  return { date: today, counts: {} };
+}
+function saveAzProgress(prog) {
+  try { localStorage.setItem('menouf_azkar_prog', JSON.stringify(prog)); } catch (e) {}
+}
+
+function renderAzkarView() {
+  const box = $('azkarContent');
+  const prog = getAzProgress();
+
+  if (!azActiveCat) {
+    const catsHtml = AZKAR_CATS.map(c => {
+      const azList = AZKAR.filter(c.filter);
+      if (!azList.length) return '';
+      const doneCount = azList.filter(z => (prog.counts[`${c.key}_${z.id}`] || 0) >= z.repeat).length;
+      return `<button type="button" class="az-cat" data-azcat="${c.key}">
+        <div class="az-cat-r">
+          <div class="az-cat-ico">${c.icon}</div>
+          <div>
+            <div class="az-cat-t">${esc(c.title)}</div>
+            <div class="az-cat-d">${esc(c.desc)}${doneCount ? ` · أتممت ${doneCount}/${azList.length}` : ''}</div>
+          </div>
+        </div>
+        <span class="az-cat-cnt">${azList.length} ذكر</span>
+      </button>`;
+    }).join('');
+    box.innerHTML = `<div class="az-panel">${catsHtml}</div>`;
+    return;
+  }
+
+  const cat = AZKAR_CATS.find(c => c.key === azActiveCat);
+  const list = cat ? AZKAR.filter(cat.filter) : [];
+  box.innerHTML = `
+    <div class="az-head-bar">
+      <button type="button" class="az-back-btn" id="azBackBtn">→ الأقسام (${list.length})</button>
+      <strong style="color:#fde047;font-size:15px">${cat.icon} ${esc(cat.title)}</strong>
+      <button type="button" class="az-reset-btn" id="azResetBtn">تصفير ↺</button>
+    </div>
+    ${list.map(z => {
+      const k = `${cat.key}_${z.id}`;
+      const cur = Math.min(z.repeat, prog.counts[k] || 0);
+      const done = cur >= z.repeat;
+      return `<div class="az-item ${done ? 'done' : ''}">
+        <div class="az-item-top">
+          <span class="az-item-title">${esc(z.title)}</span>
+          <button type="button" class="az-copy-btn" data-azcopy="${z.id}">📋 نسخ</button>
+        </div>
+        <div class="az-item-txt">${esc(z.text)}</div>
+        <div class="az-item-foot">
+          <span class="az-src">📖 ${esc(z.source)}</span>
+          <button type="button" class="az-cnt-btn" data-aztap="${k}" data-azmax="${z.repeat}">
+            ${done ? `✓ تم (${z.repeat})` : `${cur} / ${z.repeat}`}
+          </button>
+        </div>
+      </div>`;
+    }).join('')}`;
+}
+
+$('azkarContent').onclick = async e => {
+  const catBtn = e.target.closest('[data-azcat]');
+  if (catBtn) { azActiveCat = catBtn.dataset.azcat; renderAzkarView(); return; }
+
+  if (e.target.closest('#azBackBtn')) { azActiveCat = null; renderAzkarView(); return; }
+
+  if (e.target.closest('#azResetBtn')) {
+    const prog = getAzProgress();
+    Object.keys(prog.counts).forEach(k => { if (k.startsWith(azActiveCat + '_')) delete prog.counts[k]; });
+    saveAzProgress(prog);
+    renderAzkarView();
+    toast('تم تصفير عداد القسم ↺');
+    return;
+  }
+
+  const copyBtn = e.target.closest('[data-azcopy]');
+  if (copyBtn) {
+    const z = AZKAR.find(x => x.id === Number(copyBtn.dataset.azcopy));
+    if (z) {
+      try { await navigator.clipboard.writeText(`${z.text}\n(${z.source})`); toast('تم نسخ الذكر 📋'); }
+      catch (err) { toast('حدد النص للنسخ'); }
+    }
+    return;
+  }
+
+  const tapBtn = e.target.closest('[data-aztap]');
+  if (tapBtn) {
+    const key = tapBtn.dataset.aztap, max = Number(tapBtn.dataset.azmax);
+    const prog = getAzProgress();
+    const cur = prog.counts[key] || 0;
+    if (cur < max) {
+      prog.counts[key] = cur + 1;
+      saveAzProgress(prog);
+      renderAzkarView();
+      if (prog.counts[key] === max) toast('تقبل الله، أتممت الذكر ✨');
+    }
+  }
+};
+
+$('openAzkarBtn').onclick = () => {
+  azActiveCat = null;
+  renderAzkarView();
+  showModal('azkarModal');
+};
+$('closeAzkar').onclick = () => closeBaseModal('azkarModal');
+$('azkarModal').onclick = e => { if (e.target.id === 'azkarModal') closeBaseModal('azkarModal'); };
 
 $('mShare').onclick = async () => {
   const b = curBiz; if (!b) return;
