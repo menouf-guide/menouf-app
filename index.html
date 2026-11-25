@@ -2002,9 +2002,12 @@ function getCachedPrayers() {
   return null;
 }
 
+let prayerTried = false;
 async function fetchMenoufPrayers() {
   const cached = getCachedPrayers();
   if (cached) return cached;
+  if (prayerTried) return null;
+  prayerTried = true;
   try {
     const res = await fetch('https://api.aladhan.com/v1/timings?latitude=30.465&longitude=30.931&method=5');
     const json = await res.json();
