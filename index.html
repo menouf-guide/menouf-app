@@ -6,10 +6,17 @@
 <title>منوف 360 — دليلك في منوف</title>
 <meta name="description" content="دليلك الكامل للدكاترة والمحلات والخدمات والعقارات ومواعيد القطارات في منوف">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="منوف 360">
 <meta property="og:url" content="https://menouf360.online/">
 <meta property="og:title" content="منوف 360 — دليلك في منوف">
 <meta property="og:description" content="دليلك الكامل للدكاترة والصيدليات والمحلات والخدمات والعقارات ومواعيد القطارات في منوف">
 <meta property="og:image" content="https://menouf360.online/icon-512.png">
+<meta property="og:image:width" content="512">
+<meta property="og:image:height" content="512">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="منوف 360 — دليلك في منوف">
+<meta name="twitter:description" content="دليلك الكامل للدكاترة والصيدليات والمحلات والخدمات والعقارات ومواعيد القطارات في منوف">
+<meta name="twitter:image" content="https://menouf360.online/icon-512.png">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#fbf7ea" id="themeMeta">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -303,7 +310,8 @@ a{text-decoration:none;color:inherit}
 .cats{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none}
 .cats::-webkit-scrollbar{display:none}
 .cat{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-width:74px;padding:10px 6px;border-radius:18px;background:var(--card);border:1.5px solid transparent;box-shadow:var(--shadow);font-size:11.5px;font-weight:800;color:var(--txt2);transition:.2s}
-.ci{width:40px;height:40px;border-radius:12px;background:var(--row);display:flex;align-items:center;justify-content:center;font-size:22px}
+.ci{width:42px;height:42px;border-radius:14px;background:var(--row);color:var(--p);display:flex;align-items:center;justify-content:center;font-size:22px}
+.ci svg{width:22px;height:22px;display:block}
 .cat.on{border-color:var(--p);background:rgba(12,93,63,.06);color:var(--p)}
 .cat.on .ci{background:var(--pg);color:#fff;box-shadow:0 4px 12px var(--pglow)}
 
@@ -332,7 +340,8 @@ a{text-decoration:none;color:inherit}
 .biz-body{display:flex;gap:12px;align-items:stretch}
 .biz-main{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:space-between;gap:6px}
 .biz-top{display:flex;align-items:flex-start;gap:8px}
-.biz-ico{width:38px;height:38px;border-radius:50%;background:var(--row);border:1px solid var(--b);display:flex;align-items:center;justify-content:center;font-size:18px;flex:none}
+.biz-ico{width:38px;height:38px;border-radius:12px;background:var(--row);border:1px solid var(--b);color:var(--p);display:flex;align-items:center;justify-content:center;font-size:18px;flex:none}
+.biz-ico svg{width:20px;height:20px;display:block}
 .biz-thumb-wrap{position:relative;width:118px;flex:none;border-radius:16px;overflow:hidden;background:var(--row);border:1px solid var(--b)}
 .biz-thumb{width:100%;height:100%;min-height:112px;object-fit:cover;display:block}
 .fav{position:absolute;top:10px;left:10px;width:30px;height:30px;border-radius:50%;border:1px solid var(--b);background:var(--glass);display:flex;align-items:center;justify-content:center;font-size:14px;z-index:2;box-shadow:0 2px 8px rgba(0,0,0,.1)}
@@ -1022,6 +1031,24 @@ $('themeBtn').onclick = () => {
 };
 applyThemeBtn();
 
+const svgIco = p => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+
+const SVG_ICONS = {
+  all: svgIco('<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>'),
+  fav: svgIco('<path d="M12 20.5s-7-4.4-9.2-8.4C1 8.9 2.7 5 6.5 5c2.1 0 3.8 1.1 5.5 2.9C13.7 6.1 15.4 5 17.5 5c3.8 0 5.5 3.9 3.7 7.1-2.2 4-9.2 8.4-9.2 8.4z"/>'),
+  doc: svgIco('<path d="M5 3v5a5 5 0 0 0 10 0V3M7 3H5M15 3h-2M10 13v3a4 4 0 0 0 8 0v-2.5"/><circle cx="18" cy="11.5" r="2"/>'),
+  pharm: svgIco('<rect x="3.5" y="3.5" width="17" height="17" rx="4"/><path d="M12 8v8M8 12h8"/>'),
+  shop: svgIco('<path d="M3 9l1.5-5h15L21 9M3 9a2.3 2.3 0 0 0 4.5 0 2.3 2.3 0 0 0 4.5 0 2.3 2.3 0 0 0 4.5 0 2.3 2.3 0 0 0 4.5 0M5 11.5V20h14v-8.5M9.5 20v-5h5v5"/>'),
+  food: svgIco('<path d="M6 3v7a3 3 0 0 0 6 0V3M9 3v18M17.5 3v18M17.5 3c2 2 2.5 5 1 8h-1"/>'),
+  cafe: svgIco('<path d="M17 8h1.5a3.5 3.5 0 0 1 0 7H17M3.5 8H17v8a4 4 0 0 1-4 4H7.5a4 4 0 0 1-4-4V8zM7 3v2M11 3v2M14 3v2"/>'),
+  srv: svgIco('<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.7-3.7a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9l-3.7 3.7z"/>'),
+  re: svgIco('<path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9.5z"/>'),
+  lab: svgIco('<path d="M9 3h6M10 3v5.5L5.2 17.6A2 2 0 0 0 7 20.5h10a2 2 0 0 0 1.8-2.9L14 8.5V3M7.5 14.5h9"/>'),
+  gym: svgIco('<path d="M6.5 6.5v11M17.5 6.5v11M3 9v6M21 9v6M6.5 12h11"/>'),
+  del: svgIco('<path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/>'),
+  bag: svgIco('<path d="M6 7h12l1 13H5L6 7zM9 7a3 3 0 0 1 6 0"/>')
+};
+
 const DAYS = ['السبت','الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة'];
 const TYPES = {
   doctor: { label: 'دكتور / عيادة', nameLbl: 'اسم الطبيب واللقب العلمي' },
@@ -1043,16 +1070,16 @@ const CATS = {
   gym: ['جيم','نادي رياضي','كابتن خاص','أخرى']
 };
 const CAT_TABS = [
-  { k: 'الكل', i: '🧭' },
-  { k: 'المفضلة', i: '❤️' },
-  { k: 'دكاترة', i: '🩺' },
-  { k: 'صيدليات', i: '💊' },
-  { k: 'محل / مطعم', i: '🍴' },
-  { k: 'خدمة', i: '⚙️' },
-  { k: 'عقارات', i: '🏠' },
-  { k: 'معامل وأشعة', i: '🧪' },
-  { k: 'جيم ونادي', i: '🏋️' },
-  { k: 'دليفري', i: '🛵' }
+  { k: 'الكل', i: SVG_ICONS.all },
+  { k: 'المفضلة', i: SVG_ICONS.fav },
+  { k: 'دكاترة', i: SVG_ICONS.doc },
+  { k: 'صيدليات', i: SVG_ICONS.pharm },
+  { k: 'محل / مطعم', i: SVG_ICONS.shop },
+  { k: 'خدمة', i: SVG_ICONS.srv },
+  { k: 'عقارات', i: SVG_ICONS.re },
+  { k: 'معامل وأشعة', i: SVG_ICONS.lab },
+  { k: 'جيم ونادي', i: SVG_ICONS.gym },
+  { k: 'دليفري', i: SVG_ICONS.del }
 ];
 const CENTER = [30.46, 30.93];
 
@@ -1405,15 +1432,16 @@ const isRE = b => b && b.type === 'real_estate';
 const reExpired = b => isRE(b) && b.expiresAt && b.expiresAt < Date.now();
 const fmtPrice = n => n ? Number(n).toLocaleString('ar-EG') : '';
 const iconOfBiz = b => {
-  if (isRE(b)) return '🏠';
-  if (b.type === 'delivery') return '🛵';
-  if (b.type === 'lab') return '🧪';
-  if (b.type === 'gym') return '🏋️';
-  if (b.type === 'pharmacy' || b.category === 'صيدلية' || normAr(b.name).includes('صيدلي')) return '💊';
-  if (b.type === 'doctor') return '🩺';
-  if (b.type === 'service') return '⚙️';
-  if (normAr(b.category).includes('كافيه') || normAr(b.name).includes('كافيه')) return '☕';
-  return '🛍️';
+  if (isRE(b)) return SVG_ICONS.re;
+  if (b.type === 'delivery') return SVG_ICONS.del;
+  if (b.type === 'lab') return SVG_ICONS.lab;
+  if (b.type === 'gym') return SVG_ICONS.gym;
+  if (b.type === 'pharmacy' || b.category === 'صيدلية' || normAr(b.name).includes('صيدلي')) return SVG_ICONS.pharm;
+  if (b.type === 'doctor') return SVG_ICONS.doc;
+  if (b.type === 'service') return SVG_ICONS.srv;
+  if (normAr(b.category).includes('كافيه') || normAr(b.name).includes('كافيه')) return SVG_ICONS.cafe;
+  if (normAr(b.category).includes('مطعم') || normAr(b.category).includes('حلواني')) return SVG_ICONS.food;
+  return SVG_ICONS.bag;
 };
 
 /* ---------- نبض منوف والطقس ---------- */
@@ -2123,9 +2151,9 @@ $('azkarModal').onclick = e => { if (e.target.id === 'azkarModal') closeBaseModa
 $('mShare').onclick = async () => {
   const b = curBiz; if (!b) return;
   const url = `${location.origin}${location.pathname}?biz=${b.id}`;
-  const text = `📍 ${b.name}\n${isRE(b) ? '🏠 ' + b.category : b.type === 'doctor' ? '🩺 ' + b.specialty : '🏷️ ' + b.category}${b.address ? '\n📌 ' + b.address : ''}\n🔗 التفاصيل على تطبيق ${APP_NAME}:\n${url}`;
+  const text = `📍 ${b.name}\n${isRE(b) ? '🏠 ' + b.category : b.type === 'doctor' ? '🩺 ' + b.specialty : '🏷️ ' + b.category}${b.address ? '\n📌 ' + b.address : ''}\n🔗 التفاصيل على تطبيق ${APP_NAME}:`;
   if (navigator.share) { try { await navigator.share({ title: b.name, text, url }); } catch (e) {} }
-  else window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+  else window.open(`https://wa.me/?text=${encodeURIComponent(text + '\n' + url)}`, '_blank');
 };
 /* ---------- الدخول والزائر ---------- */
 function setMode(m) {
@@ -2271,10 +2299,10 @@ $('editNameBtn').onclick = async () => {
   } catch (err) { toast('تعذر تحديث الاسم'); }
 };
 $('shareAppBtn').onclick = async () => {
-  const url = `${location.origin}${location.pathname}`;
-  const text = `📍 تطبيق ${APP_NAME} — دليلك الشامل للدكاترة والصيدليات والمحلات والخدمات والعقارات ومواعيد القطارات في منوف:\n${url}`;
+  const url = `${location.origin}/`;
+  const text = `📍 تطبيق ${APP_NAME} — دليلك الشامل في منوف`;
   if (navigator.share) { try { await navigator.share({ title: APP_NAME, text, url }); } catch (e) {} }
-  else window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+  else window.open(`https://wa.me/?text=${encodeURIComponent(text + '\n' + url)}`, '_blank');
 };
 
 /* ---------- حذف الحساب ---------- */
