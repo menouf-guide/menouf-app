@@ -2294,10 +2294,19 @@ $('editNameBtn').onclick = async () => {
   if (!me || guest) return;
   const newName = prompt('اكتب اسمك الجديد:', profile?.name || '');
   if (!newName || !newName.trim() || newName.trim() === profile?.name) return;
+  const cleanName = newName.trim();
   try {
-    await updateDoc(doc(db, 'users', me.uid), { name: newName.trim() });
-    profile.name = newName.trim();
+    await updateDoc(doc(db, 'users', me.uid), { name: cleanName });
+    profile.name = cleanName;
     renderProfileCard();
+    // تحديث الاسم في أنشطة المستخدم إذا كانت قواعد الأمان تسمح بذلك
+    if (myBiz.length) {
+      try {
+        const batch = writeBatch(db);
+        myBiz.forEach(b => batch.update(doc(db, 'businesses', b.id), { ownerName: cleanName }));
+        await batch.commit();
+      } catch (e) {}
+    }
     toast('تم تحديث الاسم ✅');
   } catch (err) { toast('تعذر تحديث الاسم'); }
 };
