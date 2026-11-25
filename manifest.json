@@ -1,15 +1,17 @@
 {
-  "name": "منوف 360",
+  "id": "/",
+  "name": "منوف 360 — دليلك في منوف",
   "short_name": "منوف 360",
   "description": "دليلك الكامل للدكاترة والمحلات والخدمات والعقارات ومواعيد القطارات في منوف",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#08090c",
-  "theme_color": "#08090c",
+  "background_color": "#fbf7ea",
+  "theme_color": "#fbf7ea",
   "lang": "ar",
   "dir": "rtl",
+  "categories": ["lifestyle", "business", "navigation"],
   "icons": [
     {
       "src": "icon-192.png",
@@ -22,6 +24,12 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
