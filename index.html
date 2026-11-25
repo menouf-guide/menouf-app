@@ -6,9 +6,10 @@
 <title>منوف 360 — دليلك في منوف</title>
 <meta name="description" content="دليلك الكامل للدكاترة والمحلات والخدمات والعقارات ومواعيد القطارات في منوف">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://menouf360.online/">
 <meta property="og:title" content="منوف 360 — دليلك في منوف">
 <meta property="og:description" content="دليلك الكامل للدكاترة والصيدليات والمحلات والخدمات والعقارات ومواعيد القطارات في منوف">
-<meta property="og:image" content="icon-512.png">
+<meta property="og:image" content="https://menouf360.online/icon-512.png">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#fbf7ea" id="themeMeta">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -127,8 +128,8 @@ a{text-decoration:none;color:inherit}
 /* ===== الهيدر ===== */
 .hero-hdr{position:relative;background:var(--hdr);padding:10px 16px 18px;overflow:hidden;border-bottom:3px solid var(--p)}
 .hero-hdr::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:linear-gradient(90deg,var(--p),var(--gold),var(--p))}
-.hdr-top{display:flex;justify-content:space-between;align-items:center;max-width:520px;margin:0 auto 10px}
-.hdr-greet{font-size:12px;font-weight:800;color:var(--p);background:var(--glass);padding:4px 11px;border-radius:999px;border:1px solid var(--b)}
+.hdr-top{display:flex;justify-content:space-between;align-items:center;max-width:520px;margin:0 auto 10px;gap:6px}
+.hdr-greet{font-size:11px;font-weight:800;color:var(--p);background:var(--glass);padding:4px 10px;border-radius:999px;border:1px solid var(--b);white-space:nowrap}
 .hact{display:flex;gap:6px}
 .ib{width:34px;height:34px;border-radius:50%;border:1px solid var(--b2);background:var(--glass);font-size:15px;display:flex;align-items:center;justify-content:center;color:var(--txt);box-shadow:0 2px 8px rgba(0,0,0,.05)}
 .ib.alert{border-color:rgba(220,38,38,.45);background:rgba(254,226,226,.9);animation:blink 1.4s infinite}
@@ -255,6 +256,16 @@ a{text-decoration:none;color:inherit}
 .az-item.done .az-cnt-btn{
   background:linear-gradient(135deg,#22c55e,#15803d);color:#fff;box-shadow:none
 }
+.az-prayer-card{border:1px solid rgba(250,204,21,.32);border-radius:18px;padding:11px 12px;margin-bottom:12px;background:rgba(8,36,24,.88)}
+.az-prayer-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;font-size:12.5px}
+.az-prayer-head strong{color:#fde047;font-weight:900}
+.az-prayer-head span{color:#a7f3d0;font-size:11px;font-weight:700}
+.az-prayer-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
+.az-p-cell{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:6px 3px;text-align:center}
+.az-p-cell span{display:block;font-size:10.5px;color:#cbd5e1;font-weight:700}
+.az-p-cell b{display:block;font-size:11px;color:#fff;font-weight:900;margin-top:2px}
+.az-p-cell.next{background:rgba(250,204,21,.16);border-color:#facc15}
+.az-p-cell.next span,.az-p-cell.next b{color:#fde047}
 
 /* ===== شريط الطقس والموقع (3 أقسام) ===== */
 .weather-bar{display:grid;grid-template-columns:1.25fr .85fr .9fr;align-items:center;background:var(--pulse);border:1px solid var(--b);border-radius:16px;padding:10px 8px;margin:6px 0 10px;box-shadow:var(--shadow)}
@@ -263,6 +274,7 @@ a{text-decoration:none;color:inherit}
 .w-temp{font-size:16px;font-weight:900;color:var(--txt)}
 .pulse-train{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--card);border:1px solid rgba(12,93,63,.16);border-radius:14px;padding:8px 14px;margin-bottom:12px;font-size:12.5px;font-weight:700;color:var(--okTxt);cursor:pointer;box-shadow:var(--shadow)}
 .pulse-train strong{color:var(--p)}
+.pulse-train span:last-child{white-space:nowrap;flex:none}
 
 /* ===== البحث ===== */
 .search{display:flex;align-items:center;gap:8px;background:var(--surf);border:1px solid var(--b);border-radius:999px;padding:0 16px;margin:6px 0 12px;box-shadow:var(--shadow)}
@@ -307,7 +319,7 @@ a{text-decoration:none;color:inherit}
 .deal-badge{position:absolute;top:8px;right:8px;background:#fde047;color:#111827;font-size:11.5px;font-weight:900;padding:3px 10px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.15);line-height:1.3;text-align:center}
 .deal-body{padding:10px 12px 12px;text-align:center;display:flex;flex-direction:column;flex:1;justify-content:space-between;gap:6px}
 .deal-title{font-size:13.5px;font-weight:900;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.deal-sub{font-size:11.5px;color:var(--m);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.deal-sub{font-size:11.5px;line-height:1.5;padding-bottom:1px;color:var(--m);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .deal-btn{background:var(--p);color:#fff;border-radius:999px;padding:6px 14px;font-size:12px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:4px;margin-top:2px;box-shadow:0 4px 12px var(--pglow)}
 
 /* ===== كروت الأنشطة ===== */
@@ -599,6 +611,10 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
               <div class="field"><label>عدد الغرف</label><input id="reRooms" inputmode="numeric"></div>
               <p class="muted" style="font-size:12px">الإعلان بيفضل ظاهر 30 يوم، وبعدها بيتقفل، وتقدر تجدده من "أنشطتي".</p>
             </div>
+            <div class="field hidden" id="customCatF">
+              <label id="customCatLbl">اكتب التصنيف / التخصص</label>
+              <input id="bCustomCat" placeholder="مثال: حلواني، مكتبة، عطار..." maxlength="40">
+            </div>
             <div class="field">
               <label>📸 صورة للنشاط (اختياري، صورة واحدة)</label>
               <input id="bPhotos" type="file" accept="image/*">
@@ -622,7 +638,8 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
           </div>
           <div class="card" id="hoursCard">
             <div class="ct" style="margin-bottom:6px">مواعيد العمل</div>
-            <p class="muted" style="margin-bottom:6px">لكل يوم فترة أولى، وفترة تانية اختيارية. لو النشاط بيفتح لبعد نص الليل اكتب وقت القفل أقل من وقت الفتح (مثلاً 18:00 لـ 02:00).</p>
+            <p class="muted" style="margin-bottom:8px">لكل يوم فترة أولى، وفترة تانية اختيارية. لو النشاط بيفتح لبعد نص الليل اكتب وقت القفل أقل من وقت الفتح (مثلاً 18:00 لـ 02:00).</p>
+            <button type="button" class="btn sm s" id="set24hBtn" style="margin-bottom:10px">🌙 تفعيل العمل 24 ساعة طوال الأسبوع</button>
             <div id="hours"></div>
           </div>
           <div class="card" id="itemsCard">
@@ -647,7 +664,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
             <div class="ct" id="myProfileName">أهلاً بك</div>
             <div class="muted" id="myProfilePhone"></div>
           </div>
-          <span class="badge ok">حسابي</span>
+          <button type="button" class="btn sm s" id="editNameBtn" style="padding:5px 11px;font-size:12px">✏️ تعديل الاسم</button>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
           <button type="button" class="btn sm s" id="myFavBtn">❤️ المفضلة (<span id="myFavCount">0</span>)</button>
@@ -1204,6 +1221,7 @@ const normAr = s => String(s || '').toLowerCase()
 
 const SYN = [
   ['مطعم','مطاعم','مطبخ','كافيه','كافيهات','اكل','وجبات','برجر','شاورما','بيتزا','كشري'],
+  ['حلواني','حلويات','تورته','جاتوه','كنافه','بسبوسه','مخبز','مخبوزات','فرن'],
   ['دكتور','دكاترة','طبيب','اطباء','عياده','عيادات','مركز طبي'],
   ['صيدليه','صيدليات','دوا','ادويه'],
   ['سباك','سباكه','سباكين'],
@@ -1775,7 +1793,7 @@ $('emergencyBtn').onclick = () => showModal('emergencyModal');
 $('closeEmergency').onclick = () => closeBaseModal('emergencyModal');
 $('emergencyModal').onclick = e => { if (e.target.id === 'emergencyModal') closeBaseModal('emergencyModal'); };
 
-/* ---------- أذكار اليوم (مُنقّحة وموثّقة — 0 قراءة) ---------- */
+/* ---------- أذكار اليوم ومواقيت الصلاة ---------- */
 const AZKAR = [
   // --- أذكار الصباح (1 - 15) ---
   { id: 1, category: "morning", title: "أصبحنا وأصبح الملك لله", text: "أصبحنا وأصبح الملك لله، والحمد لله، لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير. رب أسألك خير ما في هذا اليوم وخير ما بعده، وأعوذ بك من شر ما في هذا اليوم وشر ما بعده، رب أعوذ بك من الكسل وسوء الكبر، رب أعوذ بك من عذاب في النار وعذاب في القبر.", repeat: 1, source: "صحيح مسلم 2723" },
@@ -1939,11 +1957,75 @@ function saveAzProgress(prog) {
   try { localStorage.setItem('menouf_azkar_prog', JSON.stringify(prog)); } catch (e) {}
 }
 
+function fmtPrayer12(hhmm) {
+  const clean = String(hhmm || '').split(' ')[0];
+  if (!clean.includes(':')) return clean;
+  let [h, m] = clean.split(':').map(Number);
+  const suf = h >= 12 ? 'م' : 'ص';
+  h = h % 12 || 12;
+  return `${h}:${String(m).padStart(2, '0')} ${suf}`;
+}
+
+function getCachedPrayers() {
+  try {
+    const cached = JSON.parse(localStorage.getItem('menouf_prayer_cache') || 'null');
+    if (cached && cached.date === todayLocalStr() && cached.timings) return cached;
+  } catch (e) {}
+  return null;
+}
+
+async function fetchMenoufPrayers() {
+  const cached = getCachedPrayers();
+  if (cached) return cached;
+  try {
+    const res = await fetch('https://api.aladhan.com/v1/timings?latitude=30.465&longitude=30.931&method=5');
+    const json = await res.json();
+    const t = json?.data?.timings;
+    if (t && t.Fajr) {
+      const data = {
+        date: todayLocalStr(),
+        hijri: json?.data?.date?.hijri ? `${json.data.date.hijri.day} ${json.data.date.hijri.month?.ar || ''} ${json.data.date.hijri.year || ''}` : '',
+        timings: { Fajr: t.Fajr, Dhuhr: t.Dhuhr, Asr: t.Asr, Maghrib: t.Maghrib, Isha: t.Isha }
+      };
+      try { localStorage.setItem('menouf_prayer_cache', JSON.stringify(data)); } catch (e) {}
+      return data;
+    }
+  } catch (e) {}
+  return null;
+}
+
+function renderPrayerBoxHtml(pData) {
+  if (!pData || !pData.timings) return '';
+  const list = [
+    ['الفجر', pData.timings.Fajr],
+    ['الظهر', pData.timings.Dhuhr],
+    ['العصر', pData.timings.Asr],
+    ['المغرب', pData.timings.Maghrib],
+    ['العشاء', pData.timings.Isha]
+  ];
+  const now = new Date(), cur = now.getHours() * 60 + now.getMinutes();
+  let nextIdx = list.findIndex(([, tm]) => toMin(String(tm).split(' ')[0]) > cur);
+  if (nextIdx === -1) nextIdx = 0;
+  return `<div class="az-prayer-card">
+    <div class="az-prayer-head">
+      <strong>🕌 مواقيت الصلاة في منوف</strong>
+      <span>${esc(pData.hijri || '')}</span>
+    </div>
+    <div class="az-prayer-grid">
+      ${list.map(([name, tm], i) => `<div class="az-p-cell ${i === nextIdx ? 'next' : ''}">
+        <span>${name}</span><b>${esc(fmtPrayer12(tm))}</b>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
 function renderAzkarView() {
   const box = $('azkarContent');
   const prog = getAzProgress();
 
   if (!azActiveCat) {
+    const pCached = getCachedPrayers();
+    if (!pCached) fetchMenoufPrayers().then(d => { if (d && !azActiveCat) renderAzkarView(); });
     const catsHtml = AZKAR_CATS.map(c => {
       const azList = AZKAR.filter(c.filter);
       if (!azList.length) return '';
@@ -1959,7 +2041,7 @@ function renderAzkarView() {
         <span class="az-cat-cnt">${azList.length} ذكر</span>
       </button>`;
     }).join('');
-    box.innerHTML = `<div class="az-panel">${catsHtml}</div>`;
+    box.innerHTML = `${renderPrayerBoxHtml(pCached)}<div class="az-panel">${catsHtml}</div>`;
     return;
   }
 
@@ -2045,7 +2127,6 @@ $('mShare').onclick = async () => {
   if (navigator.share) { try { await navigator.share({ title: b.name, text, url }); } catch (e) {} }
   else window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
 };
-
 /* ---------- الدخول والزائر ---------- */
 function setMode(m) {
   mode = m;
@@ -2177,6 +2258,17 @@ $('myFavBtn').onclick = () => {
   browseCat = 'المفضلة'; browseSub = 'الكل';
   buildCats(); buildSubCats(); updateDynamicTools(); renderBrowse();
   switchTab('browse');
+};
+$('editNameBtn').onclick = async () => {
+  if (!me || guest) return;
+  const newName = prompt('اكتب اسمك الجديد:', profile?.name || '');
+  if (!newName || !newName.trim() || newName.trim() === profile?.name) return;
+  try {
+    await updateDoc(doc(db, 'users', me.uid), { name: newName.trim() });
+    profile.name = newName.trim();
+    renderProfileCard();
+    toast('تم تحديث الاسم ✅');
+  } catch (err) { toast('تعذر تحديث الاسم'); }
 };
 $('shareAppBtn').onclick = async () => {
   const url = `${location.origin}${location.pathname}`;
@@ -2329,8 +2421,12 @@ function filtered() {
       || (browseCat === 'معامل وأشعة' && b.type === 'lab')
       || (browseCat === 'جيم ونادي' && b.type === 'gym');
     const subOk = browseSub === 'الكل'
-      || (browseCat === 'دكاترة' && b.specialty === browseSub)
-      || ((browseCat === 'محل / مطعم' || browseCat === 'خدمة' || browseCat === 'عقارات' || browseCat === 'معامل وأشعة' || browseCat === 'جيم ونادي') && b.category === browseSub);
+      || (browseCat === 'دكاترة' && (browseSub === 'أخرى' ? (!SPECS.includes(b.specialty) || b.specialty === 'أخرى') : b.specialty === browseSub))
+      || (browseCat === 'محل / مطعم' && (browseSub === 'أخرى' ? (!CATS.shop.includes(b.category) || b.category === 'أخرى') : b.category === browseSub))
+      || (browseCat === 'خدمة' && (browseSub === 'أخرى' ? (!CATS.service.includes(b.category) || b.category === 'أخرى') : b.category === browseSub))
+      || (browseCat === 'عقارات' && (browseSub === 'أخرى' ? (!CATS.real_estate.includes(b.category) || b.category === 'أخرى') : b.category === browseSub))
+      || (browseCat === 'معامل وأشعة' && (browseSub === 'أخرى' ? (!CATS.lab.includes(b.category) || b.category === 'أخرى') : b.category === browseSub))
+      || (browseCat === 'جيم ونادي' && (browseSub === 'أخرى' ? (!CATS.gym.includes(b.category) || b.category === 'أخرى') : b.category === browseSub));
     const qOk = !q || matchesQuery(b, q);
     const h24Ok = !only24h || b.category === 'صيدلية 24 ساعة' || normAr((b.name || '') + ' ' + (b.desc || '')).includes('24');
     return catOk && subOk && qOk && h24Ok && (!onlyOpen || (!isRE(b) && isOpen(b.hours)));
@@ -2374,7 +2470,7 @@ document.addEventListener('visibilitychange', () => { if (document.hidden) flush
 
 function renderBrowse() {
   const list = filtered();
-  $('countLabel').textContent = list.length ? `المزيد (${list.length}) ‹` : '';
+  $('countLabel').textContent = list.length ? `(${list.length} نشاط)` : '';
   if (mapView) renderMap();
   const cards = list.map(b => {
     const re = isRE(b);
@@ -2431,9 +2527,10 @@ function renderBrowse() {
     </div>`;
   }).join('');
 
+  const hasFilter = q || browseCat !== 'الكل' || browseSub !== 'الكل' || onlyOpen || only24h || priceSort || nearMe || topRated;
   let footer = '';
   if (loadingPage) footer = '<div class="empty">جاري التحميل...</div>';
-  else if (!list.length) footer = '<div class="empty">لا توجد نتائج مطابقة</div>';
+  else if (!list.length) footer = `<div class="empty"><p>لا توجد نتائج مطابقة</p>${hasFilter ? '<button type="button" class="btn sm s" id="resetBrowseFilters">🔄 إعادة ضبط البحث والفلاتر</button>' : ''}</div>`;
   $('browseList').innerHTML = cards + footer;
 }
 
@@ -2496,6 +2593,15 @@ function renderMap() {
 window.openById = id => { const b = approved.find(x => x.id === id); if (b) openModal(b); };
 
 $('browseList').onclick = e => {
+  if (e.target.closest('#resetBrowseFilters')) {
+    q = ''; $('searchInput').value = ''; $('clearSearch').classList.add('hidden');
+    browseCat = 'الكل'; browseSub = 'الكل';
+    onlyOpen = false; priceSort = false; only24h = false; nearMe = false; topRated = false;
+    $('fOpen').classList.remove('active'); $('fPriceSort').classList.remove('active');
+    $('f24h').classList.remove('active'); $('fNear').classList.remove('active'); $('fTopRated').classList.remove('active');
+    buildCats(); buildSubCats(); updateDynamicTools(); renderBrowse();
+    return;
+  }
   const wa = e.target.closest('[data-track-wa]');
   if (wa) { e.stopPropagation(); trackStat(wa.dataset.trackWa, 'waClicks'); return; }
   const ca = e.target.closest('[data-track-call]');
@@ -2769,6 +2875,19 @@ function buildTypeChips() {
     `<button type="button" class="chip ${type === k ? 'on' : ''}" data-type="${k}">${v.label}</button>`).join('');
 }
 $('typeChips').onclick = e => { const b = e.target.closest('[data-type]'); if (b) { type = b.dataset.type; buildTypeChips(); applyType(); } };
+
+function toggleCustomCat() {
+  if (!type || type === 'delivery') { $('customCatF').classList.add('hidden'); return; }
+  const val = type === 'doctor' ? $('bSpec').value : type === 'real_estate' ? $('reCat').value : $('bCat').value;
+  const show = val === 'أخرى';
+  $('customCatF').classList.toggle('hidden', !show);
+  $('customCatLbl').textContent = type === 'doctor' ? 'اكتب التخصص بالتفصيل' : 'اكتب اسم التصنيف (مثال: حلواني، مكتبة...)';
+  if (!show) $('bCustomCat').value = '';
+}
+$('bSpec').onchange = toggleCustomCat;
+$('bCat').onchange = toggleCustomCat;
+$('reCat').onchange = toggleCustomCat;
+
 function applyType() {
   $('typeFields').classList.remove('hidden');
   $('nameLbl').textContent = TYPES[type].nameLbl;
@@ -2783,6 +2902,7 @@ function applyType() {
   $('bAddr').required = !del;
   if (d) $('bSpec').innerHTML = '<option value="">اختار التخصص</option>' + SPECS.map(s => `<option>${s}</option>`).join('');
   else if (!re && !del) $('bCat').innerHTML = '<option value="">اختار التصنيف</option>' + CATS[type].map(s => `<option>${s}</option>`).join('');
+  toggleCustomCat();
 }
 
 function buildHours() {
@@ -2801,6 +2921,16 @@ function buildHours() {
   </div>`).join('');
 }
 $('hours').onclick = e => { const t = e.target.closest('[data-day]'); if (t) t.classList.toggle('on'); };
+$('set24hBtn').onclick = () => {
+  DAYS.forEach((_, i) => {
+    document.querySelector(`[data-day="${i}"]`)?.classList.add('on');
+    $('f' + i).value = '00:00';
+    $('t' + i).value = '23:59';
+    $('g' + i).value = '';
+    $('h' + i).value = '';
+  });
+  toast('تم ضبط المواعيد 24 ساعة طوال الأسبوع 🌙');
+};
 
 const collectHours = () => DAYS.map((d, i) => {
   const from2 = $('g' + i).value, to2 = $('h' + i).value;
@@ -2837,6 +2967,10 @@ $('bizForm').onsubmit = async e => {
   if (re && !$('rePrice').value.trim()) return toast('اكتب السعر');
   if (!del && !$('bLat').value) return toast('حدد مكان النشاط على الخريطة');
 
+  const customCat = $('bCustomCat').value.trim();
+  const pickedVal = d ? $('bSpec').value : re ? $('reCat').value : del ? '' : $('bCat').value;
+  if (pickedVal === 'أخرى' && !customCat) return toast('اكتب اسم التصنيف أو التخصص في الخانة');
+
   if (!editId) {
     const dayAgo = Date.now() - DAY_MS;
     const todayCount = myBiz.filter(b => tsMs(b.createdAt) > dayAgo).length;
@@ -2859,8 +2993,8 @@ $('bizForm').onsubmit = async e => {
   const nextStatus = (editId && adminEditing) ? (editOrigStatus || 'approved') : 'pending';
   const data = {
     phone, type, name: $('bName').value.trim(),
-    specialty: d ? $('bSpec').value : null,
-    category: d ? 'دكاترة' : re ? $('reCat').value : del ? 'دليفري' : $('bCat').value,
+    specialty: d ? (pickedVal === 'أخرى' ? customCat : pickedVal) : null,
+    category: d ? 'دكاترة' : del ? 'دليفري' : (pickedVal === 'أخرى' ? customCat : pickedVal),
     price: d ? $('bPrice').value.trim() : null,
     desc: $('bDesc').value.trim(), address: del ? '' : $('bAddr').value.trim(), landmark: del ? '' : $('bLandmark').value.trim(),
     lat: del ? null : Number($('bLat').value), lng: del ? null : Number($('bLng').value),
@@ -2900,8 +3034,8 @@ $('bizForm').onsubmit = async e => {
       }
       delete photoCache[editId];
       if (adminEditing) {
-        markBizDirty();
-        toast('تم حفظ التعديلات الإدارية بنجاح ✅ (اضغط نشر التحديث للجميع عند الانتهاء)');
+        await bumpBizVersion();
+        toast('تم حفظ ونشر التعديلات الإدارية بنجاح ✅');
         loadApproved(true);
       } else {
         if (editOrigStatus === 'approved') await bumpBizVersion();
@@ -2931,15 +3065,25 @@ async function startEdit(b, isAdminEdit = false) {
   type = b.type; buildTypeChips(); applyType();
   $('bName').value = b.name || ''; $('bPhone').value = b.phone || b.ownerPhone || '';
   if (b.type === 'doctor') {
-    $('bSpec').value = b.specialty || ''; $('bPrice').value = b.price || '';
+    const sp = b.specialty || '';
+    if (sp && !SPECS.includes(sp)) { $('bSpec').value = 'أخرى'; toggleCustomCat(); $('bCustomCat').value = sp; }
+    else { $('bSpec').value = sp; toggleCustomCat(); }
+    $('bPrice').value = b.price || '';
     $('bReg').value = b.regNo || '';
     getDoc(doc(db, 'regs', b.id)).then(s => { if (s.exists()) $('bReg').value = s.data().regNo; }).catch(() => {});
   } else if (b.type === 'real_estate') {
-    $('reCat').value = b.category || CATS.real_estate[0];
+    const rc = b.category || CATS.real_estate[0];
+    if (rc && !CATS.real_estate.includes(rc)) { $('reCat').value = 'أخرى'; toggleCustomCat(); $('bCustomCat').value = rc; }
+    else { $('reCat').value = rc; toggleCustomCat(); }
     $('rePrice').value = b.rePrice || '';
     $('reArea').value = b.reArea || '';
     $('reRooms').value = b.reRooms || '';
-  } else $('bCat').value = b.category || '';
+  } else if (b.type !== 'delivery') {
+    const ct = b.category || '';
+    const listCats = CATS[b.type] || [];
+    if (ct && !listCats.includes(ct)) { $('bCat').value = 'أخرى'; toggleCustomCat(); $('bCustomCat').value = ct; }
+    else { $('bCat').value = ct; toggleCustomCat(); }
+  }
   $('bDesc').value = b.desc || ''; $('bAddr').value = b.address || ''; $('bLandmark').value = b.landmark || '';
   $('bLat').value = b.lat || ''; $('bLng').value = b.lng || '';
   (b.hours || []).forEach((h, i) => {
@@ -2977,6 +3121,7 @@ function cancelEdit() {
   editId = null; editOrigType = null; editOrigStatus = null; adminEditing = false; editOwnerId = null;
   pendingFile = null; removePhotos = false;
   $('bizForm').reset(); items = []; renderItems();
+  $('bCustomCat').value = ''; $('customCatF').classList.add('hidden');
   $('photoPrev').innerHTML = ''; $('curPhotos').textContent = ''; $('rmWrap').classList.add('hidden');
   type = null; buildTypeChips(); $('typeFields').classList.add('hidden'); buildHours();
   $('geoStatus').textContent = ''; $('pickMap').classList.add('hidden'); $('editNotice').classList.add('hidden');
@@ -3093,7 +3238,7 @@ $('cleanREBtn').onclick = async () => {
     const batch = writeBatch(db);
     exp.forEach(b => batch.update(doc(db, 'businesses', b.id), { status: 'hidden', updatedAt: serverTimestamp() }));
     await batch.commit();
-    markBizDirty();
+    await bumpBizVersion();
     await loadApproved(true);
     toast(`تم إخفاء ${exp.length} عقار منتهي ✅`);
   } catch (err) { toast('تعذر التنفيذ'); }
@@ -3139,7 +3284,7 @@ $('cleanBtn').onclick = async () => {
       if (b.ownerPhone) upd.ownerPhone = deleteField();
       if (Object.keys(upd).length) { await updateDoc(doc(db, 'businesses', b.id), upd); n++; }
     }
-    if (n > 0) markBizDirty();
+    if (n > 0) await bumpBizVersion();
     toast(`تم تنظيف ${n} نشاط ✅`);
   } catch (err) { toast('حصل خطأ أثناء التنظيف: ' + (err.code || err.message)); }
 };
@@ -3226,30 +3371,30 @@ $('adminList').onclick = async e => {
       await updateDoc(doc(db, 'businesses', d.pdel), { thumb: deleteField(), photoCount: 0 });
       await deleteDoc(doc(db, 'bizPhotos', d.pdel)).catch(() => {});
       delete photoCache[d.pdel];
-      markBizDirty();
+      await bumpBizVersion();
       loadApproved(true);
       toast('تم حذف الصورة 🖼️');
     }
     else if (d.verify) {
       const b = allBiz.find(x => x.id === d.verify);
       await updateDoc(doc(db, 'businesses', d.verify), { verified: !b.verified });
-      markBizDirty();
+      await bumpBizVersion();
       loadApproved(true);
       toast(b.verified ? 'تم إلغاء التوثيق' : 'تم توثيق النشاط ✓');
     }
     else if (d.feature) {
       const b = allBiz.find(x => x.id === d.feature);
       await updateDoc(doc(db, 'businesses', d.feature), { featured: !b.featured });
-      markBizDirty();
+      await bumpBizVersion();
       loadApproved(true);
       toast(b.featured ? 'تم إلغاء التميز' : 'تم تمييز النشاط ⭐');
     }
     else if (d.approve) {
       await updateDoc(doc(db, 'businesses', d.approve), { status: 'approved' });
-      markBizDirty();
+      await bumpBizVersion();
       await notifyOwner(d.approve, '✅ تم اعتماد نشاطك', `أصبح ظاهراً للناس في ${APP_NAME}`);
       loadApproved(true);
-      toast('تم الاعتماد ✅ (اضغط نشر التحديث للجميع بعد الانتهاء)');
+      toast('تم الاعتماد والنشر للجميع ✅');
     }
     else if (d.reject) {
       const reason = prompt('سبب الرفض (هيوصل لصاحب النشاط):');
@@ -3260,7 +3405,7 @@ $('adminList').onclick = async e => {
     }
     else if (d.hide) {
       await updateDoc(doc(db, 'businesses', d.hide), { status: 'hidden' });
-      markBizDirty();
+      await bumpBizVersion();
       loadApproved(true);
       toast('تم الإخفاء ⏸️');
     }
@@ -3270,7 +3415,7 @@ $('adminList').onclick = async e => {
       await deleteDoc(doc(db, 'bizPhotos', d.del)).catch(() => {});
       await deleteDoc(doc(db, 'offers', d.del)).catch(() => {});
       delete photoCache[d.del];
-      markBizDirty();
+      await bumpBizVersion();
       loadApproved(true);
       toast('تم الحذف 🗑️');
     }
