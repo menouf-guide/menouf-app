@@ -313,7 +313,10 @@ a{text-decoration:none;color:inherit}
 /* ===== كروت الأنشطة ===== */
 .card{background:var(--card);border:1px solid var(--b);border-radius:22px;padding:14px;margin-bottom:14px;box-shadow:var(--shadow);position:relative;transition:transform .2s}
 .card:active{transform:scale(.99)}
-.card.fe{border:1.5px solid var(--gold)}
+.card.fe{border:1.5px solid #eab308;background:linear-gradient(90deg,#f9e48e 0%,#fdf3c7 52%,#fffdf5 100%);box-shadow:0 6px 20px rgba(245,158,11,.18);overflow:hidden}
+:root[data-theme="dark"] .card.fe{background:linear-gradient(90deg,rgba(234,179,8,.26) 0%,rgba(234,179,8,.12) 55%,rgba(20,24,28,.96) 100%);border-color:rgba(250,204,21,.7)}
+.fe-ribbon{position:absolute;top:0;left:48px;z-index:3;min-width:54px;padding:4px 10px 6px;border-radius:0 0 11px 11px;background:linear-gradient(180deg,#b57a16 0%,#dca02e 55%,#c4871c 100%);color:#fff;font-size:11px;font-weight:900;line-height:1.15;text-align:center;box-shadow:0 4px 10px rgba(180,120,20,.35);pointer-events:none}
+.card.fe.no-thumb .biz-top{padding-left:92px}
 .biz-body{display:flex;gap:12px;align-items:stretch}
 .biz-main{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:space-between;gap:6px}
 .biz-top{display:flex;align-items:flex-start;gap:8px}
@@ -2379,12 +2382,22 @@ function renderBrowse() {
     const open = !re && !del && isOpen(b.hours), ph = b.phone || b.ownerPhone || '', fav = favs.includes(b.id);
     const rt = ratingOf(b.id), isDoc = b.type === 'doctor';
     const cover = b.thumb || b.imageUrl || '';
+    const feLbl = b.type === 'doctor' ? 'دكتور<br>مميز'
+      : (b.type === 'pharmacy' || b.category === 'صيدلية' || normAr(b.name).includes('صيدلي')) ? 'صيدلية<br>مميزة'
+      : b.type === 'real_estate' ? 'عقار<br>مميز'
+      : b.type === 'lab' ? 'معمل<br>مميز'
+      : b.type === 'gym' ? 'جيم<br>مميز'
+      : b.type === 'delivery' ? 'مندوب<br>مميز'
+      : b.type === 'service' ? 'خدمة<br>مميزة'
+      : b.category === 'مطعم وكافيه' ? 'مطعم<br>مميز'
+      : 'نشاط<br>مميز';
     const reFacts = re ? `<div class="re-facts">
         ${b.rePrice ? `<span>💰 ${fmtPrice(b.rePrice)} ج</span>` : ''}
         ${b.reArea ? `<span>📐 ${esc(b.reArea)} م²</span>` : ''}
         ${b.reRooms ? `<span>🛏️ ${esc(b.reRooms)} غرف</span>` : ''}
       </div>` : '';
-    return `<div class="card ${b.featured ? 'fe' : ''}" data-open="${b.id}" style="cursor:pointer">
+    return `<div class="card ${b.featured ? 'fe' : ''} ${!cover ? 'no-thumb' : ''}" data-open="${b.id}" style="cursor:pointer">
+      ${b.featured ? `<div class="fe-ribbon">${feLbl}</div>` : ''}
       <button class="fav" data-fav="${b.id}">${fav ? '❤️' : '🤍'}</button>
       <div class="biz-body">
         <div class="biz-main">
@@ -2398,7 +2411,6 @@ function renderBrowse() {
             </div>
             <div class="tags">
               ${re || del ? '' : `<span class="badge ${open ? 'ok' : ''}">${open ? '<span class="dot"></span> مفتوح الآن' : '⚪ مغلق'}</span>`}
-              ${b.featured ? '<span class="badge p">⭐ مميز</span>' : ''}
               ${b.verified ? '<span class="badge v">✓ موثق</span>' : ''}
               ${rt.n ? `<span class="rt">⭐ ${rt.avg.toFixed(1)} (${rt.n})</span>` : ''}
             </div>
@@ -2804,6 +2816,7 @@ function renderItems() {
   $('itemsBox').innerHTML = items.map((it, i) => `<div class="lr"><span><strong>${esc(it.name)}</strong> · ${esc(it.price)} جنيه</span>
     <button type="button" style="color:var(--d);font-weight:700" data-rm="${i}">حذف</button></div>`).join('');
 }
+$('itemsBox').onclick = e => { const b = e.target.closest('[data-rm]'); if (b) { items.splice(+b.dataset.rm, 1); renderItems(); }
 $('itemsBox').onclick = e => { const b = e.target.closest('[data-rm]'); if (b) { items.splice(+b.dataset.rm, 1); renderItems(); } };
 $('addItem').onclick = () => {
   const n = $('iName').value.trim();
