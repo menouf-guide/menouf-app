@@ -1,3 +1,6 @@
+إليك الكود الكامل لملف index.html بعد إضافة الشريط الذهبي المتغير حسب نوع النشاط
+وتلوين الكارت المميز بالذهبي:
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -2816,7 +2819,6 @@ function renderItems() {
   $('itemsBox').innerHTML = items.map((it, i) => `<div class="lr"><span><strong>${esc(it.name)}</strong> · ${esc(it.price)} جنيه</span>
     <button type="button" style="color:var(--d);font-weight:700" data-rm="${i}">حذف</button></div>`).join('');
 }
-$('itemsBox').onclick = e => { const b = e.target.closest('[data-rm]'); if (b) { items.splice(+b.dataset.rm, 1); renderItems(); }
 $('itemsBox').onclick = e => { const b = e.target.closest('[data-rm]'); if (b) { items.splice(+b.dataset.rm, 1); renderItems(); } };
 $('addItem').onclick = () => {
   const n = $('iName').value.trim();
