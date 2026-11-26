@@ -2,6 +2,7 @@ const CACHE = 'menouf-v1';
 const ASSETS = [
   './',
   './index.html',
+  './privacy.html',
   './manifest.json',
   './logo.png',
   './icon-192.png',
