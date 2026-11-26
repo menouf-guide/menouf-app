@@ -510,7 +510,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
       <div class="hact">
         <button class="ib alert" id="emergencyBtn" title="طوارئ">🚨</button>
         <button class="ib" id="themeBtn" title="تغيير الوضع">🌙</button>
-        <button class="ib" onclick="installApp()" title="تثبيت">📲</button>
+        <button class="ib" id="installBtn" onclick="installApp()" title="تثبيت">📲</button>
         <button class="ib" id="contactBtn" title="الإدارة">💬</button>
         <button class="ib" id="logoutBtn" title="خروج">🚪</button>
       </div>
@@ -952,6 +952,7 @@ try {
 }
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const cleanPhone = s => String(s ?? '').replace(/\D/g, '');
 const PHONE_RE = /^01[0125]\d{8}$/;
 const emailOf = p => p + '@menouf.app';
 const ADMIN_PHONE = '01002480665';
@@ -965,6 +966,31 @@ const BIZ_TS_KEY = 'menouf_biz_ts';
 const BIZ_MAX_AGE = 7 * DAY_MS;
 const tsMs = x => x?.toMillis?.() ?? 0;
 const fd = ms => ms ? new Date(ms).toLocaleString('ar-EG') : '';
+
+if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone || document.referrer.startsWith('android-app://')) {
+  $('installBtn')?.classList.add('hidden');
+}
+
+function cairoNow() {
+  try {
+    const parts = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Africa/Cairo',
+      year: 'numeric', month: 'numeric', day: 'numeric',
+      hour: 'numeric', minute: 'numeric', weekday: 'short', hour12: false
+    }).formatToParts(new Date());
+    const get = t => parts.find(p => p.type === t)?.value;
+    const wdMap = { Sat: 0, Sun: 1, Mon: 2, Tue: 3, Wed: 4, Thu: 5, Fri: 6 };
+    const h = Number(get('hour')) % 24;
+    const m = Number(get('minute'));
+    const satIdx = wdMap[get('weekday')] ?? ((new Date().getDay() + 1) % 7);
+    const dateStr = `${Number(get('year'))}-${Number(get('month'))}-${Number(get('day'))}`;
+    return { h, m, cur: h * 60 + m, satIdx, isFri: satIdx === 6, dateStr };
+  } catch (e) {
+    const d = new Date();
+    const satIdx = (d.getDay() + 1) % 7;
+    return { h: d.getHours(), m: d.getMinutes(), cur: d.getHours() * 60 + d.getMinutes(), satIdx, isFri: satIdx === 6, dateStr: `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}` };
+  }
+}
 
 /* ---------- إدارة النوافذ وزر الرجوع في الموبايل ---------- */
 const BASE_MODALS = ['bizModal', 'dealModal', 'allDealsModal', 'offerModal', 'notifModal', 'emergencyModal', 'azkarModal'];
@@ -1240,7 +1266,7 @@ function fmtTrainTime(s) {
 }
 
 let trainDir = 'out_cairo', trainOn = false;
-
+// === نهاية الجزء الأول — الصق الجزء الثاني هنا مباشرة 
 /* ---------- البحث بالمرادفات ---------- */
 const normAr = s => String(s || '').toLowerCase()
   .replace(/[\u064B-\u065F\u0640]/g, '')
@@ -1291,9 +1317,7 @@ const periodsOf = t => {
 };
 function isOpen(hours) {
   if (!Array.isArray(hours) || !hours.length) return false;
-  const now = new Date();
-  const cur = now.getHours() * 60 + now.getMinutes();
-  const today = (now.getDay() + 1) % 7;
+  const { cur, satIdx: today } = cairoNow();
   const yesterday = (today + 6) % 7;
   const t = hours[today];
   if (t && t.open) {
@@ -1315,9 +1339,7 @@ const fmtPeriods = h => !h.open ? 'مغلق' : (periodsOf(h).map(([f, t]) => `${
 
 function nextOpenReminder(hours) {
   if (!Array.isArray(hours) || !hours.length) return '';
-  const now = new Date();
-  const cur = now.getHours() * 60 + now.getMinutes();
-  const todayIdx = (now.getDay() + 1) % 7;
+  const { cur, satIdx: todayIdx } = cairoNow();
   if (isOpen(hours)) {
     const t = hours[todayIdx];
     return t && t.open ? `🟢 مفتوح الآن (${fmtPeriods(t)})` : '🟢 مفتوح الآن';
@@ -1373,18 +1395,23 @@ async function preparePhotos(file) {
 }
 
 let pendingFile = null, removePhotos = false, photoCache = {}, editOwnerId = null;
-let offerPhoto = null;
+let offerPhoto = null, prevPhotoUrl = null, prevOfferUrl = null;
 
 $('bPhotos').onchange = e => {
   const f = e.target.files && e.target.files[0];
+  if (prevPhotoUrl) { URL.revokeObjectURL(prevPhotoUrl); prevPhotoUrl = null; }
   if (!f || !f.type.startsWith('image/')) { pendingFile = null; $('photoPrev').innerHTML = ''; return; }
   pendingFile = f;
-  $('photoPrev').innerHTML = `<img src="${URL.createObjectURL(f)}" alt="">`;
+  prevPhotoUrl = URL.createObjectURL(f);
+  $('photoPrev').innerHTML = `<img src="${prevPhotoUrl}" alt="">`;
   removePhotos = false; $('rmPhotos').checked = false;
 };
 $('rmPhotos').onchange = e => {
   removePhotos = e.target.checked;
-  if (removePhotos) { pendingFile = null; $('bPhotos').value = ''; $('photoPrev').innerHTML = ''; }
+  if (removePhotos) {
+    if (prevPhotoUrl) { URL.revokeObjectURL(prevPhotoUrl); prevPhotoUrl = null; }
+    pendingFile = null; $('bPhotos').value = ''; $('photoPrev').innerHTML = '';
+  }
 };
 
 /* ---------- الحالة العامة ---------- */
@@ -1405,6 +1432,9 @@ function toast(msg) {
   const t = $('toast'); t.textContent = msg; t.classList.add('show');
   clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 3000);
 }
+window.addEventListener('offline', () => toast('أنت غير متصل بالإنترنت، يتم عرض البيانات المحفوظة 📡'));
+window.addEventListener('online', () => toast('عادت شبكة الإنترنت ✅'));
+
 function friendly(err) {
   const c = err.code || '';
   if (c.includes('email-already-in-use')) return 'الرقم ده مسجل قبل كده، ادخل مباشرة';
@@ -1446,7 +1476,7 @@ const iconOfBiz = b => {
 
 /* ---------- نبض منوف والطقس ---------- */
 function initPulse() {
-  const hr = new Date().getHours();
+  const hr = cairoNow().h;
   $('pulseGreet').textContent = hr < 12 ? '☀️ صباح الخير يا أهل منوف' : hr < 17 ? '🌤️ طاب يومكم في منوف' : '🌙 مساء الخير يا أهل منوف';
 
   try {
@@ -1475,7 +1505,7 @@ function initPulse() {
 }
 
 function updateNextTrainPulse() {
-  const now = new Date(), cur = now.getHours() * 60 + now.getMinutes();
+  const { cur, satIdx, isFri } = cairoNow();
   const allOut = TRAINS.filter(t => String(t.dir || '').startsWith('out_') && tDep(t))
     .map(t => ({ ...t, m: toMin(tDep(t)) }))
     .sort((a, b) => a.m - b.m);
@@ -1483,13 +1513,14 @@ function updateNextTrainPulse() {
     $('pulseTrain').innerHTML = `<span>🚆 مواعيد القطارات في منوف</span><span style="color:var(--p)">الجدول ←</span>`;
     return;
   }
-  const todayOut = allOut.filter(t => t.m >= cur);
+  const todayOut = allOut.filter(t => t.m >= cur && (!isFri || !String(t.note || '').includes('الجمع')));
   if (todayOut.length) {
     const nx = todayOut[0], diff = nx.m - cur;
     const txt = diff === 0 ? 'يتحرك الآن' : diff < 60 ? `بعد ${diff} دقيقة` : `بعد ${Math.floor(diff / 60)} س و ${diff % 60} د`;
     $('pulseTrain').innerHTML = `<span>🚆 القطار القادم (<strong>${esc(SHORT_DIR[nx.dir])}</strong>): ${esc(fmtTrainTime(tDep(nx)))} · <strong>${txt}</strong></span><span style="color:var(--p)">الجدول ←</span>`;
   } else {
-    const nx = allOut[0];
+    const tomorrowIsFri = satIdx === 5;
+    const nx = allOut.find(t => !tomorrowIsFri || !String(t.note || '').includes('الجمع')) || allOut[0];
     $('pulseTrain').innerHTML = `<span>🚆 القطار القادم (<strong>${esc(SHORT_DIR[nx.dir])}</strong>): ${esc(fmtTrainTime(tDep(nx)))} · <strong>(غداً)</strong></span><span style="color:var(--p)">الجدول ←</span>`;
   }
 }
@@ -1707,9 +1738,11 @@ $('dealModal').onclick = e => { if (e.target.id === 'dealModal') closeBaseModal(
 
 $('oPhoto').onchange = e => {
   const f = e.target.files && e.target.files[0];
+  if (prevOfferUrl) { URL.revokeObjectURL(prevOfferUrl); prevOfferUrl = null; }
   if (!f || !f.type.startsWith('image/')) { offerPhoto = null; $('oPrev').innerHTML = ''; return; }
   offerPhoto = f;
-  $('oPrev').innerHTML = `<img src="${URL.createObjectURL(f)}" alt="" style="width:110px;height:110px;object-fit:cover;border-radius:14px">`;
+  prevOfferUrl = URL.createObjectURL(f);
+  $('oPrev').innerHTML = `<img src="${prevOfferUrl}" alt="" style="width:110px;height:110px;object-fit:cover;border-radius:14px">`;
 };
 $('closeOffer').onclick = () => closeBaseModal('offerModal');
 $('offerModal').onclick = e => { if (e.target.id === 'offerModal') closeBaseModal('offerModal'); };
@@ -1732,6 +1765,7 @@ $('oSave').onclick = async () => {
     });
     closeBaseModal('offerModal');
     $('oTitle').value = ''; $('oDiscount').value = ''; $('oDesc').value = '';
+    if (prevOfferUrl) { URL.revokeObjectURL(prevOfferUrl); prevOfferUrl = null; }
     offerPhoto = null; $('oPhoto').value = ''; $('oPrev').innerHTML = '';
     toast(isAdm ? 'تم نشر العرض ✅' : 'تم إرسال العرض وهيظهر بعد موافقة الإدارة 🔥');
   } catch (e) {
@@ -1787,10 +1821,14 @@ function renderTrains() {
   $('trainChips').innerHTML = Object.keys(DIR_LABEL).map(k =>
     `<button class="chip ${k === trainDir ? 'on' : ''}" data-tdir="${k}">${esc(SHORT_DIR[k])} ${k.startsWith('out') ? '←' : '→'}</button>`).join('');
   const list = TRAINS.filter(t => t.dir === trainDir).sort((a, b) => tDep(a).localeCompare(tDep(b)));
-  const now = new Date(), cur = now.getHours() * 60 + now.getMinutes();
-  let nextIdx = list.findIndex(t => tDep(t) && toMin(tDep(t)) >= cur);
+  const { cur, satIdx, isFri } = cairoNow();
+  let nextIdx = list.findIndex(t => tDep(t) && toMin(tDep(t)) >= cur && (!isFri || !String(t.note || '').includes('الجمع')));
   let isTomorrow = false;
-  if (nextIdx === -1 && list.length > 0) { nextIdx = 0; isTomorrow = true; }
+  if (nextIdx === -1 && list.length > 0) {
+    const tomorrowIsFri = satIdx === 5;
+    nextIdx = list.findIndex(t => tDep(t) && (!tomorrowIsFri || !String(t.note || '').includes('الجمع')));
+    if (nextIdx !== -1) isTomorrow = true;
+  }
   $('trainList').innerHTML = `<div class="ct" style="margin:6px 0 10px">${esc(DIR_LABEL[trainDir])}</div>` +
     (list.length ? list.map((t, i) => `
       <div class="card" style="padding:12px;margin-bottom:10px;${i === nextIdx ? 'border-color:var(--p)' : ''}">
@@ -1970,8 +2008,7 @@ const AZKAR_CATS = [
 let azActiveCat = null;
 
 function todayLocalStr() {
-  const d = new Date();
-  return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+  return cairoNow().dateStr;
 }
 function getAzProgress() {
   const today = todayLocalStr();
@@ -2034,7 +2071,7 @@ function renderPrayerBoxHtml(pData) {
     ['المغرب', pData.timings.Maghrib],
     ['العشاء', pData.timings.Isha]
   ];
-  const now = new Date(), cur = now.getHours() * 60 + now.getMinutes();
+  const { cur } = cairoNow();
   let nextIdx = list.findIndex(([, tm]) => toMin(String(tm).split(' ')[0]) > cur);
   if (nextIdx === -1) nextIdx = 0;
   return `<div class="az-prayer-card">
@@ -2158,6 +2195,7 @@ $('mShare').onclick = async () => {
   if (navigator.share) { try { await navigator.share({ title: b.name, text, url }); } catch (e) {} }
   else window.open(`https://wa.me/?text=${encodeURIComponent(text + '\n' + url)}`, '_blank');
 };
+
 /* ---------- الدخول والزائر ---------- */
 function setMode(m) {
   mode = m;
@@ -2170,7 +2208,7 @@ function setMode(m) {
 $('toggleAuth').onclick = () => setMode(mode === 'login' ? 'register' : 'login');
 
 $('forgotBtn').onclick = () => {
-  const p = $('phone').value.replace(/\D/g, '');
+  const p = cleanPhone($('phone').value);
   const msg = p
     ? `مرحباً إدارة تطبيق ${APP_NAME}، نسيت كلمة المرور لحسابي رقم: ${p}`
     : `مرحباً إدارة تطبيق ${APP_NAME}، نسيت كلمة المرور الخاصة بحسابي وأرجو المساعدة في استعادتها.`;
@@ -2179,7 +2217,7 @@ $('forgotBtn').onclick = () => {
 
 $('authForm').onsubmit = async e => {
   e.preventDefault();
-  const phone = $('phone').value.replace(/\D/g, ''), pass = $('password').value;
+  const phone = cleanPhone($('phone').value), pass = $('password').value;
   if (!PHONE_RE.test(phone)) return toast('رقم موبايل مصري صحيح (11 رقم)');
   if (pass.length < 6) return toast('كلمة المرور 6 خانات على الأقل');
   $('authBtn').disabled = true;
@@ -2294,16 +2332,16 @@ $('editNameBtn').onclick = async () => {
   if (!me || guest) return;
   const newName = prompt('اكتب اسمك الجديد:', profile?.name || '');
   if (!newName || !newName.trim() || newName.trim() === profile?.name) return;
-  const cleanName = newName.trim();
+  const cleanName = newName.trim().slice(0, 80);
   try {
     await updateDoc(doc(db, 'users', me.uid), { name: cleanName });
     profile.name = cleanName;
     renderProfileCard();
-    // تحديث الاسم في أنشطة المستخدم إذا كانت قواعد الأمان تسمح بذلك
-    if (myBiz.length) {
+    const pendingBiz = myBiz.filter(b => b.status === 'pending');
+    if (pendingBiz.length) {
       try {
         const batch = writeBatch(db);
-        myBiz.forEach(b => batch.update(doc(db, 'businesses', b.id), { ownerName: cleanName }));
+        pendingBiz.forEach(b => batch.update(doc(db, 'businesses', b.id), { ownerName: cleanName }));
         await batch.commit();
       } catch (e) {}
     }
@@ -2515,7 +2553,7 @@ function renderBrowse() {
   const cards = list.map(b => {
     const re = isRE(b);
     const del = b.type === 'delivery';
-    const open = !re && !del && isOpen(b.hours), ph = b.phone || b.ownerPhone || '', fav = favs.includes(b.id);
+    const open = !re && !del && isOpen(b.hours), ph = cleanPhone(b.phone || b.ownerPhone), fav = favs.includes(b.id);
     const rt = ratingOf(b.id), isDoc = b.type === 'doctor';
     const cover = b.thumb || b.imageUrl || '';
     const feLbl = b.type === 'doctor' ? 'دكتور<br>مميز'
@@ -2683,7 +2721,7 @@ $('mItems').onclick = e => {
 };
 $('mCartWa').onclick = () => {
   if (!curBiz) return;
-  const ph = curBiz.phone || curBiz.ownerPhone || '';
+  const ph = cleanPhone(curBiz.phone || curBiz.ownerPhone);
   if (!ph) return toast('لا يوجد رقم واتساب لهذا النشاط');
   const lines = []; let total = 0;
   Object.entries(cart).forEach(([idx, qv]) => {
@@ -2700,7 +2738,7 @@ $('mCartWa').onclick = () => {
 };
 $('mBookWa').onclick = () => {
   if (!curBiz) return;
-  const ph = curBiz.phone || curBiz.ownerPhone || '';
+  const ph = cleanPhone(curBiz.phone || curBiz.ownerPhone);
   if (!ph) return toast('لا يوجد رقم واتساب للعيادة');
   const pName = $('mBookName').value.trim() || profile?.name || 'مريض';
   const day = $('mBookDay').value;
@@ -2736,7 +2774,7 @@ function openModal(b) {
   const del = b.type === 'delivery';
   const isOwner = !!(me?.uid && b.ownerId === me.uid);
   if (!isOwner) trackStat(b.id, 'views');
-  const open = !re && !del && isOpen(b.hours), ph = b.phone || b.ownerPhone || '';
+  const open = !re && !del && isOpen(b.hours), ph = cleanPhone(b.phone || b.ownerPhone);
   const km = userPos ? dist(userPos.lat, userPos.lng, b.lat, b.lng) : null;
   $('mBadge').className = 'badge ' + (open ? 'ok' : '');
   $('mBadge').innerHTML = del ? '🛵 دليفري' : re ? `🏠 ${esc(b.category)}` : (open ? '<span class="dot"></span> مفتوح الآن' : '⚪ مغلق الآن');
@@ -2754,7 +2792,7 @@ function openModal(b) {
   } else $('mReFacts').classList.add('hidden');
 
   $('mDesc').textContent = b.desc || '';
-  $('mAddr').textContent = b.address + (b.landmark ? ' (بجوار ' + b.landmark + ')' : '');
+  $('mAddr').textContent = (b.address || '') + (b.landmark ? ' (بجوار ' + b.landmark + ')' : '');
   $('mLocBox').classList.toggle('hidden', del);
   $('mDist').textContent = km != null ? '🚗 ' + fmtDist(km) : '';
   $('mPriceBox').classList.toggle('hidden', re || !b.price);
@@ -2789,7 +2827,7 @@ function openModal(b) {
     const rem = nextOpenReminder(b.hours);
     $('mHoursNext').textContent = rem;
     $('mHoursNext').classList.toggle('hidden', !rem);
-    const todayIdx = (new Date().getDay() + 1) % 7;
+    const todayIdx = cairoNow().satIdx;
     $('mHours').innerHTML = (b.hours || []).map((h, i) => `
       <div class="lr ${i === todayIdx ? 'today' : ''}">
         <span>${esc(h.day)}${i === todayIdx ? ' <small style="color:var(--p)">(اليوم)</small>' : ''}</span>
@@ -2998,7 +3036,7 @@ $('addItem').onclick = () => {
 $('bizForm').onsubmit = async e => {
   e.preventDefault();
   if (!type) return toast('اختار نوع النشاط أولاً');
-  const d = type === 'doctor', re = type === 'real_estate', del = type === 'delivery', phone = $('bPhone').value.replace(/\D/g, '');
+  const d = type === 'doctor', re = type === 'real_estate', del = type === 'delivery', phone = cleanPhone($('bPhone').value);
   if (!PHONE_RE.test(phone)) return toast('رقم تواصل مصري صحيح (11 رقم)');
   if (d && !$('bSpec').value) return toast('اختار التخصص');
   if (d && $('bReg').value.trim().length < 3) return toast('اكتب رقم القيد بالنقابة');
@@ -3135,6 +3173,7 @@ async function startEdit(b, isAdminEdit = false) {
   });
   items = [...(b.items || [])]; renderItems();
 
+  if (prevPhotoUrl) { URL.revokeObjectURL(prevPhotoUrl); prevPhotoUrl = null; }
   pendingFile = null; removePhotos = false;
   $('bPhotos').value = ''; $('photoPrev').innerHTML = '';
   $('rmPhotos').checked = false;
@@ -3159,6 +3198,7 @@ async function startEdit(b, isAdminEdit = false) {
 }
 function cancelEdit() {
   editId = null; editOrigType = null; editOrigStatus = null; adminEditing = false; editOwnerId = null;
+  if (prevPhotoUrl) { URL.revokeObjectURL(prevPhotoUrl); prevPhotoUrl = null; }
   pendingFile = null; removePhotos = false;
   $('bizForm').reset(); items = []; renderItems();
   $('bCustomCat').value = ''; $('customCatF').classList.add('hidden');
@@ -3353,7 +3393,7 @@ function renderAdmin() {
         <p class="muted" style="margin:4px 0">${esc(r.text)}</p>
         <p class="muted">من: ${esc(r.reporterName || '')} · ${esc(r.reporterPhone || '')}</p>
         <div class="acts-w">
-          <a class="btn sm wa" target="_blank" href="https://wa.me/2${esc(r.reporterPhone)}">💬 المُبلِّغ</a>
+          <a class="btn sm wa" target="_blank" href="https://wa.me/2${cleanPhone(r.reporterPhone)}">💬 المُبلِّغ</a>
           <button class="btn sm" data-rdel="${r.id}">تم الحل ✓</button>
         </div></div>`).join('') : '';
   const aq = normAr(adminQ);
@@ -3368,15 +3408,16 @@ function renderAdmin() {
   });
   const cards = list.map(b => {
     const re = isRE(b);
+    const ph = cleanPhone(b.phone || b.ownerPhone);
     const reInfo = re ? `<p class="muted" style="font-size:12.5px">💰 ${fmtPrice(b.rePrice) || '—'} جنيه · 📐 ${esc(b.reArea || '—')} م² · 🛏️ ${esc(b.reRooms || '—')} غرف · ${reExpired(b) ? '⛔ منتهي' : '⏳ ينتهي ' + fd(b.expiresAt)}</p>` : '';
     return `<div class="card ${b.featured ? 'fe' : ''}">
     <div class="row"><div><h3 class="ct">${esc(b.name)}</h3>
-    <span class="muted">👤 ${esc(b.ownerName || '')} · 📞 ${esc(b.phone || b.ownerPhone || '')}</span></div>${badge(b.status)}</div>
+    <span class="muted">👤 ${esc(b.ownerName || '')} · 📞 ${esc(ph)}</span></div>${badge(b.status)}</div>
     <p style="color:var(--p);font-weight:700;font-size:13px;margin-top:6px">${b.type === 'doctor' ? 'طبيب (' + esc(b.specialty) + ')' : esc(b.category)}</p>
     ${reInfo}
     <p class="muted">${b.address ? '📍 ' + esc(b.address) + ' · ' : ''}📸 ${b.photoCount || 0} صورة</p>
     <div class="acts-w">
-      <a class="btn sm wa" target="_blank" href="https://wa.me/2${esc(b.phone || b.ownerPhone)}">💬 واتساب</a>
+      ${ph ? `<a class="btn sm wa" target="_blank" href="https://wa.me/2${ph}">💬 واتساب</a>` : ''}
       <button class="btn sm s" data-aedit="${b.id}">تعديل ✏️</button>
       ${b.type === 'doctor' ? `<button class="btn sm s" data-showreg="${b.id}">رقم القيد</button>` : ''}
       ${b.status === 'approved' ? `<button class="btn sm s" data-verify="${b.id}">${b.verified ? 'إلغاء التوثيق' : 'توثيق ✓'}</button>` : ''}
