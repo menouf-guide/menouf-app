@@ -6,11 +6,14 @@
 <title>منوف 360 — دليلك في منوف</title>
 <meta name="description" content="دليلك الكامل للدكاترة والمحلات والخدمات والعقارات ومواعيد القطارات في منوف">
 <meta property="og:type" content="website">
+<meta property="og:locale" content="ar_AR">
 <meta property="og:site_name" content="منوف 360">
 <meta property="og:url" content="https://menouf360.online/">
 <meta property="og:title" content="منوف 360 — دليلك في منوف">
 <meta property="og:description" content="دليلك الكامل للدكاترة والصيدليات والمحلات والخدمات والعقارات ومواعيد القطارات في منوف">
 <meta property="og:image" content="https://menouf360.online/icon-512.png">
+<meta property="og:image:secure_url" content="https://menouf360.online/icon-512.png">
+<meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="512">
 <meta property="og:image:height" content="512">
 <meta name="twitter:card" content="summary_large_image">
@@ -1272,6 +1275,7 @@ function fmtTrainTime(s) {
 }
 
 let trainDir = 'out_cairo', trainOn = false;
+
 /* ---------- البحث بالمرادفات ---------- */
 const normAr = s => String(s || '').toLowerCase()
   .replace(/[\u064B-\u065F\u0640]/g, '')
@@ -2313,9 +2317,9 @@ $('azkarModal').onclick = e => { if (e.target.id === 'azkarModal') closeBaseModa
 $('mShare').onclick = async () => {
   const b = curBiz; if (!b) return;
   const url = `${location.origin}${location.pathname}?biz=${b.id}`;
-  const text = `📍 ${b.name}\n${isRE(b) ? '🏠 ' + b.category : b.type === 'doctor' ? '🩺 ' + b.specialty : '🏷️ ' + b.category}${b.address ? '\n📌 ' + b.address : ''}\n🔗 التفاصيل على تطبيق ${APP_NAME}:`;
+  const text = `📍 ${b.name}\n${isRE(b) ? '🏠 ' + b.category : b.type === 'doctor' ? '🩺 ' + b.specialty : '🏷️ ' + b.category}${b.address ? '\n📌 ' + b.address : ''}\n🔗 التفاصيل على تطبيق ${APP_NAME}:\n`;
   if (navigator.share) { try { await navigator.share({ title: b.name, text, url }); } catch (e) {} }
-  else window.open(`https://wa.me/?text=${encodeURIComponent(text + '\n' + url)}`, '_blank');
+  else window.open(`https://wa.me/?text=${encodeURIComponent(text + url)}`, '_blank');
 };
 
 /* ---------- الدخول والزائر ---------- */
@@ -2471,9 +2475,9 @@ $('editNameBtn').onclick = async () => {
 };
 $('shareAppBtn').onclick = async () => {
   const url = `${location.origin}/`;
-  const text = `📍 تطبيق ${APP_NAME} — دليلك الشامل في منوف`;
+  const text = `📍 تطبيق ${APP_NAME} — دليلك الكامل في منوف\nدكاترة، صيدليات، محلات، خدمات، عقارات ومواعيد القطارات في مكان واحد.\n\nافتح التطبيق من هنا:\n`;
   if (navigator.share) { try { await navigator.share({ title: APP_NAME, text, url }); } catch (e) {} }
-  else window.open(`https://wa.me/?text=${encodeURIComponent(text + '\n' + url)}`, '_blank');
+  else window.open(`https://wa.me/?text=${encodeURIComponent(text + url)}`, '_blank');
 };
 
 /* ---------- حذف الحساب ---------- */
@@ -2672,6 +2676,8 @@ setInterval(flushStats, 60000);
 window.addEventListener('pagehide', flushStats);
 document.addEventListener('visibilitychange', () => { if (document.hidden) flushStats(); });
 
+const waBizUrl = (b, ph) => `https://wa.me/2${ph}?text=${encodeURIComponent(`مرحباً ${b.name || ''}، تواصلت معكم عبر تطبيق ${APP_NAME} 📍`)}`;
+
 function renderBrowse() {
   const list = filtered();
   $('countLabel').textContent = list.length ? `(${list.length} نشاط)` : '';
@@ -2723,7 +2729,7 @@ function renderBrowse() {
           </div>
           ${ph ? `<div class="biz-btns">
             <a class="btn g" href="tel:${ph}" data-track-call="${b.id}">📞 اتصال</a>
-            <a class="btn wa" target="_blank" href="https://wa.me/2${ph}" data-track-wa="${b.id}">💬 واتساب</a>
+            <a class="btn wa" target="_blank" href="${waBizUrl(b, ph)}" data-track-wa="${b.id}">💬 واتساب</a>
           </div>` : ''}
         </div>
         ${cover ? `<div class="biz-thumb-wrap"><img class="biz-thumb" src="${cover}" loading="lazy" alt="" onerror="this.parentElement.remove()"></div>` : ''}
@@ -2964,7 +2970,7 @@ function openModal(b) {
   }
 
   $('mActs').innerHTML = `
-    ${ph ? `<a class="btn wa" target="_blank" href="https://wa.me/2${ph}" data-track-wa="${b.id}">💬 واتساب</a><a class="btn" href="tel:${ph}" data-track-call="${b.id}">📞 اتصال</a>` : ''}
+    ${ph ? `<a class="btn wa" target="_blank" href="${waBizUrl(b, ph)}" data-track-wa="${b.id}">💬 واتساب</a><a class="btn" href="tel:${ph}" data-track-call="${b.id}">📞 اتصال</a>` : ''}
     ${b.lat ? `<a class="btn s" style="grid-column:span 2" target="_blank" href="https://www.google.com/maps?q=${b.lat},${b.lng}">📍 فتح في خرائط جوجل</a>` : ''}
     ${isOwner ? '' : '<button class="btn s" data-report style="grid-column:span 2">⚠️ إبلاغ عن خطأ في البيانات</button>'}`;
   renderRatings(b);
@@ -3636,9 +3642,8 @@ $('adminList').onclick = async e => {
 
 /* ---------- التواصل مع الإدارة ---------- */
 $('contactBtn').onclick = () => {
-  const names = myBiz.map(b => b.name).join('، ') || 'لا يوجد نشاط مسجل';
-  const who = guest ? `زائر من ${APP_NAME}` : `${profile.name} (${profile.phone})`;
-  const msg = `مرحباً، معك ${who}.\nالنشاط/الخدمة: ${names}`;
+  const who = guest ? `زائر من تطبيق ${APP_NAME}` : `${profile?.name || 'مستخدم'} (${profile?.phone || ''})`;
+  const msg = `مرحباً إدارة تطبيق ${APP_NAME}، معك ${who}.\n`;
   window.open(`https://wa.me/2${ADMIN_PHONE}?text=${encodeURIComponent(msg)}`, '_blank');
 };
 
