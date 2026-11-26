@@ -466,6 +466,361 @@ textarea{min-height:85px;resize:vertical}
 .img-zoom-modal{position:fixed;inset:0;background:rgba(0,0,0,.92);display:flex;align-items:center;justify-content:center;padding:16px;z-index:85}
 .img-zoom-modal img{max-width:100%;max-height:86vh;object-fit:contain;border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.5)}
 .img-zoom-close{position:absolute;top:16px;left:16px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.16);color:#fff;font-size:26px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.25)}
+
+/* =========================================================
+   MENOUF 360 — PREMIUM CREAM / EMERALD / GOLD SKIN
+   Visual-only overrides. Existing HTML, IDs and JavaScript
+   remain unchanged.
+   ========================================================= */
+:root{
+  --bg:#fffdf3;
+  --bgGlow:rgba(16,120,80,.09);
+  --card:#ffffff;
+  --surf:#ffffff;
+  --inp:#ffffff;
+  --chip:#ffffff;
+  --row:#f7f4e7;
+  --glass:rgba(255,255,255,.94);
+  --sheet:#ffffff;
+  --nav:rgba(255,255,255,.97);
+  --hdr:linear-gradient(180deg,#f4f8ed 0%,#fffdf3 76%,#fff9e9 100%);
+  --pulse:#ffffff;
+  --txt:#102f24;
+  --txt2:#234b3a;
+  --txt3:#536b5e;
+  --m:#78877e;
+  --p:#08613f;
+  --p2:#128052;
+  --gold:#e9a900;
+  --gold-soft:#fff3c4;
+  --b:rgba(8,97,63,.10);
+  --b2:rgba(8,97,63,.19);
+  --bg2:rgba(233,169,0,.35);
+  --dash:rgba(8,97,63,.16);
+  --pg:linear-gradient(135deg,#08784d 0%,#075536 100%);
+  --pglow:rgba(8,97,63,.18);
+  --eg:linear-gradient(135deg,#20bd69,#087c4b);
+  --gg:linear-gradient(135deg,#ffe36a,#e6a600);
+  --shadow:0 7px 22px rgba(20,65,43,.075);
+}
+body{
+  background:
+    radial-gradient(ellipse at 50% -8%,rgba(25,128,82,.10),transparent 44%),
+    linear-gradient(180deg,#fffef8 0%,#fbf8eb 100%);
+}
+.wrap{padding-top:12px}
+.hero-hdr{
+  background:linear-gradient(180deg,#f1f7ec 0%,#fffdf4 76%,#fff9e8 100%);
+  border-bottom:0;
+  padding-top:12px;
+  padding-bottom:19px;
+}
+.hero-hdr::after{
+  height:4px;
+  background:linear-gradient(90deg,#087447,#f1bd26,#087447);
+  box-shadow:0 2px 8px rgba(8,97,63,.18);
+}
+.hdr-greet{
+  color:#087047;
+  background:rgba(255,255,255,.92);
+  border-color:rgba(8,97,63,.12);
+  box-shadow:0 3px 12px rgba(20,65,43,.06);
+}
+.ib{
+  background:#fff;
+  border-color:rgba(8,97,63,.10);
+  box-shadow:0 4px 12px rgba(20,65,43,.08);
+}
+.share-btn{
+  background:#fff;
+  border-color:rgba(8,97,63,.13);
+}
+.logo{
+  border:3px solid #e9ad13;
+  box-shadow:0 7px 20px rgba(8,97,63,.16);
+}
+.hero-title h1{color:#123b2b}
+.hero-title h1 span{color:#08784d}
+.azkar-hero-card{
+  border:2px solid #e9b51e;
+  box-shadow:0 7px 18px rgba(4,36,22,.20),inset 0 0 12px rgba(250,204,21,.12);
+}
+.weather-bar{
+  border:1px solid rgba(8,97,63,.07);
+  border-radius:22px;
+  padding:12px 8px;
+  box-shadow:0 5px 18px rgba(20,65,43,.07);
+}
+.pulse-train{
+  border:1px solid rgba(8,97,63,.08);
+  border-radius:18px;
+  background:#fff;
+  padding:11px 14px;
+  box-shadow:0 5px 16px rgba(20,65,43,.055);
+}
+.search{
+  background:#fff;
+  border:1px solid rgba(8,97,63,.08);
+  border-radius:999px;
+  min-height:54px;
+  box-shadow:0 5px 18px rgba(20,65,43,.07);
+}
+.search input{font-size:14.5px}
+.mic-btn{background:#eef6e9}
+.tools{padding-top:5px}
+.tool{
+  background:#fff;
+  border:1px solid rgba(8,97,63,.09);
+  box-shadow:0 3px 10px rgba(20,65,43,.045);
+}
+.tool.active{
+  background:linear-gradient(135deg,#08784d,#075536);
+  border-color:#08784d;
+  box-shadow:0 4px 12px rgba(8,97,63,.18);
+}
+.sec{margin-top:17px;margin-bottom:11px}
+.sec-title.gold-line::after{
+  height:3px;
+  background:linear-gradient(90deg,#f6cf48,#df9e00);
+}
+.sec-title.green-line::after{
+  height:3px;
+  background:linear-gradient(90deg,#0b8754,#0b5e3e);
+}
+.cat{
+  min-width:82px;
+  min-height:112px;
+  border-radius:22px;
+  background:#fff;
+  border:1px solid rgba(8,97,63,.055);
+  box-shadow:0 6px 18px rgba(20,65,43,.07);
+  color:#234b3a;
+}
+.ci{
+  width:48px;height:48px;
+  border-radius:50%;
+  background:#f5f5e8;
+  color:#08784d;
+}
+.cat.on{
+  background:linear-gradient(180deg,#f5f9ee,#eaf3e7);
+  border:1.5px solid #08784d;
+  color:#075d3d;
+}
+.cat.on .ci{
+  background:linear-gradient(135deg,#0c8b58,#075536);
+  color:#fff;
+  box-shadow:0 5px 14px rgba(8,97,63,.20);
+}
+.deal-card{
+  min-width:205px;
+  max-width:225px;
+  border:1px solid rgba(8,97,63,.08);
+  border-radius:22px;
+  box-shadow:0 7px 20px rgba(20,65,43,.09);
+}
+.deal-media{height:112px}
+.deal-badge{
+  background:linear-gradient(135deg,#ffe76b,#f2b51c);
+  color:#173526;
+  border:1px solid rgba(255,255,255,.65);
+}
+.deal-body{padding:11px 12px 13px}
+.deal-btn{
+  background:linear-gradient(135deg,#08784d,#075536);
+  border-radius:999px;
+  box-shadow:0 4px 12px rgba(8,97,63,.16);
+}
+.card{
+  background:#fff;
+  border:1px solid rgba(8,97,63,.075);
+  border-radius:23px;
+  padding:14px;
+  box-shadow:0 7px 20px rgba(20,65,43,.075);
+}
+.card.fe{
+  border:1.5px solid #e8bd37;
+  background:linear-gradient(110deg,#fff0a9 0%,#fff9dc 43%,#fff 100%);
+  box-shadow:0 7px 20px rgba(205,153,16,.14);
+}
+.fe-ribbon{
+  background:linear-gradient(180deg,#d99d24,#b97913);
+  box-shadow:0 4px 10px rgba(180,120,20,.23);
+}
+.biz-ico{
+  background:#f4f6e9;
+  border-color:rgba(8,97,63,.08);
+  color:#08784d;
+  border-radius:14px;
+}
+.biz-thumb-wrap{
+  border:1px solid rgba(8,97,63,.09);
+  border-radius:17px;
+}
+.fav{
+  background:rgba(255,255,255,.94);
+  border:1px solid rgba(8,97,63,.10);
+}
+.name{color:#123b2b}
+.spec,.dist{color:#08784d}
+.re-facts span{
+  background:#f6f6e9;
+  border-color:rgba(8,97,63,.08);
+}
+.btn{
+  background:linear-gradient(135deg,#08784d,#075536);
+  border-radius:999px;
+  box-shadow:0 5px 14px rgba(8,97,63,.16);
+}
+.btn.wa{
+  background:linear-gradient(135deg,#22bd68,#087c4b);
+}
+.btn.s{
+  background:#f4f6e9;
+  color:#08613f;
+  border-color:rgba(8,97,63,.13);
+}
+.badge.ok{
+  color:#087047;
+  background:#e5f8e9;
+  border-color:rgba(22,163,74,.18);
+}
+.nav{
+  background:rgba(255,255,255,.97);
+  border:1px solid rgba(8,97,63,.08);
+  border-bottom:0;
+  box-shadow:0 -7px 26px rgba(20,65,43,.09);
+  backdrop-filter:blur(16px);
+}
+.nav .tb.on{color:#08784d}
+.nav .tb.on::after{background:#08784d}
+.fab{
+  background:linear-gradient(135deg,#20bd69,#087447);
+  border:3px solid #efc12c;
+  box-shadow:0 8px 20px rgba(8,97,63,.25);
+}
+.fabwrap span{color:#123b2b}
+.sheet{
+  border-color:rgba(8,97,63,.12);
+  box-shadow:0 -10px 35px rgba(20,65,43,.12);
+}
+input,select,textarea{
+  border-color:rgba(8,97,63,.14);
+  border-radius:15px;
+}
+input:focus,select:focus,textarea:focus{
+  border-color:#08784d;
+  box-shadow:0 0 0 3px rgba(8,97,63,.12);
+}
+@media(max-width:400px){
+  .cat{min-width:76px;min-height:105px}
+  .deal-card{min-width:190px}
+  .card{padding:12px;border-radius:21px}
+  .biz-body{gap:10px}
+  .biz-thumb-wrap{width:108px}
+}
+/* Preserve the existing dark-mode option and its contrast. */
+:root[data-theme="dark"]{
+  --bg:#080d0b;
+  --bgGlow:rgba(16,185,129,.10);
+  --card:#151d19;
+  --surf:#121a16;
+  --inp:#121a16;
+  --chip:#151d19;
+  --row:#1c2821;
+  --glass:rgba(18,27,22,.94);
+  --sheet:#121a16;
+  --nav:rgba(15,23,19,.97);
+  --hdr:linear-gradient(180deg,#103b2b 0%,#0b1711 100%);
+  --pulse:#151d19;
+  --txt:#f4f8f4;
+  --txt2:#d8e7dc;
+  --txt3:#b3c8ba;
+  --m:#91a69a;
+  --p:#35c982;
+  --p2:#20a96b;
+  --gold:#facc15;
+  --gold-soft:rgba(250,204,21,.15);
+  --b:rgba(255,255,255,.08);
+  --b2:rgba(255,255,255,.13);
+  --bg2:rgba(250,204,21,.30);
+  --dash:rgba(255,255,255,.10);
+  --pg:linear-gradient(135deg,#168b5b,#075536);
+  --pglow:rgba(34,197,94,.22);
+  --eg:linear-gradient(135deg,#22c55e,#15803d);
+  --shadow:0 8px 26px rgba(0,0,0,.25);
+}
+:root[data-theme="dark"] body{
+  background:radial-gradient(circle at 50% 0%,rgba(16,185,129,.10),transparent 55%),#080d0b;
+}
+:root[data-theme="dark"] .hero-hdr{
+  background:linear-gradient(180deg,#103b2b 0%,#0b1711 100%);
+}
+:root[data-theme="dark"] .card.fe{
+  background:linear-gradient(110deg,rgba(234,179,8,.24),rgba(234,179,8,.10) 50%,#151d19 100%);
+  border-color:rgba(250,204,21,.58);
+}
+:root[data-theme="dark"] .cat,
+:root[data-theme="dark"] .deal-card,
+:root[data-theme="dark"] .weather-bar,
+:root[data-theme="dark"] .pulse-train,
+:root[data-theme="dark"] .search,
+:root[data-theme="dark"] .tool,
+:root[data-theme="dark"] .nav{
+  background:var(--card);
+  color:var(--txt);
+  border-color:var(--b);
+}
+:root[data-theme="dark"] .cat.on{
+  background:rgba(34,197,94,.12);
+  border-color:var(--p);
+  color:var(--p);
+}
+:root[data-theme="dark"] .ci,
+:root[data-theme="dark"] .biz-ico,
+:root[data-theme="dark"] .re-facts span{
+  background:var(--row);
+  color:var(--p);
+  border-color:var(--b);
+}
+:root[data-theme="dark"] .name,
+:root[data-theme="dark"] .hero-title h1,
+:root[data-theme="dark"] .fabwrap span{
+  color:var(--txt);
+}
+:root[data-theme="dark"] .hdr-greet,
+:root[data-theme="dark"] .ib,
+:root[data-theme="dark"] .share-btn{
+  background:var(--glass);
+  color:var(--txt);
+  border-color:var(--b);
+}
+:root[data-theme="dark"] .btn.s{
+  background:var(--row);
+  color:var(--p);
+  border-color:var(--b2);
+}
+
+
+/* تأكيد الخروج من التطبيق */
+.exit-confirm-backdrop{
+  position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;
+  padding:22px;background:rgba(0,0,0,.68);backdrop-filter:blur(5px);
+}
+.exit-confirm-backdrop.hidden{display:none!important}
+.exit-confirm-card{
+  width:min(100%,360px);padding:24px 20px;border-radius:24px;text-align:center;
+  background:var(--card,#fff);color:var(--txt,#17211b);border:1px solid var(--b,rgba(0,0,0,.12));
+  box-shadow:0 22px 70px rgba(0,0,0,.35);direction:rtl;
+}
+.exit-confirm-icon{font-size:36px;margin-bottom:8px}
+.exit-confirm-card h3{font-size:21px;font-weight:900;margin:0 0 8px}
+.exit-confirm-card p{font-size:14px;line-height:1.8;color:var(--m,#68736d);margin:0 0 20px}
+.exit-confirm-actions{display:flex;gap:10px}
+.exit-confirm-actions button{flex:1;min-height:46px;border:0;border-radius:14px;font:inherit;font-weight:800;cursor:pointer}
+.exit-stay-btn{background:var(--p,#16a34a);color:#fff}
+.exit-leave-btn{background:var(--row,#eef2ee);color:var(--txt,#17211b);border:1px solid var(--b,rgba(0,0,0,.12))!important}
+
 </style>
 <script>
 let dp=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;});
@@ -480,6 +835,19 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
 </script>
 
 <div id="toast" class="toast"></div>
+
+<div id="exitConfirm" class="exit-confirm-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="exitConfirmTitle">
+  <div class="exit-confirm-card">
+    <div class="exit-confirm-icon" aria-hidden="true">🚪</div>
+    <h3 id="exitConfirmTitle">الخروج من منوف 360؟</h3>
+    <p>هل أنت متأكد إنك عايز تخرج من التطبيق؟</p>
+    <div class="exit-confirm-actions">
+      <button type="button" class="exit-stay-btn" id="stayInAppBtn">البقاء في التطبيق</button>
+      <button type="button" class="exit-leave-btn" id="leaveAppBtn">خروج</button>
+    </div>
+  </div>
+</div>
+
 
 <!-- الدخول -->
 <section id="authView" class="hidden">
@@ -1037,6 +1405,24 @@ function closeImgZoom() {
     setTimeout(() => { if (skipPop > 0) skipPop = 0; }, 300);
   }
 }
+let exitDialogOpen = false;
+let exitConfirmed = false;
+
+function pushExitGuard() {
+  try { history.pushState({ ...(history.state || {}), menoufExitGuard: true }, ''); } catch (e) {}
+}
+function showExitConfirm() {
+  exitDialogOpen = true;
+  $('exitConfirm').classList.remove('hidden');
+}
+function hideExitConfirm() {
+  exitDialogOpen = false;
+  $('exitConfirm').classList.add('hidden');
+}
+
+// نضيف نقطة رجوع داخلية حتى نعرض تأكيدًا بدل الخروج المفاجئ من الصفحة الرئيسية.
+pushExitGuard();
+
 window.addEventListener('popstate', () => {
   if (skipPop > 0) { skipPop--; return; }
   if (!$('imgModal').classList.contains('hidden')) {
@@ -1044,8 +1430,33 @@ window.addEventListener('popstate', () => {
     $('zoomImg').src = '';
     return;
   }
-  BASE_MODALS.forEach(m => $(m).classList.add('hidden'));
+  const modalIsOpen = BASE_MODALS.some(m => !$(m).classList.contains('hidden'));
+  if (modalIsOpen) {
+    BASE_MODALS.forEach(m => $(m).classList.add('hidden'));
+    return;
+  }
+  if (exitConfirmed) {
+    exitConfirmed = false;
+    return;
+  }
+  if (exitDialogOpen) {
+    hideExitConfirm();
+    pushExitGuard();
+    return;
+  }
+  showExitConfirm();
+  pushExitGuard();
 });
+
+$('stayInAppBtn').onclick = hideExitConfirm;
+$('leaveAppBtn').onclick = () => {
+  hideExitConfirm();
+  exitConfirmed = true;
+  try { history.back(); } catch (e) { exitConfirmed = false; }
+};
+$('exitConfirm').onclick = e => {
+  if (e.target.id === 'exitConfirm') hideExitConfirm();
+};
 $('closeImg').onclick = closeImgZoom;
 $('imgModal').onclick = e => { if (e.target.id === 'imgModal') closeImgZoom(); };
 
