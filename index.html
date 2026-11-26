@@ -963,6 +963,12 @@ const DAY_MS = 86400000;
 const WEATHER_TTL = 3 * 60 * 60 * 1000;
 const BIZ_VER_KEY = 'menouf_biz_ver';
 const BIZ_TS_KEY = 'menouf_biz_ts';
+const OFFERS_VER_KEY = 'menouf_offers_ver';
+const OFFERS_TS_KEY = 'menouf_offers_ts';
+const OFFERS_EMPTY_KEY = 'menouf_offers_empty';
+const ANN_VER_KEY = 'menouf_ann_ver';
+const ANN_TS_KEY = 'menouf_ann_ts';
+const ANN_EMPTY_KEY = 'menouf_ann_empty';
 const BIZ_MAX_AGE = 7 * DAY_MS;
 const tsMs = x => x?.toMillis?.() ?? 0;
 const fd = ms => ms ? new Date(ms).toLocaleString('ar-EG') : '';
@@ -1266,7 +1272,6 @@ function fmtTrainTime(s) {
 }
 
 let trainDir = 'out_cairo', trainOn = false;
-// === نهاية الجزء الأول — الصق الجزء الثاني هنا مباشرة 
 /* ---------- البحث بالمرادفات ---------- */
 const normAr = s => String(s || '').toLowerCase()
   .replace(/[\u064B-\u065F\u0640]/g, '')
@@ -1418,7 +1423,7 @@ $('rmPhotos').onchange = e => {
 let me = null, profile = null, unsubs = [], guest = false, mode = 'login';
 let approved = [], myBiz = [], allBiz = [], reports = [], reviews = [], notifs = [], announces = [], offers = [];
 let myStats = {}, statsLoaded = false;
-let loadingPage = false, deepHandled = false, dirtyBizVer = false;
+let loadingPage = false, deepHandled = false, dirtyBizVer = false, publicMeta = null;
 let userCount = null, type = null, items = [], browseCat = 'الكل', browseSub = 'الكل', q = '', adminQ = '';
 let editId = null, editOrigType = null, editOrigStatus = null, adminEditing = false, adminFilter = 'pending';
 let map = null, marker = null, bMap = null, bMarkers = [], userMapMarker = null, curBiz = null, cart = {};
@@ -1525,6 +1530,7 @@ function updateNextTrainPulse() {
   }
 }
 $('pulseTrain').onclick = () => { if (!trainOn) $('fTrain').click(); };
+setInterval(updateNextTrainPulse, 60000);
 
 /* ---------- البحث الصوتي ---------- */
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -1547,31 +1553,58 @@ if (SR) {
   };
 }
 
-/* ---------- كاش الأنشطة الذكي ---------- */
-async function bumpBizVersion() {
+/* ---------- كاش البيانات الذكي (الأنشطة + العروض + الإعلانات) ---------- */
+async function fetchPublicMeta(force = false) {
+  if (publicMeta && !force) return publicMeta;
+  try {
+    const snap = await getDocFromServer(doc(db, 'appMeta', 'public'));
+    publicMeta = snap.exists() ? snap.data() : {};
+  } catch (e) {
+    publicMeta = publicMeta || {};
+  }
+  return publicMeta;
+}
+
+async function bumpMetaFields(fields) {
   try {
     const v = Date.now();
-    await setDoc(doc(db, 'appMeta', 'public'), { bizVer: v }, { merge: true });
-    localStorage.setItem(BIZ_VER_KEY, String(v));
-    localStorage.setItem(BIZ_TS_KEY, String(v));
-    dirtyBizVer = false;
-    $('pubVerBar')?.classList.add('hidden');
+    const upd = {};
+    fields.forEach(f => { upd[f] = v; });
+    await setDoc(doc(db, 'appMeta', 'public'), upd, { merge: true });
+    publicMeta = { ...(publicMeta || {}), ...upd };
+    const ts = String(v);
+    if (fields.includes('bizVer')) {
+      localStorage.setItem(BIZ_VER_KEY, ts);
+      localStorage.setItem(BIZ_TS_KEY, ts);
+      dirtyBizVer = false;
+      $('pubVerBar')?.classList.add('hidden');
+    }
+    if (fields.includes('offersVer')) {
+      localStorage.setItem(OFFERS_VER_KEY, ts);
+      localStorage.setItem(OFFERS_TS_KEY, ts);
+    }
+    if (fields.includes('annVer')) {
+      localStorage.setItem(ANN_VER_KEY, ts);
+      localStorage.setItem(ANN_TS_KEY, ts);
+    }
   } catch (e) {}
 }
+const bumpBizVersion = () => bumpMetaFields(['bizVer']);
 
 function markBizDirty() {
   dirtyBizVer = true;
   $('pubVerBar')?.classList.remove('hidden');
 }
 
-async function loadApproved(forceServer = false) {
+async function loadApproved(forceServer = false, meta = null) {
   if (loadingPage) return;
   loadingPage = true;
   renderBrowse();
   try {
     const qy = query(collection(db, 'businesses'), where('status', '==', 'approved'), orderBy('createdAt', 'desc'));
     let s = null;
-    let fetchedServerVer = null;
+    const m = meta || await fetchPublicMeta(forceServer);
+    const serverVer = String(m.bizVer || 'v0');
 
     if (!forceServer) {
       let localVer = null, lastTs = 0;
@@ -1580,38 +1613,31 @@ async function loadApproved(forceServer = false) {
         lastTs = Number(localStorage.getItem(BIZ_TS_KEY) || 0);
       } catch (e) {}
 
-      const cacheFresh = localVer && (Date.now() - lastTs) < BIZ_MAX_AGE;
+      const cacheFresh = localVer && localVer === serverVer && (Date.now() - lastTs) < BIZ_MAX_AGE;
       if (cacheFresh) {
         try {
-          const meta = await getDocFromServer(doc(db, 'appMeta', 'public'));
-          fetchedServerVer = meta.exists() ? String(meta.data().bizVer || 'v0') : 'v0';
-          if (fetchedServerVer === localVer) {
-            const cached = await getDocsFromCache(qy);
-            if (!cached.empty) s = cached;
-          }
-        } catch (err) {
-          try {
-            const cached = await getDocsFromCache(qy);
-            if (!cached.empty) s = cached;
-          } catch (e) {}
-        }
+          const cached = await getDocsFromCache(qy);
+          if (!cached.empty) s = cached;
+        } catch (e) {}
       }
     }
 
     if (!s) {
-      let serverVer = fetchedServerVer;
-      if (!serverVer) {
-        serverVer = 'v0';
-        try {
-          const meta = await getDocFromServer(doc(db, 'appMeta', 'public'));
-          if (meta.exists() && meta.data().bizVer) serverVer = String(meta.data().bizVer);
-        } catch (e) {}
-      }
-      s = await getDocsFromServer(qy);
       try {
-        localStorage.setItem(BIZ_VER_KEY, serverVer);
-        localStorage.setItem(BIZ_TS_KEY, String(Date.now()));
-      } catch (e) {}
+        s = await getDocsFromServer(qy);
+        try {
+          localStorage.setItem(BIZ_VER_KEY, serverVer);
+          localStorage.setItem(BIZ_TS_KEY, String(Date.now()));
+        } catch (e) {}
+      } catch (serverErr) {
+        try {
+          const cached = await getDocsFromCache(qy);
+          if (!cached.empty) s = cached;
+          else throw serverErr;
+        } catch (e) {
+          throw serverErr;
+        }
+      }
     }
 
     approved = s.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -1630,6 +1656,94 @@ async function loadApproved(forceServer = false) {
     loadingPage = false;
     renderBrowse();
   }
+}
+
+async function loadOffers(forceServer = false, meta = null) {
+  try {
+    const qy = query(collection(db, 'offers'), where('status', '==', 'approved'), limit(25));
+    let s = null;
+    const m = meta || await fetchPublicMeta(forceServer);
+    const serverVer = String(m.offersVer || 'v0');
+
+    if (!forceServer) {
+      let localVer = null, lastTs = 0, wasEmpty = false;
+      try {
+        localVer = localStorage.getItem(OFFERS_VER_KEY);
+        lastTs = Number(localStorage.getItem(OFFERS_TS_KEY) || 0);
+        wasEmpty = localStorage.getItem(OFFERS_EMPTY_KEY) === '1';
+      } catch (e) {}
+      if (localVer === serverVer && (Date.now() - lastTs) < BIZ_MAX_AGE) {
+        try {
+          const cached = await getDocsFromCache(qy);
+          if (!cached.empty || wasEmpty) s = cached;
+        } catch (e) {}
+      }
+    }
+
+    if (!s) {
+      try {
+        s = await getDocsFromServer(qy);
+        try {
+          localStorage.setItem(OFFERS_VER_KEY, serverVer);
+          localStorage.setItem(OFFERS_TS_KEY, String(Date.now()));
+          localStorage.setItem(OFFERS_EMPTY_KEY, s.empty ? '1' : '0');
+        } catch (e) {}
+      } catch (err) {
+        try { s = await getDocsFromCache(qy); } catch (e) {}
+      }
+    }
+
+    if (s) {
+      offers = s.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderDeals();
+    }
+  } catch (e) {}
+}
+
+async function loadAnnouncements(forceServer = false, meta = null) {
+  if (guest || !me?.uid) return;
+  try {
+    const qy = query(collection(db, 'announcements'), orderBy('createdAt', 'desc'), limit(10));
+    let s = null, fromServer = false;
+    const m = meta || await fetchPublicMeta(forceServer);
+    const serverVer = String(m.annVer || 'v0');
+
+    if (!forceServer) {
+      let localVer = null, lastTs = 0, wasEmpty = false;
+      try {
+        localVer = localStorage.getItem(ANN_VER_KEY);
+        lastTs = Number(localStorage.getItem(ANN_TS_KEY) || 0);
+        wasEmpty = localStorage.getItem(ANN_EMPTY_KEY) === '1';
+      } catch (e) {}
+      if (localVer === serverVer && (Date.now() - lastTs) < BIZ_MAX_AGE) {
+        try {
+          const cached = await getDocsFromCache(qy);
+          if (!cached.empty || wasEmpty) s = cached;
+        } catch (e) {}
+      }
+    }
+
+    if (!s) {
+      try {
+        s = await getDocsFromServer(qy);
+        fromServer = true;
+        try {
+          localStorage.setItem(ANN_VER_KEY, serverVer);
+          localStorage.setItem(ANN_TS_KEY, String(Date.now()));
+          localStorage.setItem(ANN_EMPTY_KEY, s.empty ? '1' : '0');
+        } catch (e) {}
+      } catch (err) {
+        try { s = await getDocsFromCache(qy); } catch (e) {}
+      }
+    }
+
+    if (s) {
+      const list = s.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => tsMs(b.createdAt) - tsMs(a.createdAt));
+      if (fromServer && list.length && tsMs(list[0].createdAt) > lastAnnSeen) toast('📢 ' + list[0].title);
+      announces = list;
+      updateBell();
+    }
+  } catch (e) {}
 }
 
 let reviewsLoadedAll = false;
@@ -1656,10 +1770,8 @@ async function loadReviewsOnce() {
   } catch (e) {}
 }
 
-function listenOffers() {
-  const isAdm = profile?.role === 'admin';
-  const qy = isAdm ? collection(db, 'offers') : query(collection(db, 'offers'), where('status', '==', 'approved'), limit(25));
-  return onSnapshot(qy, s => {
+function listenOffersAdmin() {
+  return onSnapshot(collection(db, 'offers'), s => {
     offers = s.docs.map(d => ({ id: d.id, ...d.data() }));
     renderDeals(); renderAdminOffers(); renderAdminStats();
   }, () => {});
@@ -1763,6 +1875,7 @@ $('oSave').onclick = async () => {
       status: isAdm ? 'approved' : 'pending',
       createdAt: serverTimestamp()
     });
+    if (isAdm) await bumpMetaFields(['offersVer']);
     closeBaseModal('offerModal');
     $('oTitle').value = ''; $('oDiscount').value = ''; $('oDesc').value = '';
     if (prevOfferUrl) { URL.revokeObjectURL(prevOfferUrl); prevOfferUrl = null; }
@@ -1799,8 +1912,16 @@ function renderAdminOffers() {
 $('adminOffersBox').onclick = async e => {
   const appB = e.target.closest('[data-oapp]'), delB = e.target.closest('[data-odel]');
   try {
-    if (appB) { await updateDoc(doc(db, 'offers', appB.dataset.oapp), { status: 'approved' }); toast('تم نشر العرض 🔥'); }
-    if (delB && confirm('حذف العرض؟')) { await deleteDoc(doc(db, 'offers', delB.dataset.odel)); toast('تم الحذف'); }
+    if (appB) {
+      await updateDoc(doc(db, 'offers', appB.dataset.oapp), { status: 'approved' });
+      await bumpMetaFields(['offersVer']);
+      toast('تم نشر العرض 🔥');
+    }
+    if (delB && confirm('حذف العرض؟')) {
+      await deleteDoc(doc(db, 'offers', delB.dataset.odel));
+      await bumpMetaFields(['offersVer']);
+      toast('تم الحذف');
+    }
   } catch (err) { toast('تعذر التنفيذ'); }
 };
 $('delExpiredOffersBtn').onclick = async () => {
@@ -1812,6 +1933,7 @@ $('delExpiredOffersBtn').onclick = async () => {
     const batch = writeBatch(db);
     expired.forEach(o => batch.delete(doc(db, 'offers', o.id)));
     await batch.commit();
+    await bumpMetaFields(['offersVer']);
     toast(`تم حذف ${expired.length} عرض منتهي 🧹`);
   } catch (err) { toast('تعذر حذف العروض المنتهية'); }
 };
@@ -2252,11 +2374,11 @@ async function enterGuest() {
   $('logoutBtn').onclick = goToAuth;
   initPulse();
   unsubs.forEach(u => u()); unsubs = [];
-  unsubs.push(listenOffers());
   renderTrains(); updateNextTrainPulse();
   buildCats(); buildSubCats(); updateDynamicTools(); buildTypeChips(); buildHours();
   currentTab = 'browse'; switchTab('browse');
-  await loadApproved();
+  const meta = await fetchPublicMeta();
+  await Promise.all([loadApproved(false, meta), loadOffers(false, meta)]);
 }
 
 $('guestBtn').onclick = enterGuest;
@@ -2264,7 +2386,7 @@ $('logoutBtn').onclick = () => signOut(auth);
 
 onAuthStateChanged(auth, async user => {
   unsubs.forEach(u => u()); unsubs = [];
-  myStats = {}; statsLoaded = false; userCount = null;
+  myStats = {}; statsLoaded = false; userCount = null; publicMeta = null;
   if (!user) {
     if (guest) return;
     if (deepBizId && !deepHandled) { enterGuest(); return; }
@@ -2275,12 +2397,16 @@ onAuthStateChanged(auth, async user => {
   $('logoutBtn').textContent = '🚪'; $('logoutBtn').title = 'خروج'; $('logoutBtn').onclick = () => signOut(auth);
   const s = await getDoc(doc(db, 'users', user.uid));
   profile = s.exists() ? { uid: user.uid, ...s.data() } : { uid: user.uid, name: 'مستخدم', role: 'user', phone: '' };
+  const isAdm = profile.role === 'admin';
   $('authView').classList.add('hidden'); $('appView').classList.remove('hidden');
-  $('adminTab').classList.toggle('hidden', profile.role !== 'admin');
+  $('adminTab').classList.toggle('hidden', !isAdm);
   renderProfileCard();
   initPulse(); listen(); renderTrains(); updateNextTrainPulse(); buildCats(); buildSubCats(); updateDynamicTools(); buildTypeChips(); buildHours();
   currentTab = 'browse'; switchTab('browse');
-  await loadApproved();
+  const meta = await fetchPublicMeta();
+  const tasks = [loadApproved(false, meta), loadAnnouncements(false, meta)];
+  if (!isAdm) tasks.push(loadOffers(false, meta));
+  await Promise.all(tasks);
 });
 
 async function loadMyStatsOnce() {
@@ -2295,7 +2421,6 @@ async function loadMyStatsOnce() {
 }
 
 function listen() {
-  unsubs.push(listenOffers());
   unsubs.push(onSnapshot(query(collection(db, 'businesses'), where('ownerId', '==', me.uid)), s => {
     myBiz = s.docs.map(d => ({ id: d.id, ...d.data() }));
     renderMine();
@@ -2305,12 +2430,8 @@ function listen() {
     notifs = s.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => tsMs(b.createdAt) - tsMs(a.createdAt));
     updateBell();
   }));
-  unsubs.push(onSnapshot(query(collection(db, 'announcements'), orderBy('createdAt', 'desc'), limit(10)), s => {
-    const list = s.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => tsMs(b.createdAt) - tsMs(a.createdAt));
-    if (announces.length && list.length && tsMs(list[0].createdAt) > tsMs(announces[0].createdAt)) toast('📢 ' + list[0].title);
-    announces = list; updateBell();
-  }));
   if (profile.role === 'admin') {
+    unsubs.push(listenOffersAdmin());
     unsubs.push(onSnapshot(collection(db, 'businesses'), s => { allBiz = s.docs.map(d => ({ id: d.id, ...d.data() })); renderAdmin(); }));
     unsubs.push(onSnapshot(collection(db, 'reports'), s => { reports = s.docs.map(d => ({ id: d.id, ...d.data() })); renderAdmin(); }));
   }
@@ -2358,7 +2479,12 @@ $('shareAppBtn').onclick = async () => {
 /* ---------- حذف الحساب ---------- */
 $('delAccBtn').onclick = async () => {
   if (!me || guest) return toast('سجّل دخولك الأول');
+  const lastLoginMs = new Date(me.metadata?.lastSignInTime || 0).getTime();
+  if (!lastLoginMs || (Date.now() - lastLoginMs) > 4 * 60 * 1000) {
+    return toast('عشان الأمان، اعمل تسجيل خروج وادخل تاني دلوقتي ثم اضغط حذف الحساب');
+  }
   if (!confirm('هيتحذف حسابك وكل أنشطتك وعروضك وتقييماتك نهائياً. تكمل؟')) return;
+  $('delAccBtn').disabled = true;
   try {
     toast('جاري حذف حسابك...');
     const hadApproved = myBiz.some(b => b.status === 'approved');
@@ -2371,15 +2497,14 @@ $('delAccBtn').onclick = async () => {
     const rv = await getDocs(query(collection(db, 'reviews'), where('reviewerId', '==', me.uid)));
     for (const r of rv.docs) await deleteDoc(r.ref).catch(() => {});
     await deleteDoc(doc(db, 'users', me.uid)).catch(() => {});
-    if (hadApproved) {
-      await bumpBizVersion();
-      try { localStorage.removeItem(BIZ_VER_KEY); } catch (e) {}
-    }
+    if (hadApproved && profile?.role === 'admin') await bumpBizVersion();
     await deleteUser(me);
     toast('تم حذف حسابك ✅');
   } catch (err) {
-    if (err.code === 'auth/requires-recent-login') toast('سجّل دخول تاني وبعدين احذف الحساب (عشان الأمان)');
+    if (err.code === 'auth/requires-recent-login') toast('سجّل خروج وادخل تاني وبعدين احذف الحساب (عشان الأمان)');
     else toast('تعذر حذف الحساب: ' + (err.code || err.message));
+  } finally {
+    $('delAccBtn').disabled = false;
   }
 };
 
@@ -2463,6 +2588,7 @@ $('fOpen').onclick = () => { onlyOpen = !onlyOpen; $('fOpen').classList.toggle('
 $('fPriceSort').onclick = () => { priceSort = !priceSort; $('fPriceSort').classList.toggle('active', priceSort); renderBrowse(); };
 $('f24h').onclick = () => { only24h = !only24h; $('f24h').classList.toggle('active', only24h); renderBrowse(); };
 $('fTopRated').onclick = () => {
+  if (guest || !me?.uid) return toast('سجّل دخولك أولاً لاستخدام الترتيب بالتقييم ⭐');
   topRated = !topRated;
   $('fTopRated').classList.toggle('active', topRated);
   if (topRated && nearMe) { nearMe = false; $('fNear').classList.remove('active'); }
@@ -3112,14 +3238,14 @@ $('bizForm').onsubmit = async e => {
       }
       delete photoCache[editId];
       if (adminEditing) {
-        await bumpBizVersion();
-        toast('تم حفظ ونشر التعديلات الإدارية بنجاح ✅');
-        loadApproved(true);
+        markBizDirty();
+        toast('تم حفظ التعديل الإداري ✅ (اضغط "نشر التحديث للجميع" عند الانتهاء)');
       } else {
-        if (editOrigStatus === 'approved') await bumpBizVersion();
-        else try { localStorage.removeItem(BIZ_VER_KEY); } catch (e) {}
+        if (editOrigStatus === 'approved') {
+          approved = approved.filter(x => x.id !== editId);
+          renderBrowse();
+        }
         toast(typeChanged ? 'تم الحفظ، والنشاط رجع للمراجعة، وشلنا التوثيق لأن النوع اتغير ✅' : 'تم حفظ التعديلات وإعادة النشاط للمراجعة ✅');
-        loadApproved(true);
       }
     } else {
       const ref = doc(collection(db, 'businesses'));
@@ -3253,9 +3379,9 @@ $('mineList').onclick = async e => {
     const renBiz = myBiz.find(x => x.id === t.dataset.renew);
     try {
       await updateDoc(doc(db, 'businesses', t.dataset.renew), { expiresAt: Date.now() + RE_DAYS * DAY_MS, status: 'pending', updatedAt: serverTimestamp() });
-      if (renBiz?.status === 'approved' && !reExpired(renBiz)) {
-        await bumpBizVersion();
-        loadApproved(true);
+      if (renBiz?.status === 'approved') {
+        if (profile?.role === 'admin') await bumpBizVersion();
+        else { approved = approved.filter(x => x.id !== renBiz.id); renderBrowse(); }
       }
       toast('تم تجديد الإعلان، وهيظهر بعد المراجعة ✅');
     } catch (err) { toast('تعذر التجديد'); }
@@ -3287,9 +3413,11 @@ $('mineList').onclick = async e => {
       await deleteDoc(doc(db, 'offers', t.dataset.del)).catch(() => {});
       await deleteDoc(doc(db, 'businesses', t.dataset.del));
       delete photoCache[t.dataset.del];
-      if (delBiz?.status === 'approved') await bumpBizVersion();
-      else try { localStorage.removeItem(BIZ_VER_KEY); } catch (ex) {}
-      loadApproved(true);
+      if (delBiz?.status === 'approved') {
+        approved = approved.filter(x => x.id !== t.dataset.del);
+        renderBrowse();
+        if (profile?.role === 'admin') await bumpBizVersion();
+      }
       toast('تم الحذف');
     } catch (err) { toast('تعذر الحذف'); }
   }
@@ -3348,11 +3476,15 @@ async function loadUserCount() {
 $('annSend').onclick = async () => {
   const title = $('annTitle').value.trim(), body = $('annBody').value.trim();
   if (!title || !body) return toast('اكتب العنوان والنص');
+  $('annSend').disabled = true;
   try {
     await addDoc(collection(db, 'announcements'), { title, body, createdAt: serverTimestamp() });
+    await bumpMetaFields(['annVer']);
+    await loadAnnouncements(true);
     $('annTitle').value = ''; $('annBody').value = '';
     toast('تم نشر الإعلان للمستخدمين ✅');
   } catch (e) { toast('تعذر نشر الإعلان'); }
+  finally { $('annSend').disabled = false; }
 };
 $('cleanBtn').onclick = async () => {
   if (!confirm('هيتنقل رقم القيد لمكانه الآمن ويتشال من الأنشطة القديمة. تكمل؟')) return;
@@ -3364,7 +3496,7 @@ $('cleanBtn').onclick = async () => {
       if (b.ownerPhone) upd.ownerPhone = deleteField();
       if (Object.keys(upd).length) { await updateDoc(doc(db, 'businesses', b.id), upd); n++; }
     }
-    if (n > 0) await bumpBizVersion();
+    if (n > 0) markBizDirty();
     toast(`تم تنظيف ${n} نشاط ✅`);
   } catch (err) { toast('حصل خطأ أثناء التنظيف: ' + (err.code || err.message)); }
 };
@@ -3382,6 +3514,10 @@ $('clearAdminSearch').onclick = () => {
 };
 
 function renderAdmin() {
+  if (profile?.role === 'admin') {
+    approved = allBiz.filter(b => b.status === 'approved').sort((a, b) => tsMs(b.createdAt) - tsMs(a.createdAt));
+    renderBrowse();
+  }
   $('cP').textContent = allBiz.filter(b => b.status === 'pending').length;
   $('cA').textContent = allBiz.filter(b => b.status === 'approved').length;
   $('cH').textContent = allBiz.filter(b => b.status === 'hidden' || b.status === 'rejected').length;
@@ -3452,30 +3588,26 @@ $('adminList').onclick = async e => {
       await updateDoc(doc(db, 'businesses', d.pdel), { thumb: deleteField(), photoCount: 0 });
       await deleteDoc(doc(db, 'bizPhotos', d.pdel)).catch(() => {});
       delete photoCache[d.pdel];
-      await bumpBizVersion();
-      loadApproved(true);
-      toast('تم حذف الصورة 🖼️');
+      markBizDirty();
+      toast('تم حذف الصورة 🖼️ (اضغط "نشر التحديث للجميع" عند الانتهاء)');
     }
     else if (d.verify) {
       const b = allBiz.find(x => x.id === d.verify);
       await updateDoc(doc(db, 'businesses', d.verify), { verified: !b.verified });
-      await bumpBizVersion();
-      loadApproved(true);
-      toast(b.verified ? 'تم إلغاء التوثيق' : 'تم توثيق النشاط ✓');
+      markBizDirty();
+      toast(b.verified ? 'تم إلغاء التوثيق' : 'تم توثيق النشاط ✓ (اضغط "نشر التحديث" عند الانتهاء)');
     }
     else if (d.feature) {
       const b = allBiz.find(x => x.id === d.feature);
       await updateDoc(doc(db, 'businesses', d.feature), { featured: !b.featured });
-      await bumpBizVersion();
-      loadApproved(true);
-      toast(b.featured ? 'تم إلغاء التميز' : 'تم تمييز النشاط ⭐');
+      markBizDirty();
+      toast(b.featured ? 'تم إلغاء التميز' : 'تم تمييز النشاط ⭐ (اضغط "نشر التحديث" عند الانتهاء)');
     }
     else if (d.approve) {
       await updateDoc(doc(db, 'businesses', d.approve), { status: 'approved' });
-      await bumpBizVersion();
+      markBizDirty();
       await notifyOwner(d.approve, '✅ تم اعتماد نشاطك', `أصبح ظاهراً للناس في ${APP_NAME}`);
-      loadApproved(true);
-      toast('تم الاعتماد والنشر للجميع ✅');
+      toast('تم الاعتماد ✅ (اضغط "نشر التحديث للجميع" لما تخلص)');
     }
     else if (d.reject) {
       const reason = prompt('سبب الرفض (هيوصل لصاحب النشاط):');
@@ -3486,18 +3618,17 @@ $('adminList').onclick = async e => {
     }
     else if (d.hide) {
       await updateDoc(doc(db, 'businesses', d.hide), { status: 'hidden' });
-      await bumpBizVersion();
-      loadApproved(true);
-      toast('تم الإخفاء ⏸️');
+      markBizDirty();
+      toast('تم الإخفاء ⏸️ (اضغط "نشر التحديث للجميع" عند الانتهاء)');
     }
     else if (d.del && confirm('حذف نهائي لهذا النشاط؟')) {
+      const wasApproved = allBiz.find(x => x.id === d.del)?.status === 'approved';
       await deleteDoc(doc(db, 'businesses', d.del));
       await deleteDoc(doc(db, 'regs', d.del)).catch(() => {});
       await deleteDoc(doc(db, 'bizPhotos', d.del)).catch(() => {});
       await deleteDoc(doc(db, 'offers', d.del)).catch(() => {});
       delete photoCache[d.del];
-      await bumpBizVersion();
-      loadApproved(true);
+      if (wasApproved) markBizDirty();
       toast('تم الحذف 🗑️');
     }
   } catch (err) { toast('تعذر تنفيذ العملية'); }
@@ -3514,6 +3645,9 @@ $('contactBtn').onclick = () => {
 /* ---------- التنقل ---------- */
 function switchTab(n) {
   if (n !== 'add' && editId) cancelEdit();
+  if (currentTab === 'admin' && n !== 'admin' && dirtyBizVer) {
+    bumpBizVersion();
+  }
   currentTab = n;
   if (n === 'mine') {
     renderProfileCard();
