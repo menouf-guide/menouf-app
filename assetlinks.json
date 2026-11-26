@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "online.menouf360.twa",
+        "sha256_cert_fingerprints": ["56:A2:A4:59:DB:3F:D0:5E:F2:1D:B2:C4:38:F5:E2:0A:CB:E6:65:03:91:19:4C:B4:FD:DB:9A:A1:05:3A:6F:90"]
+      }
+    }]
