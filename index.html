@@ -44,27 +44,27 @@
 /* ===== الاستايل الافتراضي: منوف 360 (كريمي × أخضر زمردي × ذهبي) ===== */
 :root{
   color-scheme:light;
-  --bg:#fbf6e8;
-  --bgGlow:rgba(16,120,80,.06);
+  --bg:#fbf7ea;
+  --bgGlow:rgba(16,120,80,.07);
   --card:#ffffff;
   --surf:#ffffff;
   --inp:#ffffff;
   --chip:#ffffff;
   --row:#f8f4e6;
-  --glass:rgba(255,255,255,.94);
+  --glass:rgba(255,255,255,.92);
   --sheet:#ffffff;
   --nav:#ffffff;
   --toast:#0c3b28;
-  --overlay:rgba(10,35,25,.38);
-  --hdr-fade:linear-gradient(180deg,rgba(251,246,232,.18) 0%,rgba(251,246,232,.32) 55%,rgba(251,246,232,.92) 90%,#fbf6e8 100%);
+  --overlay:rgba(10,35,25,.35);
+  --hdr:linear-gradient(180deg,#e4efe9 0%,#f5f2e4 62%,#fbf7ea 100%);
   --pulse:#ffffff;
   --txt:#102a22;
   --txt2:#1f3d33;
   --txt3:#4b635b;
   --m:#6b7c76;
-  --p:#0c5d3f;
-  --p2:#16a34a;
-  --gold:#f59e0b;
+  --p:#0c5d3f;         /* الأخضر الزمردي الأساسي */
+  --p2:#158057;        /* أخضر أفتح للأزرار */
+  --gold:#f59e0b;      /* الذهبي المميز */
   --gold-soft:#fef3c7;
   --b:rgba(12,93,63,.10);
   --b2:rgba(12,93,63,.18);
@@ -77,15 +77,15 @@
   --d:#dc2626;
   --v:#0284c7;
   --e:#16a34a;
-  --pg:linear-gradient(135deg,#158057,#0a4f34);
+  --pg:linear-gradient(135deg,#127a52,#0a4f34);
   --pglow:rgba(12,93,63,.22);
   --eg:linear-gradient(135deg,#22c55e,#15803d);
-  --gg:linear-gradient(135deg,#fde047,#f59e0b);
+  --gg:linear-gradient(135deg,#fbbf24,#f59e0b);
   --ph:#9ca3af;
-  --shadow:0 6px 20px rgba(15,45,35,.06);
+  --shadow:0 6px 22px rgba(15,45,35,.06);
 }
 
-/* ===== الوضع الليلي ===== */
+/* ===== الوضع الليلي (اختياري من زر القمر) ===== */
 :root[data-theme="dark"]{
   color-scheme:dark;
   --bg:#08090c;
@@ -95,12 +95,12 @@
   --inp:rgba(15,18,22,.9);
   --chip:rgba(22,27,32,.85);
   --row:rgba(255,255,255,.04);
-  --glass:rgba(18,24,26,.86);
+  --glass:rgba(15,20,22,.75);
   --sheet:#12171a;
-  --nav:rgba(16,20,24,.98);
+  --nav:rgba(16,20,24,.97);
   --toast:rgba(18,32,26,.98);
   --overlay:rgba(4,5,8,.78);
-  --hdr-fade:linear-gradient(180deg,rgba(8,9,12,.58) 0%,rgba(8,9,12,.72) 55%,rgba(8,9,12,.94) 90%,#08090c 100%);
+  --hdr:linear-gradient(180deg,rgba(12,55,38,.92),rgba(8,9,12,.95));
   --pulse:rgba(20,25,28,.95);
   --txt:#f8fafc;
   --txt2:#e2e8f0;
@@ -120,7 +120,7 @@
   --okTxt:#d1fae5;
   --ph:#64748b;
   --pglow:rgba(34,197,94,.25);
-  --shadow:0 8px 28px rgba(0,0,0,.32);
+  --shadow:0 8px 28px rgba(0,0,0,.28);
 }
 
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -133,146 +133,59 @@ a{text-decoration:none;color:inherit}
 @keyframes up{from{transform:translateY(100%)}to{transform:none}}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(22,163,74,.65)}70%{box-shadow:0 0 0 7px rgba(22,163,74,0)}100%{box-shadow:0 0 0 0 rgba(22,163,74,0)}}
 @keyframes blink{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.7)}50%{box-shadow:0 0 0 8px rgba(220,38,38,0)}}
-.wrap{max-width:520px;margin:0 auto;padding:4px 14px 115px;animation:fadeIn .4s ease-out}
+.wrap{max-width:520px;margin:0 auto;padding:10px 16px 115px;animation:fadeIn .4s ease-out}
 
-/* ===== الهيدر البانورامي لمنوف ===== */
-.hero-hdr{
-  position:relative;
-  background:linear-gradient(180deg,#e4efe9 0%,#f5f0dc 100%);
-  background-image:url('menouf-bg.jpg');
-  background-position:center 38%;
-  background-size:cover;
-  padding:10px 14px 20px;
-  overflow:hidden;
-}
-.hero-hdr::before{
-  content:"";position:absolute;inset:0;
-  background:var(--hdr-fade);
-  pointer-events:none;
-}
-.hero-hdr > *{position:relative;z-index:2}
-.hdr-top{
-  display:flex;justify-content:space-between;align-items:center;
-  max-width:520px;margin:0 auto 6px;gap:6px
-}
-.hdr-greet{
-  display:inline-flex;align-items:center;gap:5px;
-  font-size:11.5px;font-weight:800;color:var(--txt);
-  background:var(--glass);padding:5px 12px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.7);
-  box-shadow:0 4px 14px rgba(0,0,0,.08);
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:170px
-}
-.hdr-greet::before{content:"📍";font-size:12px}
-.hact{display:flex;gap:5px;align-items:center;flex:none}
-.ib{
-  position:relative;width:34px;height:34px;border-radius:50%;
-  border:1px solid rgba(255,255,255,.75);
-  background:var(--glass);font-size:15px;
-  display:flex;align-items:center;justify-content:center;
-  color:var(--txt);box-shadow:0 4px 12px rgba(0,0,0,.09)
-}
-.ib.alert{border-color:rgba(220,38,38,.5);background:rgba(254,226,226,.95);animation:blink 1.4s infinite}
+/* ===== الهيدر ===== */
+.hero-hdr{position:relative;background:var(--hdr);padding:10px 16px 18px;overflow:hidden;border-bottom:3px solid var(--p)}
+.hero-hdr::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:linear-gradient(90deg,var(--p),var(--gold),var(--p))}
+.hdr-top{display:flex;justify-content:space-between;align-items:center;max-width:520px;margin:0 auto 10px;gap:6px}
+.hdr-greet{font-size:11px;font-weight:800;color:var(--p);background:var(--glass);padding:4px 10px;border-radius:999px;border:1px solid var(--b);white-space:nowrap}
+.hact{display:flex;gap:6px}
+.ib{width:34px;height:34px;border-radius:50%;border:1px solid var(--b2);background:var(--glass);font-size:15px;display:flex;align-items:center;justify-content:center;color:var(--txt);box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.ib.alert{border-color:rgba(220,38,38,.45);background:rgba(254,226,226,.9);animation:blink 1.4s infinite}
 .ib:active{transform:scale(.92)}
-.bell-badge{
-  position:absolute;top:-4px;right:-3px;
-  min-width:17px;height:17px;padding:0 4px;border-radius:999px;
-  background:#dc2626;color:#fff;font-size:10px;font-weight:900;
-  display:flex;align-items:center;justify-content:center;
-  border:1.5px solid #fff;line-height:1
-}
 .share-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:999px;border:1px solid var(--b2);background:var(--row);color:var(--txt2);font-size:13px;font-weight:800;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.05)}
 .share-btn:active{transform:scale(.95)}
 .share-btn svg{width:17px;height:17px;flex:none}
 
-.hero-center{
-  max-width:520px;margin:2px auto 0;
-  display:flex;flex-direction:column;align-items:center;text-align:center
-}
-.hero-brand{
-  display:inline-flex;align-items:center;gap:10px;
-  padding:4px 14px;border-radius:20px;
-}
-.logo{
-  width:64px;height:64px;border-radius:50%;object-fit:cover;
-  border:3px solid var(--gold);
-  box-shadow:0 6px 18px rgba(12,93,63,.22);background:#fff;flex:none
-}
-.hero-title{text-align:right;line-height:1}
-.hero-title h1{
-  font-size:27px;font-weight:900;color:var(--txt);letter-spacing:-.5px;
-  text-shadow:0 2px 10px rgba(255,255,255,.92)
-}
-.hero-title h1 span{
-  display:block;font-size:32px;color:#0b5d3b;font-weight:900;margin-top:2px;
-  text-shadow:0 2px 10px rgba(255,255,255,.92)
-}
-:root[data-theme="dark"] .hero-title h1{text-shadow:0 2px 10px rgba(0,0,0,.85)}
-:root[data-theme="dark"] .hero-title h1 span{color:#4ade80;text-shadow:0 2px 10px rgba(0,0,0,.85)}
-.hero-sub{
-  display:inline-flex;align-items:center;gap:8px;margin-top:5px;
-  font-size:13.5px;font-weight:900;color:var(--txt);
-  background:rgba(255,255,255,.72);padding:2px 12px;border-radius:999px;
-  backdrop-filter:blur(4px)
-}
-:root[data-theme="dark"] .hero-sub{background:rgba(15,20,24,.72);color:var(--txt2)}
-.hero-sub::before,.hero-sub::after{content:"";width:20px;height:2.5px;border-radius:99px;background:var(--gold)}
+.hero-main{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:520px;margin:0 auto}
+.hero-logo-wrap{position:relative;flex:none}
+.logo{width:74px;height:74px;border-radius:50%;object-fit:cover;border:3px solid var(--gold);box-shadow:0 6px 18px rgba(12,93,63,.18);background:#fff}
+.hero-title{flex:1;text-align:center;min-width:0}
+.hero-title h1{font-size:28px;font-weight:900;line-height:1.05;color:var(--txt);letter-spacing:-.5px}
+.hero-title h1 span{display:block;font-size:32px;color:var(--p);font-weight:900}
+.hero-sub{display:inline-flex;align-items:center;gap:8px;margin-top:4px;font-size:13px;font-weight:800;color:var(--txt2)}
+.hero-sub::before,.hero-sub::after{content:"";width:18px;height:2.5px;border-radius:99px;background:var(--gold)}
 
-@media(max-width:400px){
-  .ib{width:30px;height:30px;font-size:13.5px}
-  .hact{gap:4px}
-  .hdr-greet{font-size:10.5px;padding:4px 9px;max-width:136px}
-  .logo{width:56px;height:56px}
-  .hero-title h1{font-size:24px}
-  .hero-title h1 span{font-size:28px}
+/* ===== بطاقة وشاشة الأذكار ===== */
+.azkar-hero-card{
+  width:clamp(104px,29vw,124px);flex:none;
+  position:relative;overflow:hidden;
+  border-radius:18px;padding:8px 6px 7px;
+  background:radial-gradient(circle at 50% 15%,rgba(34,197,94,.28),transparent 65%),linear-gradient(170deg,#08432b,#042416);
+  border:1.5px solid rgba(250,204,21,.6);
+  box-shadow:0 6px 18px rgba(4,36,22,.35),inset 0 0 12px rgba(250,204,21,.12);
+  display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px;color:#fff;
+  transition:transform .2s
 }
-
-/* ===== بانر أذكار اليوم العريض ===== */
-.azkar-banner-card{
-  width:100%;position:relative;overflow:hidden;
-  border-radius:22px;min-height:112px;
-  margin:-8px 0 10px;padding:12px 16px;
-  display:flex;align-items:center;justify-content:flex-end;
-  background-color:#063b25;
-  background-image:url('azkar-bg.jpg');
-  background-position:right center;
-  background-size:cover;
-  border:2px solid #f59e0b;
-  box-shadow:0 8px 22px rgba(6,59,37,.24),inset 0 0 0 1px rgba(254,240,138,.45);
-  color:#fff;transition:transform .2s;z-index:3
-}
-.azkar-banner-card::before{
-  content:"";position:absolute;inset:0;
-  background:linear-gradient(90deg,rgba(5,54,32,.95) 0%,rgba(6,65,39,.88) 44%,rgba(6,65,39,.25) 66%,rgba(6,65,39,.05) 100%);
-  pointer-events:none
-}
-.azkar-banner-card:active{transform:scale(.98)}
-.azkar-banner-body{
-  position:relative;z-index:2;
-  width:56%;margin-right:auto;
-  display:flex;flex-direction:column;align-items:center;text-align:center;gap:3px
-}
-.azkar-banner-body strong{
-  font-size:20px;font-weight:900;color:#fde047;line-height:1.2;
-  text-shadow:0 2px 8px rgba(0,0,0,.4)
-}
-.azkar-banner-body span{
-  font-size:11.5px;font-weight:700;color:#ecfdf5;line-height:1.35;
-  text-shadow:0 1px 4px rgba(0,0,0,.4)
-}
-.azkar-banner-cta{
-  margin-top:4px;padding:4px 16px;border-radius:999px;
+.azkar-hero-card:active{transform:scale(.95)}
+.azkar-hero-card .az-top-svg{width:100%;height:26px;display:block;margin-bottom:1px}
+.azkar-hero-card strong{font-size:12.5px;font-weight:900;color:#fde047;line-height:1.2}
+.azkar-hero-card span{font-size:9px;font-weight:700;color:#e2f5ea;line-height:1.2;white-space:nowrap}
+.azkar-hero-cta{
+  margin-top:3px;width:100%;padding:3px 6px;border-radius:999px;
   background:linear-gradient(135deg,#fde047,#f59e0b);color:#102a22;
-  font-size:12px;font-weight:900;display:inline-flex;align-items:center;justify-content:center;gap:4px;
-  box-shadow:0 4px 12px rgba(245,158,11,.35)
+  font-size:10px;font-weight:900;display:inline-flex;align-items:center;justify-content:center;gap:3px;
+  box-shadow:0 2px 8px rgba(245,158,11,.35)
 }
-@media(max-width:380px){
-  .azkar-banner-body{width:60%}
-  .azkar-banner-body strong{font-size:17.5px}
-  .azkar-banner-body span{font-size:10.5px}
+@media(max-width:400px){
+  .logo{width:64px;height:64px}
+  .hero-title h1{font-size:23px}
+  .hero-title h1 span{font-size:27px}
+  .hero-sub{font-size:11.5px}
+  .hero-sub::before,.hero-sub::after{width:12px}
 }
 
-/* ===== شاشة الأذكار الداخلية ===== */
 .az-sheet{
   background:radial-gradient(circle at 50% 0%,rgba(22,163,74,.25),transparent 52%),linear-gradient(180deg,#063521 0%,#041d12 100%);
   border:1.5px solid rgba(250,204,21,.45);color:#f8fafc;padding:0 0 24px
@@ -364,153 +277,61 @@ a{text-decoration:none;color:inherit}
 .az-p-cell.next{background:rgba(250,204,21,.16);border-color:#facc15}
 .az-p-cell.next span,.az-p-cell.next b{color:#fde047}
 
-/* ===== شريط الطقس والموقع والقطار ===== */
-.weather-bar{
-  display:grid;grid-template-columns:1.25fr .8fr .95fr;align-items:center;
-  background:var(--pulse);border:1px solid rgba(255,255,255,.9);
-  border-radius:999px;padding:8px 10px;margin:0 0 8px;
-  box-shadow:0 4px 16px rgba(15,45,35,.06)
-}
-:root[data-theme="dark"] .weather-bar{border-color:var(--b)}
-.w-cell{display:flex;align-items:center;justify-content:center;gap:5px;font-size:12.5px;font-weight:800;color:var(--txt2);padding:0 6px;white-space:nowrap}
+/* ===== شريط الطقس والموقع (3 أقسام) ===== */
+.weather-bar{display:grid;grid-template-columns:1.25fr .85fr .9fr;align-items:center;background:var(--pulse);border:1px solid var(--b);border-radius:16px;padding:10px 8px;margin:6px 0 10px;box-shadow:var(--shadow)}
+.w-cell{display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;font-weight:800;color:var(--txt2);padding:0 6px}
 .w-cell+.w-cell{border-right:1px solid var(--b2)}
-.w-temp{font-size:15px;font-weight:900;color:var(--txt)}
-.pulse-train{
-  display:flex;align-items:center;justify-content:space-between;gap:8px;
-  background:var(--card);border:1px solid rgba(12,93,63,.14);
-  border-radius:999px;padding:7px 14px;margin-bottom:9px;
-  font-size:12px;font-weight:700;color:var(--okTxt);cursor:pointer;
-  box-shadow:0 3px 12px rgba(15,45,35,.05)
-}
+.w-temp{font-size:16px;font-weight:900;color:var(--txt)}
+.pulse-train{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--card);border:1px solid rgba(12,93,63,.16);border-radius:14px;padding:8px 14px;margin-bottom:12px;font-size:12.5px;font-weight:700;color:var(--okTxt);cursor:pointer;box-shadow:var(--shadow)}
 .pulse-train strong{color:var(--p)}
 .pulse-train span:last-child{white-space:nowrap;flex:none}
 
-/* ===== شريط البحث ===== */
-.search{
-  display:flex;align-items:center;gap:8px;background:var(--surf);
-  border:1px solid rgba(255,255,255,.9);border-radius:999px;
-  padding:0 16px;margin:0 0 12px;box-shadow:0 4px 16px rgba(15,45,35,.07)
-}
-:root[data-theme="dark"] .search{border-color:var(--b)}
-.search input{border:0;background:transparent;padding:11px 0;color:var(--txt);font-size:14px;flex:1;width:100%;font-weight:600}
+/* ===== البحث ===== */
+.search{display:flex;align-items:center;gap:8px;background:var(--surf);border:1px solid var(--b);border-radius:999px;padding:0 16px;margin:6px 0 12px;box-shadow:var(--shadow)}
+.search input{border:0;background:transparent;padding:12px 0;color:var(--txt);font-size:14px;flex:1;width:100%;font-weight:600}
 .search input:focus{box-shadow:none}
 .search input::placeholder{color:var(--ph)}
 .clear-btn{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--row);color:var(--m);font-size:12px;flex:none;border:1px solid var(--b)}
-.mic-btn{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(2,132,199,.10);color:var(--v);font-size:16px;flex:none}
+.mic-btn{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(12,93,63,.08);color:var(--p);font-size:16px;flex:none}
 .mic-btn.rec{background:rgba(220,38,38,.18);color:var(--d);animation:pulse 1s infinite}
 
-/* ===== التصنيفات ===== */
-.cats{display:flex;gap:9px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none}
-.cats::-webkit-scrollbar{display:none}
-.cat{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
-  min-width:78px;padding:10px 6px;border-radius:18px;
-  background:var(--card);border:1.5px solid rgba(255,255,255,.9);
-  box-shadow:0 5px 14px rgba(15,45,35,.06);
-  font-size:11.5px;font-weight:800;color:var(--txt2);transition:.2s
-}
-:root[data-theme="dark"] .cat{border-color:var(--b)}
-.ci{
-  width:42px;height:42px;border-radius:13px;background:rgba(12,93,63,.07);
-  color:var(--p2);display:flex;align-items:center;justify-content:center;font-size:22px
-}
-.ci svg{width:23px;height:23px;display:block}
-.cat.on{
-  background:linear-gradient(155deg,#16a34a 0%,#0c5d3f 65%,#063d28 100%);
-  color:#fff;border:2px solid #facc15;
-  box-shadow:0 8px 18px rgba(12,93,63,.28)
-}
-.cat.on .ci{background:rgba(255,255,255,.16);color:#fff;box-shadow:none}
-
 /* ===== أدوات الفلترة السريعة ===== */
-.tools{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 10px;margin-bottom:4px;scrollbar-width:none}
+.tools{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 10px;margin-bottom:6px;scrollbar-width:none}
 .tools::-webkit-scrollbar{display:none}
-.tool{
-  display:inline-flex;align-items:center;gap:5px;white-space:nowrap;
-  padding:7px 14px;border-radius:999px;background:var(--surf);
-  border:1px solid rgba(255,255,255,.9);font-size:12px;font-weight:800;color:var(--txt2);
-  box-shadow:0 3px 10px rgba(15,45,35,.05)
-}
-:root[data-theme="dark"] .tool{border-color:var(--b)}
+.tool{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;padding:8px 13px;border-radius:999px;background:var(--surf);border:1px solid var(--b);font-size:12.5px;font-weight:800;color:var(--txt2);box-shadow:0 2px 8px rgba(15,45,35,.04)}
 .tool.active{border-color:var(--p);background:var(--p);color:#fff}
+#bellCount{background:var(--d);color:#fff;border-radius:999px;padding:0 6px;font-size:11px;font-weight:800}
 
-/* ===== عناوين الأقسام وعروض اليوم ===== */
+/* ===== عناوين الأقسام ===== */
 .sec{font-size:17.5px;font-weight:900;color:var(--txt);margin:14px 0 10px;display:flex;justify-content:space-between;align-items:center}
 .sec-title{display:inline-flex;align-items:center;gap:7px;position:relative;padding-bottom:4px}
+.sec-title.gold-line::after{content:"";position:absolute;right:0;bottom:0;width:72%;height:3px;border-radius:99px;background:var(--gold)}
 .sec-title.green-line::after{content:"";position:absolute;right:0;bottom:0;width:72%;height:3px;border-radius:99px;background:var(--p)}
 .sec-more{font-size:13px;font-weight:800;color:var(--p);display:inline-flex;align-items:center;gap:3px}
 
-.deals-wrap{margin:2px 0 12px}
-.deals-hdr{
-  display:flex;align-items:center;justify-content:space-between;gap:8px;
-  margin-bottom:10px
-}
-.deals-ribbon{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:6px 16px 6px 24px;border-radius:999px 999px 6px 999px;
-  background:linear-gradient(135deg,#16a34a 0%,#0c5d3f 70%,#06402a 100%);
-  color:#fff;font-size:16px;font-weight:900;
-  border-bottom:2.5px solid #facc15;
-  box-shadow:0 5px 15px rgba(12,93,63,.22)
-}
-.deals-more-pill{
-  padding:6px 15px;border-radius:999px;
-  background:linear-gradient(135deg,#16a34a,#0c5d3f);
-  color:#fff;font-size:12.5px;font-weight:800;
-  box-shadow:0 4px 12px rgba(12,93,63,.22);white-space:nowrap
-}
-.deals-more-pill:active{transform:scale(.95)}
-.deals{display:flex;gap:11px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none}
+/* ===== التصنيفات ===== */
+.cats{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none}
+.cats::-webkit-scrollbar{display:none}
+.cat{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-width:74px;padding:10px 6px;border-radius:18px;background:var(--card);border:1.5px solid transparent;box-shadow:var(--shadow);font-size:11.5px;font-weight:800;color:var(--txt2);transition:.2s}
+.ci{width:42px;height:42px;border-radius:14px;background:var(--row);color:var(--p);display:flex;align-items:center;justify-content:center;font-size:22px}
+.ci svg{width:22px;height:22px;display:block}
+.cat.on{border-color:var(--p);background:rgba(12,93,63,.06);color:var(--p)}
+.cat.on .ci{background:var(--pg);color:#fff;box-shadow:0 4px 12px var(--pglow)}
+
+/* ===== عروض اليوم ===== */
+.deals-wrap{margin:4px 0 10px}
+.deals{display:flex;gap:12px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none}
 .deals::-webkit-scrollbar{display:none}
-.deal-card{
-  min-width:190px;max-width:205px;background:var(--card);
-  border:1.5px solid rgba(255,255,255,.9);border-radius:20px;overflow:hidden;
-  box-shadow:0 6px 18px rgba(15,45,35,.08);
-  display:flex;flex-direction:column;cursor:pointer;flex:none;transition:transform .2s
-}
-:root[data-theme="dark"] .deal-card{border-color:var(--b)}
+.deal-card{min-width:195px;max-width:210px;background:var(--card);border:1px solid var(--b);border-radius:20px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;cursor:pointer;flex:none;transition:transform .2s}
 .deal-card:active{transform:scale(.97)}
 .deal-media{position:relative;height:96px;background:linear-gradient(135deg,#0c5d3f,#16a34a);display:flex;align-items:center;justify-content:center;overflow:hidden}
 .deal-media img{width:100%;height:100%;object-fit:cover;display:block}
 .deal-media .deal-ph{font-size:34px;color:#fff}
-.deal-badge{
-  position:absolute;top:7px;right:7px;
-  background:linear-gradient(135deg,#fde047,#f59e0b);color:#111827;
-  font-size:11px;font-weight:900;padding:2px 10px;border-radius:999px;
-  box-shadow:0 2px 8px rgba(0,0,0,.18);line-height:1.4;max-width:90%;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis
-}
-.deal-body{
-  padding:9px 11px 11px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex:1
-}
-.deal-info{min-width:0;flex:1;text-align:right}
-.deal-title{font-size:13px;font-weight:900;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.deal-sub{font-size:11px;line-height:1.4;color:var(--m);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.deal-arrow{
-  width:28px;height:28px;border-radius:50%;flex:none;
-  background:linear-gradient(135deg,#16a34a,#0c5d3f);color:#fff;
-  display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;
-  box-shadow:0 3px 8px rgba(12,93,63,.24)
-}
-
-/* ===== بانر خدمات وخريطة منوف ===== */
-.promo-banner{
-  width:100%;position:relative;overflow:hidden;border-radius:20px;
-  margin:4px 0 12px;padding:12px 14px;
-  background:linear-gradient(110deg,#08472e 0%,#12744d 58%,#16a34a 100%);
-  border:1.5px solid #f59e0b;
-  box-shadow:0 8px 20px rgba(12,93,63,.22);
-  display:flex;align-items:center;justify-content:space-between;gap:10px;color:#fff;text-align:right
-}
-.promo-banner:active{transform:scale(.98)}
-.promo-txt{flex:1;min-width:0}
-.promo-txt strong{display:block;font-size:15px;font-weight:900;color:#fde047;line-height:1.25}
-.promo-txt span{display:block;font-size:11.5px;color:#ecfdf5;font-weight:700;margin-top:2px}
-.promo-cta{
-  flex:none;padding:6px 13px;border-radius:999px;
-  background:linear-gradient(135deg,#fde047,#f59e0b);color:#102a22;
-  font-size:12px;font-weight:900;box-shadow:0 4px 12px rgba(0,0,0,.2);white-space:nowrap
-}
+.deal-badge{position:absolute;top:8px;right:8px;background:#fde047;color:#111827;font-size:11.5px;font-weight:900;padding:3px 10px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.15);line-height:1.3;text-align:center}
+.deal-body{padding:10px 12px 12px;text-align:center;display:flex;flex-direction:column;flex:1;justify-content:space-between;gap:6px}
+.deal-title{font-size:13.5px;font-weight:900;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.deal-sub{font-size:11.5px;line-height:1.5;padding-bottom:1px;color:var(--m);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.deal-btn{background:var(--p);color:#fff;border-radius:999px;padding:6px 14px;font-size:12px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:4px;margin-top:2px;box-shadow:0 4px 12px var(--pglow)}
 
 /* ===== كروت الأنشطة ===== */
 .card{background:var(--card);border:1px solid var(--b);border-radius:22px;padding:14px;margin-bottom:14px;box-shadow:var(--shadow);position:relative;transition:transform .2s}
@@ -617,25 +438,13 @@ textarea{min-height:85px;resize:vertical}
 .cart-bar{background:rgba(22,163,74,.1);border:1px solid rgba(22,163,74,.35);border-radius:16px;padding:12px;margin-top:10px}
 
 /* ===== الشريط السفلي ===== */
-.nav{
-  position:fixed;bottom:0;left:0;right:0;max-width:520px;margin:0 auto;z-index:35;
-  display:flex;justify-content:space-around;align-items:flex-end;
-  padding:8px 10px 10px;background:var(--nav);
-  border-top:1px solid var(--b);border-radius:26px 26px 0 0;
-  box-shadow:0 -8px 26px rgba(15,45,35,.09)
-}
+.nav{position:fixed;bottom:0;left:0;right:0;max-width:520px;margin:0 auto;z-index:35;display:flex;justify-content:space-around;align-items:flex-end;padding:8px 10px 10px;background:var(--nav);border-top:1px solid var(--b);border-radius:26px 26px 0 0;box-shadow:0 -6px 25px rgba(15,45,35,.08)}
 .nav .tb{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:12px;font-weight:800;color:var(--m);min-width:68px;flex:1;padding:4px 0;position:relative}
 .nav .tb .ic{font-size:20px;line-height:1}
 .nav .tb.on{color:var(--p)}
 .nav .tb.on::after{content:"";width:38px;height:3px;border-radius:99px;background:var(--p);margin-top:2px}
 .fabwrap{display:flex;flex-direction:column;align-items:center;min-width:86px;flex:1}
-.fab{
-  width:58px;height:58px;border-radius:50%;
-  background:linear-gradient(145deg,#22c55e,#0c5d3f);color:#fff;
-  font-size:32px;font-weight:900;display:flex;align-items:center;justify-content:center;
-  margin-top:-32px;box-shadow:0 8px 22px rgba(12,93,63,.35);
-  border:3px solid #facc15;outline:4px solid var(--nav);padding:0;line-height:1
-}
+.fab{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,#22c55e,#0c5d3f);color:#fff;font-size:32px;font-weight:900;display:flex;align-items:center;justify-content:center;margin-top:-32px;box-shadow:0 8px 20px rgba(12,93,63,.30);border:3px solid var(--gold);outline:3px solid var(--nav);padding:0;line-height:1}
 .fabwrap span{color:var(--txt);font-size:12px;font-weight:800;margin-top:5px;white-space:nowrap}
 
 /* إشعارات ونوافذ */
@@ -700,49 +509,53 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
 <section id="appView" class="hidden">
   <header class="hero-hdr">
     <div class="hdr-top">
-      <div class="hdr-greet" id="pulseGreet">مدينة منوف</div>
+      <div class="hdr-greet" id="pulseGreet">أهلاً بكم في منوف</div>
       <div class="hact">
-        <button class="ib" id="bellBtn" title="الإشعارات">🔔<span id="bellCount" class="bell-badge hidden"></span></button>
-        <button class="ib" id="contactBtn" title="الإدارة">💬</button>
         <button class="ib alert" id="emergencyBtn" title="طوارئ">🚨</button>
         <button class="ib" id="themeBtn" title="تغيير الوضع">🌙</button>
         <button class="ib" id="installBtn" onclick="installApp()" title="تثبيت">📲</button>
+        <button class="ib" id="contactBtn" title="الإدارة">💬</button>
         <button class="ib" id="logoutBtn" title="خروج">🚪</button>
       </div>
     </div>
-    <div class="hero-center">
-      <div class="hero-brand">
+    <div class="hero-main">
+      <div class="hero-logo-wrap">
         <img class="logo" src="logo.png" alt="منوف 360">
-        <div class="hero-title">
-          <h1>منوف<span>360</span></h1>
-        </div>
       </div>
-      <div class="hero-sub">دليلك في منوف</div>
+      <div class="hero-title">
+        <h1>منوف<span>360</span></h1>
+        <div class="hero-sub">دليلك في منوف</div>
+      </div>
+      <button type="button" id="openAzkarBtn" class="azkar-hero-card" title="أذكار اليوم">
+        <svg class="az-top-svg" viewBox="0 0 120 34" fill="none" aria-hidden="true">
+          <path d="M18 32 C18 14, 42 10, 60 3 C78 10, 102 14, 102 32" stroke="#facc15" stroke-width="1.5" stroke-opacity=".75"/>
+          <path d="M40 24 L60 28 L80 24 L76 12 L60 16 L44 12 Z" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.2"/>
+          <line x1="60" y1="16" x2="60" y2="28" stroke="#b45309" stroke-width="1.2"/>
+          <rect x="14" y="13" width="8" height="12" rx="2" fill="#fde047" opacity=".85"/>
+          <line x1="18" y1="5" x2="18" y2="13" stroke="#facc15" stroke-width="1"/>
+          <rect x="98" y="13" width="8" height="12" rx="2" fill="#fde047" opacity=".85"/>
+          <line x1="102" y1="5" x2="102" y2="13" stroke="#facc15" stroke-width="1"/>
+        </svg>
+        <strong>أذكار اليوم</strong>
+        <span>راحة للقلب .. وبركة للحياة</span>
+        <div class="azkar-hero-cta">عرض الأذكار ❮</div>
+      </button>
     </div>
   </header>
 
   <div class="wrap">
     <div id="tab-browse">
-      <!-- بانر أذكار اليوم -->
-      <button type="button" id="openAzkarBtn" class="azkar-banner-card" title="أذكار اليوم">
-        <div class="azkar-banner-body">
-          <strong>أذكار اليوم</strong>
-          <span>راحة للقلب .. وبركة للحياة</span>
-          <div class="azkar-banner-cta">عرض الأذكار ❮</div>
-        </div>
-      </button>
-
-      <!-- شريط الطقس ومواعيد القطارات -->
+      <!-- شريط الطقس -->
       <div class="weather-bar">
         <div class="w-cell"><span>⛅</span><span>الطقس في منوف</span></div>
-        <div class="w-cell"><span style="color:#dc2626">📍</span><span>منوف</span></div>
+        <div class="w-cell"><span style="color:var(--p)">📍</span><span>منوف</span></div>
         <div class="w-cell w-temp" id="pulseWeather">☀️ 26°</div>
       </div>
       <div class="pulse-train" id="pulseTrain"><span>🚆 مواعيد القطارات في منوف</span><span style="color:var(--p)">الجدول ←</span></div>
 
       <!-- البحث -->
       <div class="search">
-        <span style="color:var(--p);font-size:17px">🔍</span>
+        <span style="color:var(--txt2)">🔍</span>
         <input id="searchInput" placeholder="ابحث عن نشاط أو خدمة في منوف">
         <button type="button" class="clear-btn hidden" id="clearSearch" title="مسح">✖</button>
         <button type="button" class="mic-btn hidden" id="voiceBtn" title="بحث صوتي">🎙️</button>
@@ -754,32 +567,24 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
 
       <!-- أدوات الفلترة -->
       <div class="tools">
-        <button class="tool" id="fNear">📍 الأقرب لمكاني</button>
-        <button class="tool" id="fTopRated">⭐ الأعلى تقييماً</button>
+        <button class="tool" id="bellBtn">🔔 الإشعارات <span id="bellCount" class="hidden"></span></button>
         <button class="tool" id="fOpen">🟢 مفتوح الآن</button>
         <button class="tool hidden" id="fPriceSort">💰 الأقل سعراً</button>
         <button class="tool hidden" id="f24h">🌙 صيدليات 24 ساعة</button>
         <button class="tool" id="fMap">🗺️ الخريطة</button>
+        <button class="tool" id="fNear">📍 الأقرب لمكاني</button>
+        <button class="tool" id="fTopRated">⭐ الأعلى تقييماً</button>
         <button class="tool" id="fTrain">🚆 القطارات</button>
       </div>
 
       <!-- عروض اليوم -->
       <div id="dealsBar" class="deals-wrap hidden">
-        <div class="deals-hdr">
-          <span class="deals-ribbon">🏷️ عروض اليوم ✨</span>
-          <button type="button" id="moreDealsBtn" class="deals-more-pill">المزيد ←</button>
+        <div class="sec" style="margin-top:4px">
+          <span class="sec-title gold-line">📢 عروض اليوم</span>
+          <button type="button" id="moreDealsBtn" class="sec-more">المزيد ‹</button>
         </div>
         <div class="deals" id="dealsList"></div>
       </div>
-
-      <!-- بانر استكشاف خدمات منوف -->
-      <button type="button" class="promo-banner" onclick="document.getElementById('fMap').click()">
-        <div class="promo-txt">
-          <strong>🗺️ عروض وخدمات منوف</strong>
-          <span>كل ما تحتاجه في مكان واحد — محلات، دكاترة، خدمات</span>
-        </div>
-        <span class="promo-cta">اكتشف الخريطة ❮</span>
-      </button>
 
       <div id="trainBox" class="hidden">
         <div class="chips" id="trainChips"></div>
@@ -1153,7 +958,7 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt
 const cleanPhone = s => String(s ?? '').replace(/\D/g, '');
 const PHONE_RE = /^01[0125]\d{8}$/;
 const emailOf = p => p + '@menouf.app';
-let ADMIN_PHONE = '01002480665';
+const ADMIN_PHONE = '01002480665';
 const APP_NAME = 'منوف 360';
 const MAX_PER_DAY = 3;
 const RE_DAYS = 30;
@@ -1244,7 +1049,7 @@ window.addEventListener('popstate', () => {
 $('closeImg').onclick = closeImgZoom;
 $('imgModal').onclick = e => { if (e.target.id === 'imgModal') closeImgZoom(); };
 
-/* ---------- الوضع الفاتح / الليلي ---------- */
+/* ---------- الوضع الفاتح (الافتراضي) / الليلي ---------- */
 function applyThemeBtn() {
   const dark = document.documentElement.getAttribute('data-theme') === 'dark';
   $('themeBtn').textContent = dark ? '☀️' : '🌙';
@@ -1681,7 +1486,7 @@ const iconOfBiz = b => {
 /* ---------- نبض منوف والطقس ---------- */
 function initPulse() {
   const hr = cairoNow().h;
-  $('pulseGreet').textContent = hr < 12 ? 'منوف · صباح الخير' : hr < 17 ? 'مدينة منوف' : 'منوف · مساء الخير';
+  $('pulseGreet').textContent = hr < 12 ? '☀️ صباح الخير يا أهل منوف' : hr < 17 ? '🌤️ طاب يومكم في منوف' : '🌙 مساء الخير يا أهل منوف';
 
   try {
     const cached = JSON.parse(localStorage.getItem('menouf_weather_cache') || 'null');
@@ -1758,10 +1563,6 @@ async function fetchPublicMeta(force = false) {
   try {
     const snap = await getDocFromServer(doc(db, 'appMeta', 'public'));
     publicMeta = snap.exists() ? snap.data() : {};
-    if (publicMeta.adminPhone) {
-      const p = cleanPhone(publicMeta.adminPhone);
-      if (PHONE_RE.test(p)) ADMIN_PHONE = p;
-    }
   } catch (e) {
     publicMeta = publicMeta || {};
   }
@@ -1996,11 +1797,11 @@ function renderDeals() {
         <div class="deal-badge">${esc(o.discount || 'عرض')}</div>
       </div>
       <div class="deal-body">
-        <div class="deal-info">
+        <div>
           <div class="deal-title">${esc(o.bizName || o.title)}</div>
           <div class="deal-sub">${esc(o.title || o.desc || 'عرض حصري في منوف')}</div>
         </div>
-        <span class="deal-arrow">❮</span>
+        <span class="deal-btn">المزيد ←</span>
       </div>
     </div>`).join('');
 }
@@ -2186,6 +1987,7 @@ $('emergencyModal').onclick = e => { if (e.target.id === 'emergencyModal') close
 
 /* ---------- أذكار اليوم ومواقيت الصلاة ---------- */
 const AZKAR = [
+  // --- أذكار الصباح (1 - 15) ---
   { id: 1, category: "morning", title: "أصبحنا وأصبح الملك لله", text: "أصبحنا وأصبح الملك لله، والحمد لله، لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير. رب أسألك خير ما في هذا اليوم وخير ما بعده، وأعوذ بك من شر ما في هذا اليوم وشر ما بعده، رب أعوذ بك من الكسل وسوء الكبر، رب أعوذ بك من عذاب في النار وعذاب في القبر.", repeat: 1, source: "صحيح مسلم 2723" },
   { id: 2, category: "morning", title: "دعاء بداية الصباح", text: "اللهم بك أصبحنا، وبك أمسينا، وبك نحيا، وبك نموت، وإليك النشور.", repeat: 1, source: "سنن الترمذي 3391" },
   { id: 3, category: "morning", title: "فطرة الإسلام وكلمة الإخلاص (صباحاً)", text: "أصبحنا على فطرة الإسلام، وعلى كلمة الإخلاص، وعلى دين نبينا محمد صلى الله عليه وسلم، وعلى ملة أبينا إبراهيم حنيفاً مسلماً وما كان من المشركين.", repeat: 1, source: "مسند أحمد 15360" },
@@ -2201,6 +2003,8 @@ const AZKAR = [
   { id: 13, category: "morning", title: "تسبيح الرضا والزنة والمداد", text: "سبحان الله وبحمده، عدد خلقه، ورضا نفسه، وزنة عرشه، ومداد كلماته.", repeat: 3, source: "صحيح مسلم 2726" },
   { id: 14, category: "morning", title: "تهليل الصباح العشر", text: "لا إله إلا الله وحده لا شريك له، له الملك وله الحمد، وهو على كل شيء قدير.", repeat: 10, source: "سنن أبي داود 5077 / صحيح مسلم 2693" },
   { id: 15, category: "morning", title: "الإقرار بنعمة الله في الصباح", text: "اللهم ما أصبح بي من نعمة أو بأحد من خلقك فمنك وحدك لا شريك لك، فلك الحمد ولك الشكر.", repeat: 1, source: "سنن أبي داود 5073 (مختلف في تصحيحه)" },
+
+  // --- أذكار المساء (16 - 30) ---
   { id: 16, category: "evening", title: "أمسينا وأمسى الملك لله", text: "أمسينا وأمسى الملك لله، والحمد لله، لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير. رب أسألك خير ما في هذه الليلة وخير ما بعدها، وأعوذ بك من شر ما في هذه الليلة وشر ما بعدها، رب أعوذ بك من الكسل وسوء الكبر، رب أعوذ بك من عذاب في النار وعذاب في القبر.", repeat: 1, source: "صحيح مسلم 2723" },
   { id: 17, category: "evening", title: "دعاء دخول المساء", text: "اللهم بك أمسينا، وبك أصبحنا، وبك نحيا، وبك نموت، وإليك المصير.", repeat: 1, source: "سنن الترمذي 3391" },
   { id: 18, category: "evening", title: "فطرة الإسلام وكلمة الإخلاص (مساءً)", text: "أمسينا على فطرة الإسلام، وعلى كلمة الإخلاص، وعلى دين نبينا محمد صلى الله عليه وسلم، وعلى ملة أبينا إبراهيم حنيفاً مسلماً وما كان من المشركين.", repeat: 1, source: "مسند أحمد 15360" },
@@ -2216,6 +2020,8 @@ const AZKAR = [
   { id: 28, category: "evening", title: "سورة الناس (مساءً)", text: "قل أعوذ برب الناس ۝ ملك الناس ۝ إله الناس ۝ من شر الوسواس الخناس ۝ الذي يوسوس في صدور الناس ۝ من الجنة والناس.", repeat: 3, source: "سنن أبي داود 5082" },
   { id: 29, category: "evening", title: "تهليل المساء العشر", text: "لا إله إلا الله وحده لا شريك له، له الملك وله الحمد، وهو على كل شيء قدير.", repeat: 10, source: "سنن أبي داود 5077 / صحيح مسلم 2693" },
   { id: 30, category: "evening", title: "الإقرار بنعمة الله في المساء", text: "اللهم ما أمسى بي من نعمة أو بأحد من خلقك فمنك وحدك لا شريك لك، فلك الحمد ولك الشكر.", repeat: 1, source: "سنن أبي داود 5073 (مختلف في تصحيحه)" },
+
+  // --- أذكار مشتركة للصباح والمساء (31 - 39) ---
   { id: 31, category: "both", title: "سيد الاستغفار", text: "اللهم أنت ربي لا إله إلا أنت، خلقتني وأنا عبدك، وأنا على عهدك ووعدك ما استطعت، أعوذ بك من شر ما صنعت، أبوء لك بنعمتك علي، وأبوء بذنبي فاغفر لي، فإنه لا يغفر الذنوب إلا أنت.", repeat: 1, source: "صحيح البخاري 6306" },
   { id: 32, category: "both", title: "بسم الله الذي لا يضر", text: "بسم الله الذي لا يضر مع اسمه شيء في الأرض ولا في السماء وهو السميع العليم.", repeat: 3, source: "سنن أبي داود 5088 / الترمذي 3388" },
   { id: 33, category: "both", title: "رضيت بالله رباً", text: "رضيت بالله رباً، وبالإسلام ديناً، وبمحمد صلى الله عليه وسلم نبياً.", repeat: 3, source: "مسند أحمد 18967 (مختلف في تصحيحه)" },
@@ -2225,6 +2031,8 @@ const AZKAR = [
   { id: 37, category: "both", title: "الاستغفار والتوبة", text: "أستغفر الله وأتوب إليه.", repeat: 100, source: "صحيح البخاري 6307 / مسلم 2702" },
   { id: 38, category: "both", title: "الكلمتان الخفيفتان", text: "سبحان الله وبحمده، سبحان الله العظيم.", repeat: 1, source: "صحيح البخاري 6406" },
   { id: 39, category: "both", title: "كنز من كنوز الجنة", text: "لا حول ولا قوة إلا بالله.", repeat: 1, source: "صحيح البخاري 6409" },
+
+  // --- أذكار النوم (40 - 53) ---
   { id: 40, category: "sleep", title: "آية الكرسي عند النوم", text: "الله لا إله إلا هو الحي القيوم لا تأخذه سنة ولا نوم له ما في السماوات وما في الأرض من ذا الذي يشفع عنده إلا بإذنه يعلم ما بين أيديهم وما خلفهم ولا يحيطون بشيء من علمه إلا بما شاء وسع كرسيه السماوات والأرض ولا يؤوده حفظهما وهو العلي العظيم.", repeat: 1, source: "صحيح البخاري 2311" },
   { id: 41, category: "sleep", title: "خواتيم سورة البقرة في الليل", text: "آمن الرسول بما أنزل إليه من ربه والمؤمنون كل آمن بالله وملائكته وكتبه ورسله لا نفرق بين أحد من رسله وقالوا سمعنا وأطعنا غفرانك ربنا وإليك المصير ۝ لا يكلف الله نفساً إلا وسعها لها ما كسبت وعليها ما اكتسبت ربنا لا تؤاخذنا إن نسينا أو أخطأنا ربنا ولا تحمل علينا إصراً كما حملته على الذين من قبلنا ربنا ولا تحملنا ما لا طاقة لنا به واعف عنا واغفر لنا وارحمنا أنت مولانا فانصرنا على القوم الكافرين.", repeat: 1, source: "البقرة: 285-286 / البخاري 5009" },
   { id: 42, category: "sleep", title: "سورة الإخلاص (مع النفث في الكفين والمسح)", text: "قل هو الله أحد ۝ الله الصمد ۝ لم يلد ولم يولد ۝ ولم يكن له كفواً أحد.", repeat: 3, source: "صحيح البخاري 5017" },
@@ -2239,6 +2047,8 @@ const AZKAR = [
   { id: 51, category: "sleep", title: "تسبيح النوم (سبحان الله)", text: "سبحان الله.", repeat: 33, source: "صحيح البخاري 6318" },
   { id: 52, category: "sleep", title: "تحميد النوم (الحمد لله)", text: "الحمد لله.", repeat: 33, source: "صحيح البخاري 6318" },
   { id: 53, category: "sleep", title: "تكبير النوم (الله أكبر)", text: "الله أكبر.", repeat: 34, source: "صحيح البخاري 6318" },
+
+  // --- أذكار الصلاة (54 - 83) ---
   { id: 54, category: "prayer", title: "التسمية قبل الوضوء", text: "بسم الله.", repeat: 1, source: "سنن أبي داود 101" },
   { id: 55, category: "prayer", title: "الذكر بعد الفراغ من الوضوء", text: "أشهد أن لا إله إلا الله وحده لا شريك له، وأشهد أن محمداً عبده ورسوله. اللهم اجعلني من التوابين واجعلني من المتطهرين.", repeat: 1, source: "صحيح مسلم 234 / الترمذي 55" },
   { id: 56, category: "prayer", title: "الحوقلة عند سماع الحيعلتين في الأذان", text: "لا حول ولا قوة إلا بالله (عند سماع: حي على الصلاة، وحي على الفلاح؛ أما باقي الأذان فيقول مثل ما يقول المؤذن).", repeat: 1, source: "صحيح مسلم 385" },
@@ -2269,6 +2079,8 @@ const AZKAR = [
   { id: 81, category: "prayer", title: "سورة الناس بعد الصلاة", text: "قل أعوذ برب الناس ۝ ملك الناس ۝ إله الناس ۝ من شر الوسواس الخناس ۝ الذي يوسوس في صدور الناس ۝ من الجنة والناس.", repeat: 1, source: "سنن أبي داود 1523" },
   { id: 82, category: "prayer", title: "دعاء الإعانة على الذكر (دبر كل صلاة)", text: "اللهم أعني على ذكرك وشكرك وحسن عبادتك.", repeat: 1, source: "سنن أبي داود 1522" },
   { id: 83, category: "prayer", title: "سؤال العلم والرزق والعمل (بعد صلاة الفجر)", text: "اللهم إني أسألك علماً نافعاً، ورزقاً طيباً، وعملاً متقبلاً.", repeat: 1, source: "سنن ابن ماجه 925" },
+
+  // --- أذكار عامة وحياتية يومية (84 - 123) ---
   { id: 84, category: "general", title: "دعاء الاستيقاظ من النوم", text: "الحمد لله الذي أحيانا بعد ما أماتنا وإليه النشور.", repeat: 1, source: "صحيح البخاري 6312" },
   { id: 85, category: "general", title: "الذكر لمن استيقظ من الليل", text: "لا إله إلا الله وحده لا شريك له، له الملك وله الحمد، وهو على كل شيء قدير، الحمد لله، وسبحان الله، ولا إله إلا الله، والله أكبر، ولا حول ولا قوة إلا بالله، اللهم اغفر لي.", repeat: 1, source: "صحيح البخاري 1154" },
   { id: 86, category: "general", title: "دعاء لبس الثوب", text: "الحمد لله الذي كساني هذا الثوب ورزقنيه من غير حول مني ولا قوة.", repeat: 1, source: "سنن أبي داود 4023" },
