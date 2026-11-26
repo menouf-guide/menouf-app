@@ -802,6 +802,56 @@ input:focus,select:focus,textarea:focus{
 }
 
 
+/* إصلاح تباين الوضع الليلي لكروت الأنشطة والنماذج */
+:root[data-theme="dark"] .card:not(.fe){
+  background:var(--card)!important;
+  color:var(--txt)!important;
+  border-color:var(--b)!important;
+  box-shadow:var(--shadow);
+}
+:root[data-theme="dark"] .card.fe{
+  color:var(--txt)!important;
+}
+:root[data-theme="dark"] .biz-ico,
+:root[data-theme="dark"] .re-facts span{
+  background:var(--row)!important;
+  color:var(--txt2)!important;
+  border-color:var(--b)!important;
+}
+:root[data-theme="dark"] .card .ct,
+:root[data-theme="dark"] .card .name,
+:root[data-theme="dark"] .card p,
+:root[data-theme="dark"] .card small,
+:root[data-theme="dark"] .card label,
+:root[data-theme="dark"] .card .muted,
+:root[data-theme="dark"] .sheet .ct,
+:root[data-theme="dark"] .sheet .muted,
+:root[data-theme="dark"] .sheet label{
+  color:var(--txt2);
+}
+:root[data-theme="dark"] .card .ct,
+:root[data-theme="dark"] .card .name,
+:root[data-theme="dark"] .sheet .ct{
+  color:var(--txt)!important;
+}
+:root[data-theme="dark"] .card input,
+:root[data-theme="dark"] .card select,
+:root[data-theme="dark"] .card textarea,
+:root[data-theme="dark"] .sheet input,
+:root[data-theme="dark"] .sheet select,
+:root[data-theme="dark"] .sheet textarea{
+  background:var(--inp)!important;
+  color:var(--txt)!important;
+  border-color:var(--b2)!important;
+}
+:root[data-theme="dark"] .card input::placeholder,
+:root[data-theme="dark"] .card textarea::placeholder,
+:root[data-theme="dark"] .sheet input::placeholder,
+:root[data-theme="dark"] .sheet textarea::placeholder{
+  color:var(--m)!important;
+  opacity:1;
+}
+
 /* تأكيد الخروج من التطبيق */
 .exit-confirm-backdrop{
   position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;
