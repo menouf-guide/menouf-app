@@ -1358,7 +1358,7 @@ window.FIREBASE_CONFIG={apiKey:"AIzaSyB1Rh9EwHgQkuqHtSh5PDlyICKK0CO3ccM",authDom
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, deleteUser } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, deleteUser, reauthenticateWithCredential, EmailAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, getFirestore, doc, getDoc, getDocFromServer, getDocs, getDocsFromCache, getDocsFromServer, setDoc, deleteDoc, collection, addDoc, query, where, orderBy, limit, onSnapshot, updateDoc, serverTimestamp, deleteField, getAggregateFromServer, count, writeBatch, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const app = initializeApp(window.FIREBASE_CONFIG);
@@ -2052,7 +2052,7 @@ async function bumpMetaFields(fields) {
       localStorage.setItem(ANN_VER_KEY, ts);
       localStorage.setItem(ANN_TS_KEY, ts);
     }
-  } catch (e) {}
+  } catch (e) { toast('تعذر تحديث الدليل، تأكد من النت وجرّب تاني'); }
 }
 const bumpBizVersion = () => bumpMetaFields(['bizVer']);
 
@@ -2120,12 +2120,13 @@ async function loadApproved(forceServer = false, meta = null) {
   } finally {
     loadingPage = false;
     renderBrowse();
+    renderDeals();
   }
 }
 
 async function loadOffers(forceServer = false, meta = null) {
   try {
-    const qy = query(collection(db, 'offers'), where('status', '==', 'approved'), limit(25));
+    const qy = query(collection(db, 'offers'), where('status', '==', 'approved'), limit(100));
     let s = null;
     const m = meta || await fetchPublicMeta(forceServer);
     const serverVer = String(m.offersVer || 'v0');
@@ -2228,7 +2229,7 @@ async function loadReviewsFor(bizId) {
 async function loadReviewsOnce() {
   if (reviewsLoadedAll || guest || !me?.uid) return;
   try {
-    const s = await getDocs(query(collection(db, 'reviews'), orderBy('createdAt', 'desc'), limit(200)));
+    const s = await getDocs(collection(db, 'reviews'));
     reviews = s.docs.map(d => ({ id: d.id, ...d.data() }));
     reviewsLoadedAll = true;
     renderBrowse(); renderAdminStats();
@@ -2245,7 +2246,8 @@ function listenOffersAdmin() {
 /* ---------- عروض اليوم ---------- */
 function activeOffers() {
   const now = Date.now();
-  return offers.filter(o => o.status === 'approved' && (!o.expiresAt || o.expiresAt > now))
+  const liveIds = new Set(approved.map(b => b.id));
+  return offers.filter(o => o.status === 'approved' && (!o.expiresAt || o.expiresAt > now) && liveIds.has(o.bizId))
     .sort((a, b) => tsMs(b.createdAt) - tsMs(a.createdAt));
 }
 function renderDeals() {
@@ -2814,6 +2816,7 @@ $('authForm').onsubmit = async e => {
       if (!name) throw { code: 'name' };
       const c = await createUserWithEmailAndPassword(auth, emailOf(phone), pass);
       await setDoc(doc(db, 'users', c.user.uid), { name, phone, role: 'user', createdAt: serverTimestamp() });
+      setTimeout(() => location.reload(), 1500);
     } else await signInWithEmailAndPassword(auth, emailOf(phone), pass);
   } catch (err) { toast(err.code === 'name' ? 'اكتب اسمك' : friendly(err)); }
   $('authBtn').disabled = false;
@@ -2944,11 +2947,14 @@ $('shareAppBtn').onclick = async () => {
 /* ---------- حذف الحساب ---------- */
 $('delAccBtn').onclick = async () => {
   if (!me || guest) return toast('سجّل دخولك الأول');
-  const lastLoginMs = new Date(me.metadata?.lastSignInTime || 0).getTime();
-  if (!lastLoginMs || (Date.now() - lastLoginMs) > 4 * 60 * 1000) {
-    return toast('عشان الأمان، اعمل تسجيل خروج وادخل تاني دلوقتي ثم اضغط حذف الحساب');
-  }
   if (!confirm('هيتحذف حسابك وكل أنشطتك وعروضك وتقييماتك نهائياً. تكمل؟')) return;
+  const pass = prompt('عشان الأمان، اكتب كلمة المرور بتاعتك لتأكيد حذف الحساب:');
+  if (!pass) return;
+  try {
+    await reauthenticateWithCredential(me, EmailAuthProvider.credential(me.email, pass));
+  } catch (err) {
+    return toast('كلمة المرور غلط، الحساب لم يُحذف');
+  }
   $('delAccBtn').disabled = true;
   try {
     toast('جاري حذف حسابك...');
@@ -2962,7 +2968,7 @@ $('delAccBtn').onclick = async () => {
     const rv = await getDocs(query(collection(db, 'reviews'), where('reviewerId', '==', me.uid)));
     for (const r of rv.docs) await deleteDoc(r.ref).catch(() => {});
     await deleteDoc(doc(db, 'users', me.uid)).catch(() => {});
-    if (hadApproved && profile?.role === 'admin') await bumpBizVersion();
+    if (hadApproved) await bumpBizVersion();
     await deleteUser(me);
     toast('تم حذف حسابك ✅');
   } catch (err) {
@@ -3677,7 +3683,7 @@ $('bizForm').onsubmit = async e => {
     data.rePrice = Number($('rePrice').value.replace(/\D/g, '')) || null;
     data.reArea = $('reArea').value.trim() || null;
     data.reRooms = $('reRooms').value.trim() || null;
-    data.expiresAt = Date.now() + RE_DAYS * DAY_MS;
+    if (!editId || editOrigType !== 'real_estate') data.expiresAt = Date.now() + RE_DAYS * DAY_MS;
   }
   $('saveBtn').disabled = true;
   try {
@@ -3711,6 +3717,7 @@ $('bizForm').onsubmit = async e => {
         if (editOrigStatus === 'approved') {
           approved = approved.filter(x => x.id !== editId);
           renderBrowse();
+          await bumpBizVersion();
         }
         toast(typeChanged ? 'تم الحفظ، والنشاط رجع للمراجعة، وشلنا التوثيق لأن النوع اتغير ✅' : 'تم حفظ التعديلات وإعادة النشاط للمراجعة ✅');
       }
@@ -3847,8 +3854,9 @@ $('mineList').onclick = async e => {
     try {
       await updateDoc(doc(db, 'businesses', t.dataset.renew), { expiresAt: Date.now() + RE_DAYS * DAY_MS, status: 'pending', updatedAt: serverTimestamp() });
       if (renBiz?.status === 'approved') {
-        if (profile?.role === 'admin') await bumpBizVersion();
-        else { approved = approved.filter(x => x.id !== renBiz.id); renderBrowse(); }
+        approved = approved.filter(x => x.id !== renBiz.id);
+        renderBrowse();
+        await bumpBizVersion();
       }
       toast('تم تجديد الإعلان، وهيظهر بعد المراجعة ✅');
     } catch (err) { toast('تعذر التجديد'); }
@@ -3883,7 +3891,7 @@ $('mineList').onclick = async e => {
       if (delBiz?.status === 'approved') {
         approved = approved.filter(x => x.id !== t.dataset.del);
         renderBrowse();
-        if (profile?.role === 'admin') await bumpBizVersion();
+        await bumpBizVersion();
       }
       toast('تم الحذف');
     } catch (err) { toast('تعذر الحذف'); }
@@ -4072,9 +4080,9 @@ $('adminList').onclick = async e => {
     }
     else if (d.approve) {
       await updateDoc(doc(db, 'businesses', d.approve), { status: 'approved' });
-      markBizDirty();
+      await bumpBizVersion();
       await notifyOwner(d.approve, '✅ تم اعتماد نشاطك', `أصبح ظاهراً للناس في ${APP_NAME}`);
-      toast('تم الاعتماد ✅ (اضغط "نشر التحديث للجميع" لما تخلص)');
+      toast('تم الاعتماد ونشر التحديث للجميع ✅');
     }
     else if (d.reject) {
       const reason = prompt('سبب الرفض (هيوصل لصاحب النشاط):');
@@ -4085,8 +4093,8 @@ $('adminList').onclick = async e => {
     }
     else if (d.hide) {
       await updateDoc(doc(db, 'businesses', d.hide), { status: 'hidden' });
-      markBizDirty();
-      toast('تم الإخفاء ⏸️ (اضغط "نشر التحديث للجميع" عند الانتهاء)');
+      await bumpBizVersion();
+      toast('تم الإخفاء ونشر التحديث ⏸️');
     }
     else if (d.del && confirm('حذف نهائي لهذا النشاط؟')) {
       const wasApproved = allBiz.find(x => x.id === d.del)?.status === 'approved';
@@ -4095,7 +4103,7 @@ $('adminList').onclick = async e => {
       await deleteDoc(doc(db, 'bizPhotos', d.del)).catch(() => {});
       await deleteDoc(doc(db, 'offers', d.del)).catch(() => {});
       delete photoCache[d.del];
-      if (wasApproved) markBizDirty();
+      if (wasApproved) await bumpBizVersion();
       toast('تم الحذف 🗑️');
     }
   } catch (err) { toast('تعذر تنفيذ العملية'); }
@@ -4111,9 +4119,6 @@ $('contactBtn').onclick = () => {
 /* ---------- التنقل ---------- */
 function switchTab(n) {
   if (n !== 'add' && editId) cancelEdit();
-  if (currentTab === 'admin' && n !== 'admin' && dirtyBizVer) {
-    bumpBizVersion();
-  }
   currentTab = n;
   if (n === 'mine') {
     renderProfileCard();
